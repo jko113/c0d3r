@@ -18,8 +18,13 @@ app.use(static('public'));
 setupAuth(app);
 app.use(bodyParser.urlencoded({ extended: false }))
 
+
+// need to handle 
 app.get('/', (req, res) => {
-    res.send(`WELCOME ${req.session.passport.user.username}!`)
+    var raw = (req.session.passport.user._raw)
+    raw = (JSON.parse(raw))
+    res.send(raw)
+    // res.send(`WELCOME ${req.session.passport.user.username}!`)
 });
 
 
@@ -29,14 +34,22 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', (req, res) => {
     var userSession = req.session.passport.user
+    var rawParsed = JSON.parse(userSession.raw)
     db.getUserByGithubId(userSession.id)
         .then((data) => {
             if(data){
                 res.redirect('/')
             } else {
-                db.addUser(userSession.username, userSession.id, userSession.username, userSession.displayName, userSession.displayName, userSession.profileUrl, null, null, null, null, '2014-10-10', null, null, null, null)
-                res.send(userSession)
-                
+                var city = ;
+                var state = 
+                res.render('homepage',{
+                   alias: userSession.username,
+                   gitHubId: userSession.id,
+                   username: userSession.username,
+                   gitURL: userSession.profileUrl 
+                }) 
+                db.addUser(userSession.username, userSession.id, userSession.username, userSession.displayName, userSession.displayName, userSession.profileUrl, null, null, null, null, new Date(), null, null, null, null)
+                res.send(userSession)    
             }
     });
     // console.log(req.session.passport.user.username);
