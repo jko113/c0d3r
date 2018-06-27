@@ -7,4 +7,5 @@ Thumbs.db
 node_modules
 __pycache__
 .env
+sessions
 queries

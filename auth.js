@@ -27,7 +27,7 @@ const setupAuth = (app) => {
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "http://localhost:5000/github/auth"
   }, (accessToken, refreshToken, profile, done) => {
-
+    // console.log(profile)
     return done(null, profile);
     // // TODO: replace this with code that finds the user
     // // in the database.
@@ -50,14 +50,13 @@ const setupAuth = (app) => {
     // null is for errors
     console.log('we are serializing');
     console.log(user);
-
     // This adds the following to the session:
     // {
     //   "passport": {
     //     "user": "1090173"
     //   }
     // }
-    done(null, user.id);
+    done(null, user);
 
     // Meaning, you can identify the user via:
     // req.session.passport.user
@@ -66,13 +65,13 @@ const setupAuth = (app) => {
   // #5 call passport.serializeUser
   // This configures how passport checks what's in the
   // session to see if the login is still valid.
-  passport.deserializeUser(function(id, done) {
+  passport.deserializeUser(function(user, done) {
     console.log('we are deserializing');
     // placeholder for custom user deserialization.
     // maybe you are going to get the user from mongo by id?
     // null is for errors
-    console.log(id);
-    done(null, id);
+    console.log(user);
+    done(null, user);
   });
 
   // #6 initialize passport middleware and register it with express
@@ -104,8 +103,7 @@ const setupAuth = (app) => {
 
       console.log('you just logged in');
       console.log(req.isAuthenticated());
-
-      res.redirect('/');
+      res.redirect('/setup');
     }
   );
 
