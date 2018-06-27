@@ -40,13 +40,16 @@ app.get('/newprofile', (req, res) => {
             if(data){
                 res.redirect('/')
             } else {
-                var city = ;
-                var state = 
+                var locArr = rawParse.location.split(',');
+                var city = locArr[0];
+                var state = locArr[1];
                 res.render('homepage',{
                    alias: userSession.username,
                    gitHubId: userSession.id,
                    username: userSession.username,
-                   gitURL: userSession.profileUrl 
+                   gitURL: userSession.profileUrl,
+                   city: city,
+                   state: state
                 }) 
                 db.addUser(userSession.username, userSession.id, userSession.username, userSession.displayName, userSession.displayName, userSession.profileUrl, null, null, null, null, new Date(), null, null, null, null)
                 res.send(userSession)    
