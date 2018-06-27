@@ -103,7 +103,7 @@ const setupAuth = (app) => {
 
       console.log('you just logged in');
       console.log(req.isAuthenticated());
-      res.redirect('/setup');
+      res.redirect('/newprofile');
     }
   );
 
