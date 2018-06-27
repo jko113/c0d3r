@@ -70,7 +70,7 @@ const setupAuth = (app) => {
     // placeholder for custom user deserialization.
     // maybe you are going to get the user from mongo by id?
     // null is for errors
-    console.log();
+    console.log(user);
     done(null, user);
   });
 
