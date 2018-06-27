@@ -60,5 +60,6 @@ module.exports = {
     getUsersByState: getUsersByState,
     getUsersByZip: getUsersByZip,
     addUser: addUser,
-    getUserByAlias: getUserByAlias
+    getUserByAlias: getUserByAlias,
+    getUserByGithubId: getUserByGithubId
 };

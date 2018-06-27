@@ -18,10 +18,27 @@ app.use(static('public'));
 setupAuth(app);
 app.use(bodyParser.urlencoded({ extended: false }))
 
-
-
 app.get('/', (req, res) => {
-    res.send('Sign In');
+    res.send(`WELCOME ${req.session.passport.user.username}!`)
+});
+
+
+
+// redirected here from login using the functions in auth
+// the stuff after the else will be handled through res.render and allow for user to input in form format
+// will also make the remake the function after .then as a named function passed in
+app.get('/newprofile', (req, res) => {
+    var userSession = req.session.passport.user
+    db.getUserByGithubId(userSession.id)
+        .then((data) => {
+            if(data){
+                res.redirect('/')
+            } else {
+                db.addUser(userSession.username, userSession.id, userSession.username, userSession.displayName, userSession.displayName, userSession.profileUrl, null, null, null, null, '2014-10-10', null, null, null, null)
+                res.send(userSession)
+                
+            }
+    });
     // console.log(req.session.passport.user.username);
     // res.send(req.session.passport.user.username);
 });
