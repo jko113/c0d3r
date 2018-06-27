@@ -70,16 +70,23 @@ function getMessagesByRecipient (recipient_id) {
 }
 
 function createMessage(author_id, now, message_text) {
-    return db.one('', []);
+    return db.one('INSERT INTO messages (author_id, date_time, message_text) \
+    VALUES ($1, $2, $3) RETURNING message_id', [author_id, now, message_text]);
 }
 
 function sendMessage(author_id, recipient_id_array, message_text) {
     return createMessage(author_id, new Date(), message_text)
-                .then((message_id) => {
-                    recipient_id_array.forEach(() => {
-                        db.one('', []);
-                    });
-                })
+        .then((message) => {
+            // console.log('about to print message id')
+            // console.log(message);
+            recipient_id_array.forEach((recipient) => {
+                db.query('INSERT INTO message_recipients \
+                    (message_id, recipient_id, is_read) VALUES \
+                    ($1, $2, $3)', [message.message_id, recipient, false]).catch(console.error)
+            });
+            return true;
+        })
+        .catch(console.error);
 }
 
 // addUser('joshbrown', 3, 'joshthebrownster', 'josh', 'brizown', 'www.webpage.com', 'workplace', 'Atlanta', 'GA', 30088,
@@ -87,9 +94,9 @@ function sendMessage(author_id, recipient_id_array, message_text) {
 //     .then(console.log)
 //     .catch(console.error);
 
-getMessagesByRecipient(1)
-    .then(console.log)
-    .catch(console.error);
+// sendMessage(9, [9,7,8], 'Vote for Chris Aquino!')
+//     .then(console.log)
+//     .catch(console.error);
 
 module.exports = {
     getUserByUserId: getUserByUserId,
@@ -103,5 +110,6 @@ module.exports = {
     getUsersByEditor: getUsersByEditor,
     getUsersByEmployer: getUsersByEmployer,
     getMessagesBySender: getMessagesBySender,
-    getMessagesByRecipient: getMessagesByRecipient
+    getMessagesByRecipient: getMessagesByRecipient,
+    sendMessage: sendMessage
 };
