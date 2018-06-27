@@ -4,6 +4,8 @@
   "description": "",
   "main": "db.js",
   "scripts": {
+    "dev": "nodemon index.js",
+    "resetdb": "dropdb c0d3r; createdb c0d3r; psql -d c0d3r -f schema.sql; psql -d c0d3r -f dummy_data.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,5 +21,8 @@
     "passport-github": "^1.1.0",
     "pg-promise": "^8.4.4",
     "session-file-store": "^1.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5"
   }
 }
