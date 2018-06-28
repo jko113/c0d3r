@@ -39,9 +39,13 @@ app.get('/', (req, res) => {
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
     // console.log(userSession._raw);
-    // console.log(rawParsed);
-    db.getUserByGithubId(userSession.id)
-    .then((data) => {
+    // console.log(rawParsed)
+    console.log(typeof userSession.id)
+    console.log(userSession.id + ' LOOK FOR ME!!!')
+    console.log(typeof Number(userSession.id))
+    db.getUserByGithubId(Number(userSession.id))
+        .then((data) => {
+        console.log(data)
         if(data){
             console.log('data exists');
             res.redirect('/')
@@ -56,6 +60,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                    alias: userSession.username,
                    gitHubId: userSession.id,
                    username: userSession.username,
+                   name: userSession.displayName,
                    gitURL: userSession.profileUrl,
                    city: city,
                    state: state
@@ -67,21 +72,57 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/newprofile', (req, res) => {
-    var githubid = parseInt(req.body.githubid)
-    var zip = parseInt(req.body.zip_code)
-    var newDate = new Date();
-    var newDate = parseInt(newDate)
-    db.addUser(req.body.alias, githubid, req.session.passport.user.username, req.body.fname, req.body.lname, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, newDate, true, true, true, 'Hey')
+    var githubid = Number(req.body.githubid)
+    var zip = Number(req.body.zip_code)
+    console.log('!!!!!!!!!!!!!!!!!!!!!');
+    console.log(typeof githubid);
+    console.log(typeof zip);
+    // console.log(typeof new Date());
+    // console.log(Date.parse(new Date()));
+    db.addUser(req.body.alias, githubid, req.session.passport.user.username, req.body.fname, req.body.lname, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
         .then((data) => {
             // res.send(data)
             res.redirect('/');
         })
-        .catch(console.log)
+        .catch(console.log);
 });
 
 app.get('/setup', ensureAuthenticated, (req, res) => {
     res.send(req.session.passport.user)
-})
+});
+
+app.get('/search', (req, res) => {
+    res.render('search')
+});
+
+app.post('/search', (req, res) => {
+    res.redirect('/')
+});
+
+
+app.get('/home', (req, res) => {
+    db.getAllUsers()
+    .then
+        res.render('home', data)
+    .catch(console.log)
+});
+
+
+app.get('/messages', (req, res) => {
+    res.render('messages')
+});
+app.post('/messages', (req, res) => {
+    res.render('messages')
+});
+
+
+app.get('/messages/new', (req, res) => {
+    res.render('messages-new')
+});
+app.post('messages/new', (req, res) => {
+    res.redirect('/messages')``
+});
+
 
 
 app.listen(5000, () => {
