@@ -79,7 +79,7 @@ app.post('/newprofile', (req, res) => {
     console.log(typeof zip);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.session.passport.user.username, req.body.fname, req.body.lname, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
         .then((data) => {
             // res.send(data)
             res.redirect('/');
