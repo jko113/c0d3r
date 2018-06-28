@@ -87,16 +87,7 @@ function sendMessage(author_id, recipient_id_array, message_text) {
             return true;
         })
         .catch(console.error);
-}
-
-// addUser('joshbrown', 3, 'joshthebrownster', 'josh', 'brizown', 'www.webpage.com', 'workplace', 'Atlanta', 'GA', 30088,
-// '2014-09-10', true, true, true, 'I like fun things!')
-//     .then(console.log)
-//     .catch(console.error);
-
-// sendMessage(9, [9,7,8], 'Vote for Chris Aquino!')
-//     .then(console.log)
-//     .catch(console.error);
+} 
 
 module.exports = {
     getUserByUserId: getUserByUserId,
