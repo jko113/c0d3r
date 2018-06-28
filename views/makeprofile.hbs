@@ -1,0 +1,47 @@
+<form method="POST" action="/newprofile">
+<input type="text" name="alias" value="{{alias}}">
+<br>
+<br>
+<input type="text" name="gitihubid" value="{{gitHubId}}">
+<br>
+<br>
+<p>{{username}}</p>
+<br>
+<br>
+<input type="text" name="fname">
+<br>
+<br>
+<input type="text" name="lname">
+<br>
+<br>
+<input type="text" name="gitURL" value="{{gitURL}}">
+<br>
+<br>
+<input type="text" name="employer">
+<br>
+<br>
+<input type="text" name="city" value="{{city}}">
+<br>
+<br>
+<input type="text" name="state" value="{{state}}">
+<br>
+<br>
+<input type="number" name="zip_code">
+<br>
+<br>
+<select name="tabs">
+    <option value="tabs">Tabs</option>
+    <option value="spaces">Spaces</option>
+</select>
+<br>
+<select name="curly_braces">
+    <option value="same">Same Line</option>
+    <option value="next">Next Line</option>
+</select>
+<br>
+<select name="quotes">
+    <option value="single">Single Quotes</option>
+    <option value="double">Double Quotes</option>
+</select>
+<input type="submit">
+</form>
