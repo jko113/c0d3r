@@ -1,6 +1,7 @@
 INSERT INTO users (
     alias,
     github_id,
+    github_avatar_url,
     name,
     github_url,
     employer,
@@ -15,6 +16,7 @@ INSERT INTO users (
 ) VALUES (
     'test',
     12345,
+    'avatar.com',
     'Tom Jones',
     'www.github.com/test',
     null,
@@ -30,6 +32,7 @@ INSERT INTO users (
 (
     'funName',
     54321,
+    'picture.com',
     'Martha Washington',
     'www.github.com/funUser',
     'El presidente',
@@ -45,6 +48,7 @@ INSERT INTO users (
 (
     'sillyAlias',
     10101,
+    'funImage.com',
     'Timothy Farflignugen',
     'www.github.com/farflig',
     'Microsoft',
