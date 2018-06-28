@@ -113,6 +113,81 @@ function hasUnreadMessages(user_id) {
     WHERE ma.is_read = false AND ma.recipient_id = $1;', [user_id]);
 }
 
+/*let parameters = {
+    //editors: [1,2],
+    // languages: [3,4],
+    // tabs_preference: 1
+    // same_line_curlies_preference: 1
+    // single_quotes_preference: 1
+};*/
+
+function selectiveSearch(searchObject) {
+
+    let chunks = {
+        editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
+        languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
+        tabs_preference: 'JOIN tabs_preferences tp ON tp.preference_id = users.tabs_preference ',
+        same_line_curlies_preference: 'JOIN same_line_curlies_preferences sl ON sl.preference_id = users.same_line_curlies_preference ',
+        single_quotes_preference: 'JOIN single_quotes_preferences sq ON sq.preference_id = users.single_quotes_preference ',
+        editorsWhere: 'editors.editor_id IN ',
+        languagesWhere: 'languages.lang_id IN ',
+        tabs_preferenceWhere: 'tp.preference_id = ',
+        same_line_curlies_preferenceWhere: 'sl.preference_id = ',
+        single_quotes_preferenceWhere: 'sq.preference_id = '
+    }
+
+    let result = '';
+    let select = 'SELECT DISTINCT users.* FROM users ';
+    let where = ' WHERE ';
+    Object.keys(searchObject).forEach((key, outerIndex) => {
+        objString = '';
+
+        if (typeof searchObject[key] === 'object') {
+            
+            searchObject[key].forEach( (datum, innerIndex) => {
+                if (innerIndex === searchObject[key].length - 1) {
+                    objString += datum;
+                } else {
+                    objString += datum + ', '
+                }
+            });
+            select += (chunks[key]);
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + '(' + objString + ') ';
+            } else {
+                where += chunks[key + 'Where'] + '(' + objString + ') AND ';      
+            }
+
+        } else if (typeof searchObject[key] === 'number') {
+            // console.log();
+            objString += searchObject[key];
+            select += (chunks[key]);
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + objString;
+            } else {
+                where += chunks[key + 'Where'] + objString;      
+            }
+
+        } else if (typeof searchObject[key] === 'string') {
+            // console.log();
+            objString += searchObject[key];
+            select += (chunks[key]);
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + objString;
+            } else {
+                where += chunks[key + 'Where'] + objString;      
+            }
+
+        } else {
+            console.log(typeof searchObject[key]);
+        }
+    });
+    result = select + where + ';';
+    console.log(result);
+}
+
+//selectiveSearch(parameters);
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -131,7 +206,8 @@ module.exports = {
     getAllUsers: getAllUsers,
     getLanguages: getLanguages,
     getEditors: getEditors,
-    hasUnreadMessages: hasUnreadMessages
+    hasUnreadMessages: hasUnreadMessages,
+    selectiveSearch: selectiveSearch
 };
 
 // TESTS
