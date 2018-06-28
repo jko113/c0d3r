@@ -42,7 +42,7 @@ function addUser(alias,github_id,github_avatar_url,name,github_url,employer,city
 function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio,user_id) {
     return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
         tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
-        WHERE user_id = $10',
+        WHERE user_id = $10 RETURNING true',
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
             single_quotes_preference,bio,user_id]);
 }
@@ -147,7 +147,7 @@ module.exports = {
 // getUsersByZip(30055)
 //     .then(console.log)
 //     .catch(console.error);
-// addUser('testAlias', 12321, 'testImageUrl.com', 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 'tabs', 'sameLine', 'single', 'I\'m a coder who codes things!')
+// addUser('testAlias', 12321, 'testImageUrl.com', 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 1, 1, 1, 'I\'m a coder who codes things!')
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByAlias('testAlias')
@@ -187,9 +187,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 
-// editUser('Tommy Bumpkin', 'NASA', 'Washington, D.C.', null, 58474, 'Tabs', 'sameLine', 'single', 'I changed my profile', 1)
-    // .then(console.log)
-    // .catch(console.error);
+// editUser('Tommy Bumpkin', 'NASA', 'Washington, D.C.', null, 58474, 2, 2, 3, 'I changed my profile', 1)
+//     .then(console.log)
+//     .catch(console.error);
 /**** FIELDS NEEDED TO EDIT USER:
 user_id,name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio */
 
