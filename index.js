@@ -48,7 +48,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
         console.log(data)
         if(data){
             console.log('data exists');
-            res.redirect('/')
+            res.redirect('/home')
         } else {
             console.log('data doesnt exist');
             // res.send(userSession)
@@ -79,17 +79,20 @@ app.post('/newprofile', (req, res) => {
     console.log(typeof zip);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.session.passport.user.username, req.body.fname, req.body.lname, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
         .then((data) => {
             // res.send(data)
-            res.redirect('/');
+            res.redirect('/home');
         })
         .catch(console.log);
 });
+  
 
-app.get('/setup', ensureAuthenticated, (req, res) => {
-    res.send(req.session.passport.user)
-});
+// dunno why this is here or if it is needed !!!!!!!!!!!!!
+// can revisit and reassess later as needed !!!!!!!!!!!!!!
+// app.get('/setup', ensureAuthenticated, (req, res) => {
+//     res.send(req.session.passport.user)
+// });
 
 app.get('/search', (req, res) => {
     res.render('search')
@@ -102,9 +105,12 @@ app.post('/search', (req, res) => {
 
 app.get('/home', (req, res) => {
     db.getAllUsers()
-    .then
-        res.render('home', data)
-    .catch(console.log)
+        .then((data) => {
+
+            // res.send(data)
+            res.render('home', data)
+        })
+        .catch(console.log)
 });
 
 
@@ -120,7 +126,20 @@ app.get('/messages/new', (req, res) => {
     res.render('messages-new')
 });
 app.post('messages/new', (req, res) => {
-    res.redirect('/messages')``
+    res.redirect('/messages')
+});
+
+app.get('/profile/:user_id', (req, res) => {
+    db.getUserByUserId(req.params.user_id)
+    .then((data) => {
+        // isProfile(req.session.passport.user, data)
+        // res.send(data)
+        res.render('profile', {
+            alias: data.alias,
+            isProfile: isProfile(req.session.passport.user, data)
+        })
+    })
+    .catch(console.log)
 });
 
 
@@ -128,3 +147,13 @@ app.post('messages/new', (req, res) => {
 app.listen(5000, () => {
     console.log('Someones here');
 });
+
+
+function isProfile(session, dbUser){
+    console.log(session.id)
+    console.log(dbUser.github_id)
+    if(Number(session.id) === Number(dbUser.github_id)){
+        console.log('they are the same')
+        return true
+    }
+};
