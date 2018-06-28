@@ -48,7 +48,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
         console.log(data)
         if(data){
             console.log('data exists');
-            res.redirect('/')
+            res.redirect('/home')
         } else {
             console.log('data doesnt exist');
             // res.send(userSession)
@@ -82,14 +82,17 @@ app.post('/newprofile', (req, res) => {
     db.addUser(req.body.alias, githubid, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
         .then((data) => {
             // res.send(data)
-            res.redirect('/');
+            res.redirect('/home');
         })
         .catch(console.log);
 });
+  
 
-app.get('/setup', ensureAuthenticated, (req, res) => {
-    res.send(req.session.passport.user)
-});
+// dunno why this is here or if it is needed !!!!!!!!!!!!!
+// can revisit and reassess later as needed !!!!!!!!!!!!!!
+// app.get('/setup', ensureAuthenticated, (req, res) => {
+//     res.send(req.session.passport.user)
+// });
 
 app.get('/search', (req, res) => {
     res.render('search')
@@ -102,9 +105,12 @@ app.post('/search', (req, res) => {
 
 app.get('/home', (req, res) => {
     db.getAllUsers()
-    .then
-        res.render('home', data)
-    .catch(console.log)
+        .then((data) => {
+
+            // res.send(data)
+            res.render('home', data)
+        })
+        .catch(console.log)
 });
 
 
