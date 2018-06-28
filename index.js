@@ -66,6 +66,19 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
     // res.send(req.session.passport.user.username);
 });
 
+app.post('/newprofile', (req, res) => {
+    var githubid = parseInt(req.body.githubid)
+    var zip = parseInt(req.body.zip_code)
+    var newDate = new Date();
+    var newDate = parseInt(newDate)
+    db.addUser(req.body.alias, githubid, req.session.passport.user.username, req.body.fname, req.body.lname, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, newDate, true, true, true, 'Hey')
+        .then((data) => {
+            // res.send(data)
+            res.redirect('/');
+        })
+        .catch(console.log)
+});
+
 app.get('/setup', ensureAuthenticated, (req, res) => {
     res.send(req.session.passport.user)
 })
