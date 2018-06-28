@@ -3,12 +3,12 @@ INSERT INTO tabs_preferences (description) VALUES
 ('spaces'),
 ('don''t care');
 
-INSERT INTO same_line_curlies_preference (description) VALUES
+INSERT INTO same_line_curlies_preferences (description) VALUES
 ('same line'),
 ('next line'),
 ('don''t care');
 
-INSERT INTO single_quotes_preference (description) VALUES
+INSERT INTO single_quotes_preferences (description) VALUES
 ('single quotes'),
 ('double quotes'),
 ('don''t care');
