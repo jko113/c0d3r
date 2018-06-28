@@ -32,11 +32,19 @@ function getUsersByZip(zip) {
     return db.any('SELECT * FROM users WHERE zip = $1', [zip]);
 }
 
-function addUser(alias,github_id,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio) {
-    return db.one('INSERT INTO users (alias, github_id, name, github_url, employer, city, state, \
+function addUser(alias,github_id,github_avatar_url,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio) {
+    return db.one('INSERT INTO users (alias, github_id, github_avatar_url, name, github_url, employer, city, state, \
         zip, join_date, tabs_preference, same_line_curlies_preference, single_quotes_preference, bio \
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING user_id',
-        [alias,github_id,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio]);
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING user_id',
+        [alias,github_id,github_avatar_url,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio]);
+}
+
+function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio,user_id) {
+    return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
+        tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
+        WHERE user_id = $10',
+        [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
+            single_quotes_preference,bio,user_id]);
 }
 
 function getUserByAlias(searchString) {
@@ -89,7 +97,15 @@ function sendMessage(author_id, recipient_id_array, message_text) {
             return true;
         })
         .catch(console.error);
-} 
+}
+
+function getLanguages() {
+    return db.any('SELECT * FROM languages;');
+}
+
+function getEditors() {
+    return db.any('SELECT * FROM editors;');
+}
 
 module.exports = {
     getUserByUserId: getUserByUserId,
@@ -97,6 +113,7 @@ module.exports = {
     getUsersByState: getUsersByState,
     getUsersByZip: getUsersByZip,
     addUser: addUser,
+    editUser: editUser,
     getUserByAlias: getUserByAlias,
     getUserByGithubId: getUserByGithubId,
     getUsersByLanguage: getUsersByLanguage,
@@ -105,7 +122,9 @@ module.exports = {
     getMessagesBySender: getMessagesBySender,
     getMessagesByRecipient: getMessagesByRecipient,
     sendMessage: sendMessage,
-    getAllUsers: getAllUsers
+    getAllUsers: getAllUsers,
+    getLanguages: getLanguages,
+    getEditors: getEditors
 };
 
 // TESTS
@@ -121,7 +140,7 @@ module.exports = {
 // getUsersByZip(30055)
 //     .then(console.log)
 //     .catch(console.error);
-// addUser('testAlias', 12321, 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 'tabs', 'sameLine', 'single', 'I\'m a coder who codes things!')
+// addUser('testAlias', 12321, 'testImageUrl.com', 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 'tabs', 'sameLine', 'single', 'I\'m a coder who codes things!')
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByAlias('testAlias')
@@ -151,3 +170,19 @@ module.exports = {
 // getAllUsers()
 //     .then(console.log)
 //     .catch(console.error);
+// getLanguages()
+//     .then(console.log)
+//     .catch(console.error);
+// getEditors()
+//     .then(console.log)
+//     .catch(console.error);
+
+// editUser('Tommy Bumpkin', 'NASA', 'Washington, D.C.', null, 58474, 'Tabs', 'sameLine', 'single', 'I changed my profile', 1)
+    // .then(console.log)
+    // .catch(console.error);
+/**** FIELDS NEEDED TO EDIT USER:
+user_id,name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio */
+
+/**** SEARCH FIELDS
+tabs, curlies, quotes, languages, editors, city, state, zip, company
+*/
