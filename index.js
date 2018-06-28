@@ -106,9 +106,16 @@ app.post('/search', (req, res) => {
 app.get('/home', (req, res) => {
     db.getAllUsers()
         .then((data) => {
-
-            // res.send(data)
-            res.render('home', data)
+            var check = arrayIsProfile(req.session.passport.user, data)
+            // console.log(check)
+            return check
+        })
+        .then((check) => {
+            console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
+            console.log(check)
+            res.render('home', {
+                check: check
+            })
         })
         .catch(console.log)
 });
@@ -125,20 +132,27 @@ app.post('/messages', (req, res) => {
 app.get('/messages/new', (req, res) => {
     res.render('messages-new')
 });
-app.post('messages/new', (req, res) => {
+app.post('/messages/new', (req, res) => {
     res.redirect('/messages')
 });
+
+app.get('/profile', (req, res) => {
+    console.log(req.session.passport.user.id)
+    db.getUserByGithubId((req.session.passport.user.id))
+        .then((data) => {
+            console.log('LINE 142!!!!!!!!!!!!');
+            console.log(data)
+            res.render('profile', data)
+        })
+})
 
 app.get('/profile/:user_id', (req, res) => {
     db.getUserByUserId(req.params.user_id)
     .then((data) => {
-        // isProfile(req.session.passport.user, data)
-        // res.send(data)
-        res.render('profile', {
-            alias: data.alias,
-            isProfile: isProfile(req.session.passport.user, data)
-        })
-    })
+
+        isProfile(req.session.passport.user, data)
+        res.render('profile', data)
+    })    
     .catch(console.log)
 });
 
@@ -152,8 +166,23 @@ app.listen(5000, () => {
 function isProfile(session, dbUser){
     console.log(session.id)
     console.log(dbUser.github_id)
+    console.log(dbUser)
     if(Number(session.id) === Number(dbUser.github_id)){
         console.log('they are the same')
         return true
     }
+};
+
+function arrayIsProfile(session, dbUser){
+    var fixedArr = [];
+    // console.log('LINE 171!!!!!!!!!!!!!')
+    // console.log(dbUser);
+    dbUser.forEach(function(data){
+        // console.log(session.id);
+        // console.log(data.github_id);
+        if(Number(session.id) !== Number(data.github_id)){
+            fixedArr.push(data);
+        }
+    })
+    return fixedArr;
 };
