@@ -18,16 +18,17 @@ app.use(static('public'));
 setupAuth(app);
 app.use(bodyParser.urlencoded({ extended: false }))
 
-
 // need to handle 
 app.get('/', (req, res) => {
     // var raw = (req.session.passport.user._raw)
     // raw = (JSON.parse(raw))
     // res.send(raw)
+    console.log('here');
     if (req.session.passport){
-        res.send(`WELCOME ${req.session.passport.user.username}!`)
+        res.send(`WELCOME ${req.session.passport.user.username}!`);
     } else {
-        res.send('Welcome!')
+        // res.send('Welcome!')
+        res.sendFile(__dirname + '/public/frontpage.html');
     }
 });
 
