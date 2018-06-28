@@ -126,7 +126,20 @@ app.get('/messages/new', (req, res) => {
     res.render('messages-new')
 });
 app.post('messages/new', (req, res) => {
-    res.redirect('/messages')``
+    res.redirect('/messages')
+});
+
+app.get('/profile/:user_id', (req, res) => {
+    db.getUserByUserId(req.params.user_id)
+    .then((data) => {
+        // isProfile(req.session.passport.user, data)
+        // res.send(data)
+        res.render('profile', {
+            alias: data.alias,
+            isProfile: isProfile(req.session.passport.user, data)
+        })
+    })
+    .catch(console.log)
 });
 
 
@@ -134,3 +147,13 @@ app.post('messages/new', (req, res) => {
 app.listen(5000, () => {
     console.log('Someones here');
 });
+
+
+function isProfile(session, dbUser){
+    console.log(session.id)
+    console.log(dbUser.github_id)
+    if(Number(session.id) === Number(dbUser.github_id)){
+        console.log('they are the same')
+        return true
+    }
+};
