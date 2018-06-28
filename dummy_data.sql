@@ -1,7 +1,6 @@
 INSERT INTO users (
     alias,
     github_id,
-    github_alias,
     name,
     github_url,
     employer,
@@ -9,14 +8,13 @@ INSERT INTO users (
     state,
     zip,
     join_date,
-    likes_tabs,
-    likes_same_line_curlies,
-    likes_single_quotes,
+    tabs_preference,
+    same_line_curlies_preference,
+    single_quotes_preference,
     bio
 ) VALUES (
     'test',
     12345,
-    'githubaliastest',
     'Tom Jones',
     'www.github.com/test',
     null,
@@ -24,15 +22,14 @@ INSERT INTO users (
     'GA',
     30055,
     '2018-06-25 12:31:56',
-    true,
-    false,
-    true,
+    'tabs',
+    'sameLine',
+    'single',
     'I am a coder who enjoys coding.'
 ),
 (
     'funName',
     54321,
-    'anotherGitHubUser',
     'Martha Washington',
     'www.github.com/funUser',
     'El presidente',
@@ -40,15 +37,14 @@ INSERT INTO users (
     null,
     73678,
     '2018-06-24 11:02:13',
-    false,
-    true,
-    false,
+    'tabs',
+    'sameLine',
+    'single',
     'This is for testing purposes only. No more, no less.'
 ),
 (
     'sillyAlias',
     10101,
-    'famousCoder',
     'Timothy Farflignugen',
     'www.github.com/farflig',
     'Microsoft',
@@ -56,9 +52,9 @@ INSERT INTO users (
     'Washington',
     48765,
     '2018-06-23 11:12:46',
-    true,
-    true,
-    false,
+    'spaces',
+    'differentLine',
+    'double',
     'If you were a coder, would you code as excellently as me?'
 );
 
