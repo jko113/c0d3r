@@ -68,7 +68,7 @@ INSERT INTO users (
     'www.github.com/farflig',
     'Microsoft',
     'Seattle',
-    'Washington',
+    'WA',
     48765,
     '2018-06-23 11:12:46',
     3,
