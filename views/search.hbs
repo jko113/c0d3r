@@ -1,0 +1,51 @@
+<div class="block">
+  <form action="/search" method="POST">
+    Search for user:<br>
+    <input type="search" name="alias">
+    <input type="submit" value="Search" class="button is-primary">
+    <input type="reset" value="Reset" class="button is-primary">
+  </form>
+  <hr>
+  <form action="/search" method="POST">
+      <div class="notification is-5">Filter by profile property:</div>
+      <div class="columns">
+          <div class="column">
+            Tabs or Spaces?<br>
+            <input type="checkbox" name="tabs-tabs">&nbsp;Tabs<br>
+            <input type="checkbox" name="tabs-spaces">&nbsp;Spaces<br>
+            <br>
+            Brackets: same line or next?<br>
+            <input type="checkbox" name="curlies-same">&nbsp;Same line<br>
+            <input type="checkbox" name="curlies-next">&nbsp;Next line<br>
+            <br>
+            Quotes: single or double?<br>
+            <input type="checkbox" name="quotes-single">&nbsp;Single<br>
+            <input type="checkbox" name="quotes-double">&nbsp;Double<br>
+            <br>
+          </div>
+          <div class="column">
+            Preferred languages<br>
+            <input type="checkbox" name="lang-1">&nbsp;Java<br>
+            <input type="checkbox" name="lang-2">&nbsp;JavaScript<br>
+            <br>
+            Preferred text editor<br>
+            <input type="checkbox" name="editor-1">&nbsp;VS Code<br>
+            <input type="checkbox" name="editor-2">&nbsp;Atom<br>
+            <br>
+            City&nbsp;<input type="search" name="city"><br>
+            State&nbsp;
+            <select name="state">
+              <option value="AL">AL</option>
+              <option value="AK">AK</option>
+              <option value="AS">AS</option>
+            </select><br>
+            Zip&nbsp;<input type="search" name="zip"><br>
+            <br>
+            Company:&nbsp;<input type="search" name="company"><br>
+            <br>
+          </div>
+        </div>
+    <input type="submit" value="Search" class="button is-primary">
+    <input type="reset" value="Reset" class="button is-primary">
+  </form>
+</div>
