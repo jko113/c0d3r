@@ -32,14 +32,11 @@ function getUsersByZip(zip) {
     return db.any('SELECT * FROM users WHERE zip = $1', [zip]);
 }
 
-function addUser(alias,github_id,github_alias,first_name,last_name,
-    github_url,employer,city,state,zip,join_date,likes_tabs,likes_same_line_curlies,likes_single_quotes,bio) {
-    return db.one('INSERT INTO users (alias, github_id, github_alias, first_name, last_name, github_url, employer, city, state, \
-    zip, join_date, likes_tabs, likes_same_line_curlies, likes_single_quotes, bio \
-) VALUES (\'$1#\', $2, \'$3#\', \'$4#\', \'$5#\', \'$6#\', $7, $8, $9, \
-$10, \'$11#\', \
-$12, $13, $14, $15) RETURNING user_id', [alias,github_id,github_alias,first_name,last_name,
-    github_url,employer,city,state,zip,join_date,likes_tabs,likes_same_line_curlies,likes_single_quotes,bio]);
+function addUser(alias,github_id,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio) {
+    return db.one('INSERT INTO users (alias, github_id, name, github_url, employer, city, state, \
+        zip, join_date, tabs_preference, same_line_curlies_preference, single_quotes_preference, bio \
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING user_id',
+        [alias,github_id,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio]);
 }
 
 function getUserByAlias(searchString) {
@@ -69,7 +66,8 @@ function getMessagesBySender (author_id) {
 }
 
 function getMessagesByRecipient (recipient_id) {
-    return db.any('SELECT mess.* FROM messages AS mess JOIN \ message_recipients AS ma ON mess.message_id = ma.message_id \
+    return db.any('SELECT mess.* FROM messages AS mess JOIN \
+    message_recipients AS ma ON mess.message_id = ma.message_id \
     WHERE ma.recipient_id = $1;', [recipient_id]);
 }
 
@@ -109,3 +107,47 @@ module.exports = {
     sendMessage: sendMessage,
     getAllUsers: getAllUsers
 };
+
+// TESTS
+// getUserByUserId(1)
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByCity('Atlanta')
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByState('Washington')
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByZip(30055)
+//     .then(console.log)
+//     .catch(console.error);
+// addUser('testAlias', 12321, 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 'tabs', 'sameLine', 'single', 'I\'m a coder who codes things!')
+//     .then(console.log)
+//     .catch(console.error);
+// getUserByAlias('testAlias')
+//     .then(console.log)
+//     .catch(console.error);
+// getUserByGithubId(12321)
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByLanguage(1)
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByEditor(1)
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByEmployer('Microsoft')
+//     .then(console.log)
+//     .catch(console.error);
+// getMessagesBySender(1)
+//     .then(console.log)
+//     .catch(console.error);
+// getMessagesByRecipient(1)
+//     .then(console.log)
+//     .catch(console.error);
+// sendMessage(1, [2,3,4], 'This is a testy message.')
+//     .then(console.log)
+//     .catch(console.error);
+// getAllUsers()
+//     .then(console.log)
+//     .catch(console.error);
