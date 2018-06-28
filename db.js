@@ -12,6 +12,10 @@ function getUserByUserId(id) {
     return db.oneOrNone('SELECT * FROM users WHERE user_id = $1;', [id]);
 }
 
+function getAllUsers() {
+    return db.any('SELECT * FROM users;');
+}
+
 function getUserByGithubId(id) {
     return db.oneOrNone('SELECT * FROM users WHERE github_id = $1;', [id]);
 }
@@ -102,5 +106,6 @@ module.exports = {
     getUsersByEmployer: getUsersByEmployer,
     getMessagesBySender: getMessagesBySender,
     getMessagesByRecipient: getMessagesByRecipient,
-    sendMessage: sendMessage
+    sendMessage: sendMessage,
+    getAllUsers: getAllUsers
 };
