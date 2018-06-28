@@ -107,6 +107,62 @@ function getEditors() {
     return db.any('SELECT * FROM editors;');
 }
 
+function hasUnreadMessages(user_id) {
+    return db.one('SELECT COUNT(*) > 0 AS has_unread FROM message_recipients AS ma \
+    JOIN messages m ON m.message_id = ma.message_id \
+    WHERE ma.is_read = false AND ma.recipient_id = $1;', [user_id]);
+}
+
+let parameters = {
+    // editors: [1,2],
+    // languages: [3,4],
+    likes_tabs: "tabs"
+};
+
+function selectiveSearch(searchObject) {
+
+
+    let chunks = {
+        editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
+        languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
+        editorsWhere: 'editors.editor_id IN ',
+        languagesWhere: 'languages.lang_id IN '
+    }
+
+    let result = '';
+    let select = 'SELECT DISTINCT users.* FROM users ';
+    let where = ' WHERE ';
+    Object.keys(searchObject).forEach((key, outerIndex) => {
+        objString = '';
+
+        if (typeof searchObject[key] === 'object') {
+            
+            searchObject[key].forEach( (datum, innerIndex) => {
+                if (innerIndex === searchObject[key].length - 1) {
+                    objString += datum;
+                } else {
+                    objString += datum + ', '
+                }
+            });
+            select += (chunks[key]);
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + '(' + objString + ');';
+            } else {
+                where += chunks[key + 'Where'] + '(' + objString + ') AND ';      
+            }
+
+        } else if (typeof searchObject[key] === 'string') {
+
+            console.log('got a string');
+
+        }
+    });
+    result = select + where;
+    console.log(result);
+}
+
+selectiveSearch(parameters);
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -124,7 +180,8 @@ module.exports = {
     sendMessage: sendMessage,
     getAllUsers: getAllUsers,
     getLanguages: getLanguages,
-    getEditors: getEditors
+    getEditors: getEditors,
+    hasUnreadMessages: hasUnreadMessages
 };
 
 // TESTS
@@ -174,6 +231,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // getEditors()
+//     .then(console.log)
+//     .catch(console.error);
+// hasUnreadMessages(3)
 //     .then(console.log)
 //     .catch(console.error);
 
