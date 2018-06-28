@@ -113,12 +113,11 @@ app.get('/home', (req, res) => {
         .then((check) => {
             console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
             console.log(check)
-            res.render('home', {
-                check: check
-            })
+            res.render('home', check)
         })
         .catch(console.log)
 });
+
 
 
 app.get('/messages', (req, res) => {
@@ -145,7 +144,10 @@ app.get('/profile', (req, res) => {
             res.render('profile', data)
         })
 })
-
+app.post('/profile', (req, res) => {
+    console.log('User information updated')
+    db 
+})
 app.get('/profile/:user_id', (req, res) => {
     db.getUserByUserId(req.params.user_id)
     .then((data) => {
