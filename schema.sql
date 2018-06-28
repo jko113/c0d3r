@@ -2,7 +2,6 @@ CREATE TABLE users (
     user_id serial primary key,
     alias varchar(30) NOT NULL,
     github_id integer NOT NULL,
-    github_alias varchar(30) NOT NULL,
     name varchar(50),
     github_url varchar(100) NOT NULL,
     employer varchar(30),
@@ -10,9 +9,9 @@ CREATE TABLE users (
     state varchar(30),
     zip integer,
     join_date timestamp NOT NULL,
-    likes_tabs boolean,
-    likes_same_line_curlies boolean,
-    likes_single_quotes boolean,
+    tabs_preference varchar(30),
+    same_line_curlies_preference varchar(30),
+    single_quotes_preference varchar(30),
     bio varchar(2000)
 );
 
