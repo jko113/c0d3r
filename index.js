@@ -194,39 +194,62 @@ app.get('/home', (req, res) => {
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
     const github_id = userData.id;
-    console.log(github_id);
 
     // check if user exists in database
     db.checkUserExistence(github_id)
         .then((data) => {
-            const isRegistered = data[0].user_exists;
-            if (isRegistered) {
-                res.render('messages')
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render messages page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                    db.getMessagesByRecipient(internalId)
+                        .then( (receivedMessages) => {
+                            receivedMessages.forEach((message, index) => {
+                                message.date_time = message.date_time.toString();
+                            });
+
+                            db.getMessagesBySender(internalId)
+                                // console.log(receivedMessages);
+                                .then(sentMessages => {
+                                    // console.log("sentMessages");
+                                    // console.log(sentMessages);
+                                    sentMessages.forEach((message, index) => {
+                                        message.date_time = message.date_time.toString();
+                                    });
+                                    let messageObject = {};
+                                    messageObject.sent = sentMessages;
+                                    messageObject.received = receivedMessages;
+                                    console.log("messageObject");
+                                    console.log(messageObject);
+                                    res.render('messages', {
+                                        messages: messageObject
+                                    });
+                                })
+                                .catch(console.error);
+                            // res.render('messages', {
+                            //     messages: messageData
+                            // });
+                        })
+                        .catch(console.error);
+
+                // otherwise, redirect to root
+                } else {
+                    res.redirect('/');
+                }
             } else {
                 res.redirect('/');
             }
-            //console.log(isRegistered);
         })
         .catch(console.error);
 
-    // db.getMessagesByRecipient(req.session.passport.user);
-    //res.render('messages');
-    // .then((returnVal) => {
-    //     console.log(returnVal);
-    //     res.render('messages')
-    // })
 });
 app.post('/messages', (req, res) => {
     res.render('messages')
 });
-    
-    
-    app.get('/messages/new', (req, res) => {
-        res.render('messages-new')
-    });
-    app.post('/messages/new', (req, res) => {
-        res.redirect('/messages')
-    });
 
 app.get('/messages/new', (req, res) => {
     res.render('messages-new')

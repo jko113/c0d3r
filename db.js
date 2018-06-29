@@ -70,13 +70,16 @@ function getUsersByEmployer(employer) {
 }
 
 function getMessagesBySender (author_id) {
-    return db.any('SELECT * FROM messages WHERE author_id = $1;', [author_id]);
+    return db.any('SELECT mess.*, users.alias FROM messages AS mess \
+    JOIN users ON users.user_id = mess.author_id \
+    WHERE author_id = $1;', [author_id]);
 }
 
 function getMessagesByRecipient (recipient_id) {
-    return db.any('SELECT mess.* FROM messages AS mess JOIN \
+    return db.any('SELECT mess.*, users.alias AS sender_alias FROM messages AS mess JOIN \
     message_recipients AS ma ON mess.message_id = ma.message_id \
-    WHERE ma.recipient_id = $1;', [recipient_id]);
+    JOIN users ON mess.author_id = users.user_id \
+    WHERE ma.recipient_id = $1 ORDER BY date_time DESC;', [recipient_id]);
 }
 
 function createMessage(author_id, now, message_text) {
@@ -124,7 +127,7 @@ function hasUnreadMessages(user_id) {
 //     zip: 48765
 // };
 
-function selectiveSearch(searchObject) {
+function andSearch(searchObject) {
     // console.log(searchObject);
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
@@ -200,7 +203,7 @@ function selectiveSearch(searchObject) {
     return db.any(result);
 }
 
-function nonSelectiveSearch(searchObject) {
+function orSearch(searchObject) {
 
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
@@ -277,8 +280,12 @@ function nonSelectiveSearch(searchObject) {
 }
 
 function checkUserExistence(github_id) {
-    return db.any('SELECT COUNT(*) = 1 AS user_exists FROM users WHERE github_id = $1;', [github_id]);
+    return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
+
+// checkUserExistence(5)
+//     .then(console.log)
+//     .catch(console.error);
 
 module.exports = {
     getUserByUserId: getUserByUserId,
@@ -299,8 +306,8 @@ module.exports = {
     getLanguages: getLanguages,
     getEditors: getEditors,
     hasUnreadMessages: hasUnreadMessages,
-    selectiveSearch: selectiveSearch,
-    nonSelectiveSearch: nonSelectiveSearch,
+    andSearch: andSearch,
+    orSearch: orSearch,
     checkUserExistence: checkUserExistence
 };
 
