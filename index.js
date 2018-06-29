@@ -171,14 +171,32 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                 if (isRegistered) {
                     const internalId = data[0].user_id;
                     db.getMessagesByRecipient(internalId)
-                        .then( (messageData) => {
-                            messageData.forEach((message, index) => {
+                        .then( (receivedMessages) => {
+                            receivedMessages.forEach((message, index) => {
                                 message.date_time = message.date_time.toString();
                             });
 
-                            res.render('messages', {
-                                messages: messageData
-                            });
+                            db.getMessagesBySender(internalId)
+                                // console.log(receivedMessages);
+                                .then(sentMessages => {
+                                    // console.log("sentMessages");
+                                    // console.log(sentMessages);
+                                    sentMessages.forEach((message, index) => {
+                                        message.date_time = message.date_time.toString();
+                                    });
+                                    let messageObject = {};
+                                    messageObject.sent = sentMessages;
+                                    messageObject.received = receivedMessages;
+                                    console.log("messageObject");
+                                    console.log(messageObject);
+                                    res.render('messages', {
+                                        messages: messageObject
+                                    });
+                                })
+                                .catch(console.error);
+                            // res.render('messages', {
+                            //     messages: messageData
+                            // });
                         })
                         .catch(console.error);
 
