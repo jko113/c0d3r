@@ -125,7 +125,7 @@ function hasUnreadMessages(user_id) {
 // };
 
 function andSearch(searchObject) {
-    // console.log(searchObject);
+    // console.log('andSearch searchObject: ' + searchObject);
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
         languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
@@ -146,11 +146,12 @@ function andSearch(searchObject) {
     let select = 'SELECT DISTINCT users.* FROM users ';
     let where = ' WHERE ';
     Object.keys(searchObject).forEach((key, outerIndex) => {
-        // console.log(searchObject[key]);
+        // console.log('key: ' + key);
+        // console.log('value: ' + searchObject[key]);
         // console.log(typeof searchObject[key]);
         objString = '';
 
-        if (typeof searchObject[key] === 'object') {
+        if (typeof searchObject[key] === 'object' && searchObject[key]) {
             
             searchObject[key].forEach( (datum, innerIndex) => {
                 if (innerIndex === searchObject[key].length - 1) {
@@ -226,7 +227,7 @@ function orSearch(searchObject) {
         // console.log(typeof searchObject[key]);
         objString = '';
 
-        if (typeof searchObject[key] === 'object') {
+        if (typeof searchObject[key] === 'object' && searchObject[key]) {
             
             searchObject[key].forEach( (datum, innerIndex) => {
                 if (innerIndex === searchObject[key].length - 1) {
