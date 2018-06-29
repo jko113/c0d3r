@@ -26,7 +26,8 @@ app.get('/', (req, res) => {
     // res.send(raw)
     // console.log('here');
     if (req.session.passport){
-        res.send(`WELCOME ${req.session.passport.user.username}!`);
+        // res.send(`WELCOME ${req.session.passport.user.username}!`);
+        res.redirect('home');
     } else {
         // res.send('Welcome!')
         res.sendFile(__dirname + '/public/frontpage.html');
@@ -63,10 +64,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 gitHubId: userSession.id,
                 gitHubAv: userSession._json.avatar_url,
                 username: userSession.username,
-                name: userSession.displayName,
+                name: userSession.displayName, // TODO: this isn't working
                 gitURL: userSession.profileUrl,
                 city: city,
-                state: state
+                state: state,
+                bio: rawParsed.bio
             });   
         }
     });
@@ -75,21 +77,22 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/newprofile', (req, res) => {
-    var githubid = Number(req.body.githubid)
-    var zip = Number(req.body.zip_code)
-    // console.log('!!!!!!!!!!!!!!!!!!!!!');
-    // console.log(typeof githubid);
-    // console.log(typeof zip);
+    var githubid = Number(req.body.githubid);
+    var zip = Number(req.body.zip_code);
+    console.log('!!!!!!!!!!!!!!!!!!!!!');
+    console.log(req.body);
+    console.log(req.body.tabs);
+    console.log(req.body.curly_braces);
+    console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), req.body.tabs, req.body.curly_braces, req.body.bio, 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
     .then((data) => {
         // res.send(data)
         res.redirect('/home');
     })
     .catch(console.log);
 });
-
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
 // can revisit and reassess later as needed !!!!!!!!!!!!!!
@@ -151,9 +154,7 @@ app.get('/home', (req, res) => {
         })
         .catch(console.log)
     });
-    
-    
-    
+
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
     const github_id = userData.id;
@@ -190,6 +191,13 @@ app.post('/messages', (req, res) => {
     app.post('/messages/new', (req, res) => {
         res.redirect('/messages')
     });
+
+app.get('/messages/new', (req, res) => {
+    res.render('messages-new')
+});
+app.post('/messages/new', (req, res) => {
+    res.redirect('/messages')
+});
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
         // console.log(req.session.passport.user)
@@ -205,18 +213,20 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
         })
 })
 app.post('/profile', (req, res) => {
-        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
-                .then((data) => {
-                    res.redirect('/profile')
-})
-})
+    db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+        .then((data) => {
+            res.redirect('/profile');
+        })
+});
 
 app.get('/profile/:user_id', (req, res) => {
         db.getUserByUserId(req.params.user_id)
         .then((data) => {
             
-            isProfile(req.session.passport.user, data)
-            res.render('profile', data)
+            res.render('profile', {
+                data: data,
+                isProfile: null
+            })
         })    
     .catch(console.log)
 });
