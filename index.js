@@ -54,6 +54,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
         } else {
             // console.log('data doesnt exist');
             // res.send(userSession)
+            console.log(userSession)
             var rawParsed = JSON.parse(userSession._raw);
             var locArr = rawParsed.location.split(',');
             var city = locArr[0];
@@ -142,7 +143,7 @@ app.get('/home', (req, res) => {
     db.getAllUsers()
         .then((data) => {
             var check = arrayIsProfile(req.session.passport.user, data)
-            // console.log(check)
+            console.log(check)
             return check
         })
         .then((check) => {
@@ -185,19 +186,19 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
         })
 })
 app.post('/profile', (req, res) => {
-        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
-                .then((data) => {
-                    res.redirect('/profile')
-})
-})
+    db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+        .then((data) => {
+            res.redirect('/profile');
+        })
+});
 
 app.get('/profile/:user_id', (req, res) => {
         db.getUserByUserId(req.params.user_id)
         .then((data) => {
             
-            isProfile(req.session.passport.user, data)
             res.render('profile', {
-                data: data
+                data: data,
+                isProfile: null
             })
         })    
     .catch(console.log)
