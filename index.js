@@ -163,13 +163,30 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
     // check if user exists in database
     db.checkUserExistence(github_id)
         .then((data) => {
+            //console.log(data);
             const isRegistered = data[0].user_exists;
+
+            // render messages page if user exists
             if (isRegistered) {
-                res.render('messages')
+                const internalId = data[0].user_id;
+                //console.log(internalId);
+                db.getMessagesByRecipient(internalId)
+                    .then( (messageData) => {
+                        res.render('messages', {
+                            messages: messageData
+                        });
+                    })
+                    .catch(console.error);
+
+                // db.getUserByGithubId(github_id)
+                //     .then((userData) => {
+                //         // console.log(userData);
+                //         res.render('messages')
+                //     }).catch(console.error);
+            // otherwise, redirect to root
             } else {
                 res.redirect('/');
             }
-            //console.log(isRegistered);
         })
         .catch(console.error);
 
