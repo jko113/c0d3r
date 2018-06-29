@@ -43,6 +43,7 @@ function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies
     return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
         tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
         WHERE github_id = $10',
+
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
             single_quotes_preference,bio,github_id]);
 }
