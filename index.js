@@ -26,7 +26,8 @@ app.get('/', (req, res) => {
     // res.send(raw)
     console.log('here');
     if (req.session.passport){
-        res.send(`WELCOME ${req.session.passport.user.username}!`);
+        // res.send(`WELCOME ${req.session.passport.user.username}!`);
+        res.redirect('home');
     } else {
         // res.send('Welcome!')
         res.sendFile(__dirname + '/public/frontpage.html');
@@ -154,24 +155,22 @@ app.get('/home', (req, res) => {
         })
         .catch(console.log)
     });
-    
-    
-    
-    app.get('/messages', (req, res) => {
-        db.getMessagesByRecipient(req.session.passport.user)
-        res.render('messages')
-    });
-    app.post('/messages', (req, res) => {
-        res.render('messages')
-    });
-    
-    
-    app.get('/messages/new', (req, res) => {
-        res.render('messages-new')
-    });
-    app.post('/messages/new', (req, res) => {
-        res.redirect('/messages')
-    });
+
+app.get('/messages', (req, res) => {
+    db.getMessagesByRecipient(req.session.passport.user)
+    res.render('messages')
+});
+app.post('/messages', (req, res) => {
+    res.render('messages')
+});
+
+
+app.get('/messages/new', (req, res) => {
+    res.render('messages-new')
+});
+app.post('/messages/new', (req, res) => {
+    res.redirect('/messages')
+});
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
         console.log(req.session.passport.user)
