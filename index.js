@@ -146,14 +146,50 @@ app.get('/home', (req, res) => {
             var check = arrayIsProfile(req.session.passport.user, data)
             console.log(check)
             return check
+        }).then((check) => {
+            let shrunkArr = [];
+            let firstProfile = check[Math.floor(Math.random() * 4)];
+            let secondPRofile = check[Math.floor(Math.random() * 4)];
+            shrunkArr.push(firstProfile);
+            shrunkArr.push(secondPRofile);
+            // console.log(shrunkArr);
+            return shrunkArr;
         })
-        .then((check) => {
+        .then((shrunkArr) => {
+            console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
+            console.log(shrunkArr);
+            console.log(shrunkArr.length);
             // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
             // console.log(check)
-            res.render('home', check)
+            res.render('home', shrunkArr)
         })
         .catch(console.log)
     });
+    app.post('/home', (req, res) => {
+        db.getAllUsers()
+        .then((data) => {
+            var check = arrayIsProfile(req.session.passport.user, data)
+            console.log(check)
+            return check
+        }).then((check) => {
+            let shrunkArr = [];
+            let firstProfile = check[Math.floor(Math.random() * 4)];
+            let secondPRofile = check[Math.floor(Math.random() * 4)];
+            shrunkArr.push(firstProfile);
+            shrunkArr.push(secondPRofile);
+            // console.log(shrunkArr);
+            return shrunkArr;
+        })
+        .then((shrunkArr) => {
+            console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
+            console.log(shrunkArr);
+            console.log(shrunkArr.length);
+            // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
+            // console.log(check)
+            res.render('home', shrunkArr)
+        })
+        .catch(console.log)
+    })
 
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
