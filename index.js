@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     // var raw = (req.session.passport.user._raw)
     // raw = (JSON.parse(raw))
     // res.send(raw)
-    console.log('here');
+    // console.log('here');
     if (req.session.passport){
         res.send(`WELCOME ${req.session.passport.user.username}!`);
     } else {
@@ -40,11 +40,11 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
-    console.log(userSession._json.avatar_url);
-    console.log(userSession._json.avatar_url)
+    // console.log(userSession._json.avatar_url);
+    // console.log(userSession._json.avatar_url)
     // console.log(typeof userSession.id)
     // console.log(userSession.id + ' LOOK FOR ME!!!')
-    console.log(typeof Number(userSession.id))
+    // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
         // console.log(data)
@@ -77,9 +77,9 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     var githubid = Number(req.body.githubid)
     var zip = Number(req.body.zip_code)
-    console.log('!!!!!!!!!!!!!!!!!!!!!');
-    console.log(typeof githubid);
-    console.log(typeof zip);
+    // console.log('!!!!!!!!!!!!!!!!!!!!!');
+    // console.log(typeof githubid);
+    // console.log(typeof zip);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
     db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), req.body.tabs, req.body.curly_braces, req.body.bio, 'Hey')
@@ -104,7 +104,7 @@ app.get('/search', (req, res) => {
 
 app.post('/search', (req, res) => {
     req.queryObject = generateQueryObject(req.body);
-    console.log(req.queryObject);
+    // console.log(req.queryObject);
     // res.redirect('/')
 
     // Helper functions
@@ -145,8 +145,8 @@ app.get('/home', (req, res) => {
             return check
         })
         .then((check) => {
-            console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
-            console.log(check)
+            // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
+            // console.log(check)
             res.render('home', check)
         })
         .catch(console.log)
@@ -154,13 +154,34 @@ app.get('/home', (req, res) => {
     
     
     
-    app.get('/messages', (req, res) => {
-        db.getMessagesByRecipient(req.session.passport.user)
-        res.render('messages')
-    });
-    app.post('/messages', (req, res) => {
-        res.render('messages')
-    });
+app.get('/messages', ensureAuthenticated, (req, res) => {
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+    console.log(github_id);
+
+    // check if user exists in database
+    db.checkUserExistence(github_id)
+        .then((data) => {
+            const isRegistered = data[0].user_exists;
+            if (isRegistered) {
+                res.render('messages')
+            } else {
+                res.redirect('/');
+            }
+            //console.log(isRegistered);
+        })
+        .catch(console.error);
+
+    // db.getMessagesByRecipient(req.session.passport.user);
+    //res.render('messages');
+    // .then((returnVal) => {
+    //     console.log(returnVal);
+    //     res.render('messages')
+    // })
+});
+app.post('/messages', (req, res) => {
+    res.render('messages')
+});
     
     
     app.get('/messages/new', (req, res) => {
@@ -171,12 +192,12 @@ app.get('/home', (req, res) => {
     });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        console.log(req.session.passport.user)
-        console.log(req.session.passport.user.id)
+        // console.log(req.session.passport.user)
+        // console.log(req.session.passport.user.id)
         db.getUserByGithubId((req.session.passport.user.id))
         .then((data) => {
-            console.log('LINE 142!!!!!!!!!!!!');
-            console.log(data)
+            // console.log('LINE 142!!!!!!!!!!!!');
+            // console.log(data)
             res.render('profile', {
                 data: data,
                 isProfile: isProfile(req.session.passport.user, data)
@@ -208,14 +229,18 @@ app.listen(5000, () => {
 
 
 function isProfile(session, dbUser){
-    console.log(session.id)
-    console.log(dbUser.github_id)
-    console.log(dbUser)
+    // console.log(session.id)
+    // console.log(dbUser.github_id)
+    // console.log(dbUser)
     if(Number(session.id) === Number(dbUser.github_id)){
-        console.log('they are the same')
+        // console.log('they are the same')
         return true
     }
 };
+
+function hasUserId() {
+
+}
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
