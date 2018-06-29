@@ -170,41 +170,27 @@ app.get('/home', (req, res) => {
         res.redirect('/messages')
     });
     
-    app.get('/profile', ensureAuthenticated, (req, res) => {
+app.get('/profile', ensureAuthenticated, (req, res) => {
         console.log(req.session.passport.user)
         console.log(req.session.passport.user.id)
         db.getUserByGithubId((req.session.passport.user.id))
         .then((data) => {
             console.log('LINE 142!!!!!!!!!!!!');
             console.log(data)
-            res.render('profile', data)
-        })
-    })
-    app.get('/profile/edit', (req, res) => {
-        var userSession = req.session.passport.user
-        var rawParsed = JSON.parse(userSession._raw)
-        var locArr = rawParsed.location.split(',');
-        var city = locArr[0];
-        var state = locArr[1];
-        res.render('editprofile', {
-            alias: userSession.username,
-            gitHubId: userSession.id,
-            gitHubAv: userSession._json.avatar_url,
-            username: userSession.username,
-            name: userSession.displayName,
-            gitURL: userSession.profileUrl,
-            city: city,
-            state: state
-        });   
-    })
-    app.post('/profile/edit', (req, res) => {
-        console.log('User information updated')
-        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
-            .then((data) => {
-                res.redirect('/profile')
+            res.render('profile', {
+                data: data,
+                isProfile: isProfile(req.session.passport.user, data)
             })
-    })
-    app.get('/profile/:user_id', (req, res) => {
+        })
+})
+app.post('/profile', (req, res) => {
+        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+                .then((data) => {
+                    res.redirect('/profile')
+})
+})
+
+app.get('/profile/:user_id', (req, res) => {
         db.getUserByUserId(req.params.user_id)
         .then((data) => {
             
