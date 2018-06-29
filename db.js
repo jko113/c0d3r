@@ -277,6 +277,10 @@ function nonSelectiveSearch(searchObject) {
     return db.any(result);
 }
 
+function checkUserExistence(github_id) {
+    return db.any('SELECT COUNT(*) = 1 AS user_exists FROM users WHERE github_id = $1;', [github_id]);
+}
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -297,7 +301,8 @@ module.exports = {
     getEditors: getEditors,
     hasUnreadMessages: hasUnreadMessages,
     selectiveSearch: selectiveSearch,
-    nonSelectiveSearch: nonSelectiveSearch
+    nonSelectiveSearch: nonSelectiveSearch,
+    checkUserExistence: checkUserExistence
 };
 
 // TESTS
@@ -356,6 +361,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // nonSelectiveSearch(parameters)
+//     .then(console.log)
+//     .catch(console.error);
+// checkUserExistence(10101)
 //     .then(console.log)
 //     .catch(console.error);
 
