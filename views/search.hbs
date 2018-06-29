@@ -1,51 +1,79 @@
 <div class="block">
   <form action="/search" method="POST">
-    Search for user:<br>
-    <input type="search" name="alias">
-    <input type="submit" value="Search" class="button is-primary">
-    <input type="reset" value="Reset" class="button is-primary">
+  <div class="field has-addons">
+    <div class="control">
+      <input type="text" name="alias" placeholder="Search for user..." class="input">
+    </div>
+    <div class="control">
+      <input type="submit" value="Search" class="button is-primary">
+    </div>
+    <div class="control">
+      <input type="reset" value="Reset" class="button is-primary">
+    </div>
+  </div>
   </form>
   <hr>
   <form action="/search" method="POST">
-      <div class="notification is-5">Filter by profile property:</div>
-      <div class="columns">
-          <div class="column">
-            Tabs or Spaces?<br>
-            <input type="checkbox" name="tabs-tabs">&nbsp;Tabs<br>
-            <input type="checkbox" name="tabs-spaces">&nbsp;Spaces<br>
-            <br>
-            Brackets: same line or next?<br>
-            <input type="checkbox" name="curlies-same">&nbsp;Same line<br>
-            <input type="checkbox" name="curlies-next">&nbsp;Next line<br>
-            <br>
-            Quotes: single or double?<br>
-            <input type="checkbox" name="quotes-single">&nbsp;Single<br>
-            <input type="checkbox" name="quotes-double">&nbsp;Double<br>
-            <br>
+      <div class="notification is-5">Filter profiles by</div>
+      <div class="field">
+        <div class="columns">
+            <div class="column">
+              <div class="block">
+                <label class="label">Tabs or Spaces?</label>
+                <input type="checkbox" class="checkbox" name="tabs_preference_1">&nbsp;Tabs<br>
+                <input type="checkbox" name="tabs_preference_2">&nbsp;Spaces<br>
+              </div>
+              <div class="block">
+                <label class="label">Brackets: same line or next?</label>
+                <input type="checkbox" name="same_line_curlies_preference_1">&nbsp;Same line<br>
+                <input type="checkbox" name="same_line_curlies_preference_2">&nbsp;Next line
+              </div>
+              <div class="block">
+                <label class="label">Quotes: single or double?</label>
+                <input type="checkbox" name="single_quotes_preference_1">&nbsp;Single<br>
+                <input type="checkbox" name="single_quotes_preference_2">&nbsp;Double
+              </div>
+            </div>
+            <div class="column">
+              <div class="block">
+                <label class="label">Preferred languages</label>
+                <input type="checkbox" name="languages_1">&nbsp;Java<br>
+                <input type="checkbox" name="languages_2">&nbsp;JavaScript
+              </div>
+              <div class="block">
+                <label class="label">Preferred text editor</label>
+                <input type="checkbox" name="editors_1">&nbsp;VS Code<br>
+                <input type="checkbox" name="editors_2">&nbsp;Atom
+              </div>
+              <div class="block">
+                {{!-- <label class="label">City</label> --}}
+                <input type="text" class="input" name="city" placeholder="City...">
+              </div>
+              <div class="block">
+                {{!-- <label class="label">State</label> --}}
+                <div class="select">
+                  <select name="state">
+                    <option>State</option>
+                    <option value="AL">AL</option>
+                    <option value="AK">AK</option>
+                    <option value="AS">AS</option>
+                  </select>
+                </div>
+              </div>
+              <div class="block">
+                {{!-- <label class="label">Zip</label> --}}
+                <input type="text" class="input" name="zip" placeholder="Zip...">
+              </div>
+              <div class="block">
+                {{!-- <label class="label">Employer</label> --}}
+                <input type="search" class="input" name="employer" placeholder="Employer...">
+              </div>
+            </div>
           </div>
-          <div class="column">
-            Preferred languages<br>
-            <input type="checkbox" name="lang-1">&nbsp;Java<br>
-            <input type="checkbox" name="lang-2">&nbsp;JavaScript<br>
-            <br>
-            Preferred text editor<br>
-            <input type="checkbox" name="editor-1">&nbsp;VS Code<br>
-            <input type="checkbox" name="editor-2">&nbsp;Atom<br>
-            <br>
-            City&nbsp;<input type="search" name="city"><br>
-            State&nbsp;
-            <select name="state">
-              <option value="AL">AL</option>
-              <option value="AK">AK</option>
-              <option value="AS">AS</option>
-            </select><br>
-            Zip&nbsp;<input type="search" name="zip"><br>
-            <br>
-            Company:&nbsp;<input type="search" name="company"><br>
-            <br>
-          </div>
+        <div class="block">
+          <input type="submit" value="Search" class="button is-primary">
+          <input type="reset" value="Reset" class="button is-primary">
         </div>
-    <input type="submit" value="Search" class="button is-primary">
-    <input type="reset" value="Reset" class="button is-primary">
+    </div>
   </form>
 </div>

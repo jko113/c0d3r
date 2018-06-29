@@ -101,8 +101,37 @@ app.get('/search', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-    console.log(req.body);
-    res.redirect('/')
+    req.queryObject = generateQueryObject(req.body);
+    console.log(req.queryObject);
+    // res.redirect('/')
+
+    // Helper functions
+    function generateQueryObject(body) {
+        let queryObject = {};
+        for (let item in req.body) {
+            let itemId = getId(item)[0];
+            let itemTable = getId(item)[1];
+            if(parseInt(itemId)){
+                if(!queryObject[itemTable]) {
+                    queryObject[itemTable] = []
+                }
+                queryObject[itemTable].push(parseInt(itemId));
+                
+            } else {
+                if(item == 'state' && req.body[item] == 'State') {
+                    queryObject[item] = '';
+                } else {
+                    queryObject[item] = req.body[item];
+                }
+            }
+        }
+        return queryObject;
+    }
+    function getId(itemName) {
+        itemName = itemName.split('_');
+        let id = itemName.pop();
+        return [id, itemName.join('_')];
+    }
 });
 
 
