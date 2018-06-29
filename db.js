@@ -42,7 +42,11 @@ function addUser(alias,github_id,github_avatar_url,name,github_url,employer,city
 function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio,github_id) {
     return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
         tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
+<<<<<<< HEAD
         WHERE github_id = $10',
+=======
+        WHERE user_id = $10 RETURNING true',
+>>>>>>> 322ef402a920e8e42349b60d730f65f32870c532
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
             single_quotes_preference,bio,github_id]);
 }
@@ -107,6 +111,175 @@ function getEditors() {
     return db.any('SELECT * FROM editors;');
 }
 
+function hasUnreadMessages(user_id) {
+    return db.one('SELECT COUNT(*) > 0 AS has_unread FROM message_recipients AS ma \
+    JOIN messages m ON m.message_id = ma.message_id \
+    WHERE ma.is_read = false AND ma.recipient_id = $1;', [user_id]);
+}
+
+// let parameters = {
+//     editors: [1,2],
+//     languages: [3,4],
+//     tabs_preference: [1],
+//     same_line_curlies_preference: 1,
+//     single_quotes_preference: 1,
+//     city: 'Seattle',
+//     state: 'WA',
+//     zip: 48765
+// };
+
+function selectiveSearch(searchObject) {
+
+    let chunks = {
+        editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
+        languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
+        tabs_preference: 'JOIN tabs_preferences tp ON tp.preference_id = users.tabs_preference ',
+        same_line_curlies_preference: 'JOIN same_line_curlies_preferences sl ON sl.preference_id = users.same_line_curlies_preference ',
+        single_quotes_preference: 'JOIN single_quotes_preferences sq ON sq.preference_id = users.single_quotes_preference ',
+        editorsWhere: 'editors.editor_id IN ',
+        languagesWhere: 'languages.lang_id IN ',
+        tabs_preferenceWhere: 'tp.preference_id = ',
+        same_line_curlies_preferenceWhere: 'sl.preference_id = ',
+        single_quotes_preferenceWhere: 'sq.preference_id = ',
+        cityWhere: 'users.city ILIKE ',
+        stateWhere: 'users.state ILIKE ',
+        zipWhere: 'users.zip = '
+    }
+
+    let result = '';
+    let select = 'SELECT DISTINCT users.* FROM users ';
+    let where = ' WHERE ';
+    Object.keys(searchObject).forEach((key, outerIndex) => {
+        // console.log(searchObject[key]);
+        // console.log(typeof searchObject[key]);
+        objString = '';
+
+        if (typeof searchObject[key] === 'object') {
+            
+            searchObject[key].forEach( (datum, innerIndex) => {
+                if (innerIndex === searchObject[key].length - 1) {
+                    objString += datum;
+                } else {
+                    objString += datum + ', '
+                }
+            });
+            if (chunks[key]) {
+                select += (chunks[key]);
+            }
+            
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + '(' + objString + ') ';
+            } else {
+                where += chunks[key + 'Where'] + '(' + objString + ') AND ';      
+            }
+
+        } else if (typeof searchObject[key] === 'number') {
+            // console.log('got number')
+            objString += searchObject[key];
+            if (chunks[key]) {
+                select += (chunks[key]);
+            }
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + objString;
+            } else {
+                where += chunks[key + 'Where'] + objString + ' AND ';      
+            }
+
+        } else if (typeof searchObject[key] === 'string') {
+            // console.log('got string')
+            objString += '\'' + searchObject[key] + '\'';
+
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += chunks[key + 'Where'] + objString;
+            } else {
+                where += chunks[key + 'Where'] + objString + ' AND ';      
+            }
+
+        } else {
+            console.log(typeof searchObject[key]);
+        }
+    });
+    result = select + where + ';';
+    console.log(result);
+    return db.any(result);
+}
+
+function nonSelectiveSearch(searchObject) {
+
+    let chunks = {
+        editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
+        languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
+        tabs_preference: 'JOIN tabs_preferences tp ON tp.preference_id = users.tabs_preference ',
+        same_line_curlies_preference: 'JOIN same_line_curlies_preferences sl ON sl.preference_id = users.same_line_curlies_preference ',
+        single_quotes_preference: 'JOIN single_quotes_preferences sq ON sq.preference_id = users.single_quotes_preference ',
+        editorsWhere: 'editors.editor_id IN ',
+        languagesWhere: 'languages.lang_id IN ',
+        tabs_preferenceWhere: 'tp.preference_id = ',
+        same_line_curlies_preferenceWhere: 'sl.preference_id = ',
+        single_quotes_preferenceWhere: 'sq.preference_id = ',
+        cityWhere: 'users.city ILIKE ',
+        stateWhere: 'users.state ILIKE ',
+        zipWhere: 'users.zip = '
+    }
+
+    let result = '';
+    let select = 'SELECT DISTINCT users.* FROM users ';
+    let where = ' WHERE ';
+    Object.keys(searchObject).forEach((key, outerIndex) => {
+        // console.log(searchObject[key]);
+        // console.log(typeof searchObject[key]);
+        objString = '';
+
+        if (typeof searchObject[key] === 'object') {
+            
+            searchObject[key].forEach( (datum, innerIndex) => {
+                if (innerIndex === searchObject[key].length - 1) {
+                    objString += datum;
+                } else {
+                    objString += datum + ', '
+                }
+            });
+            if (chunks[key]) {
+                select += (chunks[key]);
+            }
+            
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += '(' + chunks[key + 'Where'] + '(' + objString + ')) ';
+            } else {
+                where += '(' + chunks[key + 'Where'] + '(' + objString + ')) OR ';      
+            }
+
+        } else if (typeof searchObject[key] === 'number') {
+            // console.log('got number')
+            objString += searchObject[key];
+            if (chunks[key]) {
+                select += (chunks[key]);
+            }
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += '(' + chunks[key + 'Where'] + objString + ')';
+            } else {
+                where += '(' + chunks[key + 'Where'] + objString + ') OR ';      
+            }
+
+        } else if (typeof searchObject[key] === 'string') {
+            // console.log('got string')
+            objString += '\'' + searchObject[key] + '\'';
+
+            if (outerIndex === Object.keys(searchObject).length - 1) {
+                where += '(' + chunks[key + 'Where'] + objString + ')';
+            } else {
+                where += '(' + chunks[key + 'Where'] + objString + ') OR ';      
+            }
+
+        } else {
+            console.log(typeof searchObject[key]);
+        }
+    });
+    result = select + where + ';';
+    // console.log(result);
+    return db.any(result);
+}
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -124,7 +297,10 @@ module.exports = {
     sendMessage: sendMessage,
     getAllUsers: getAllUsers,
     getLanguages: getLanguages,
-    getEditors: getEditors
+    getEditors: getEditors,
+    hasUnreadMessages: hasUnreadMessages,
+    selectiveSearch: selectiveSearch,
+    nonSelectiveSearch: nonSelectiveSearch
 };
 
 // TESTS
@@ -140,7 +316,7 @@ module.exports = {
 // getUsersByZip(30055)
 //     .then(console.log)
 //     .catch(console.error);
-// addUser('testAlias', 12321, 'testImageUrl.com', 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 'tabs', 'sameLine', 'single', 'I\'m a coder who codes things!')
+// addUser('testAlias', 12321, 'testImageUrl.com', 'A Cool Name', 'http://github.com/url', null, null, null, 30893, '2018-04-04', 1, 1, 1, 'I\'m a coder who codes things!')
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByAlias('testAlias')
@@ -176,10 +352,19 @@ module.exports = {
 // getEditors()
 //     .then(console.log)
 //     .catch(console.error);
+// hasUnreadMessages(3)
+//     .then(console.log)
+//     .catch(console.error);
+// selectiveSearch(parameters)
+//     .then(console.log)
+//     .catch(console.error);
+// nonSelectiveSearch(parameters)
+//     .then(console.log)
+//     .catch(console.error);
 
-// editUser('Tommy Bumpkin', 'NASA', 'Washington, D.C.', null, 58474, 'Tabs', 'sameLine', 'single', 'I changed my profile', 1)
-    // .then(console.log)
-    // .catch(console.error);
+// editUser('Tommy Bumpkin', 'NASA', 'Washington, D.C.', null, 58474, 2, 2, 3, 'I changed my profile', 1)
+//     .then(console.log)
+//     .catch(console.error);
 /**** FIELDS NEEDED TO EDIT USER:
 user_id,name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio */
 
