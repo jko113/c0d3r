@@ -48,8 +48,8 @@ const setupAuth = (app) => {
   passport.serializeUser(function(user, done) {
     // placeholder for custom user serialization
     // null is for errors
-    console.log('we are serializing');
-    console.log(user);
+    // console.log('we are serializing');
+    // console.log(user);
     // This adds the following to the session:
     // {
     //   "passport": {
@@ -66,11 +66,11 @@ const setupAuth = (app) => {
   // This configures how passport checks what's in the
   // session to see if the login is still valid.
   passport.deserializeUser(function(user, done) {
-    console.log('we are deserializing');
+    // console.log('we are deserializing');
     // placeholder for custom user deserialization.
     // maybe you are going to get the user from mongo by id?
     // null is for errors
-    console.log(user);
+    // console.log(user);
     done(null, user);
   });
 
@@ -85,7 +85,7 @@ const setupAuth = (app) => {
   app.get('/login', passport.authenticate('github'));
 
   app.get('/logout', function(req, res, next) {
-    console.log('logging out');
+    // console.log('logging out');
     req.logout();
     res.redirect('/');
   });
@@ -101,8 +101,8 @@ const setupAuth = (app) => {
       // if you don't have your own route handler after the passport.authenticate middleware
       // then you get stuck in the infinite loop
 
-      console.log('you just logged in');
-      console.log(req.isAuthenticated());
+      // console.log('you just logged in');
+      // console.log(req.isAuthenticated());
       res.redirect('/newprofile');
     }
   );
@@ -120,11 +120,11 @@ const ensureAuthenticated = (req, res, next) => {
 
   if (req.isAuthenticated()) {
     // req.user is available for use here
-    console.log('we are all good');
+    // console.log('we are all good');
     return next();
   }
 
-  console.log('clearly, they are not authenticated');
+  // console.log('clearly, they are not authenticated');
   // denied. redirect to login
   res.redirect('/login');
 }
