@@ -40,21 +40,21 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
-    console.log(userSession._json.avatar_url);
-    console.log(userSession._json.avatar_url)
+    // console.log(userSession._json.avatar_url);
+    // console.log(userSession._json.avatar_url)
     // console.log(typeof userSession.id)
     // console.log(userSession.id + ' LOOK FOR ME!!!')
-    console.log(typeof Number(userSession.id))
+    // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
         // console.log(data)
         if(data){
             // console.log('data exists');
-            res.redirect('/home')
+            res.redirect('/home');
         } else {
             // console.log('data doesnt exist');
             // res.send(userSession)
-            var rawParsed = JSON.parse(userSession._raw)
+            var rawParsed = JSON.parse(userSession._raw);
             var locArr = rawParsed.location.split(',');
             var city = locArr[0];
             var state = locArr[1];
@@ -77,16 +77,15 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     var githubid = Number(req.body.githubid);
     var zip = Number(req.body.zip_code);
-    console.log('!!!!!!!!!!!!!!!!!!!!!');
-    console.log(req.body);
-    console.log(req.body.tabs);
-    console.log(req.body.curly_braces);
-    console.log(req.body.quotes);
+    // console.log('!!!!!!!!!!!!!!!!!!!!!');
+    // console.log(req.body);
+    // console.log(req.body.tabs);
+    // console.log(req.body.curly_braces);
+    // console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
     db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), 'Hey')
     .then((data) => {
-        // res.send(data)
         res.redirect('/home');
     })
     .catch(console.log);
@@ -173,12 +172,12 @@ app.get('/home', (req, res) => {
     });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        console.log(req.session.passport.user)
-        console.log(req.session.passport.user.id)
+        // console.log(req.session.passport.user)
+        // console.log(req.session.passport.user.id)
         db.getUserByGithubId((req.session.passport.user.id))
         .then((data) => {
-            console.log('LINE 142!!!!!!!!!!!!');
-            console.log(data)
+            // console.log('LINE 142!!!!!!!!!!!!');
+            // console.log(data)
             res.render('profile', {
                 data: data,
                 isProfile: isProfile(req.session.passport.user, data)
@@ -197,7 +196,9 @@ app.get('/profile/:user_id', (req, res) => {
         .then((data) => {
             
             isProfile(req.session.passport.user, data)
-            res.render('profile', data)
+            res.render('profile', {
+                data: data
+            })
         })    
     .catch(console.log)
 });
