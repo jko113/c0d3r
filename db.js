@@ -124,7 +124,7 @@ function hasUnreadMessages(user_id) {
 //     zip: 48765
 // };
 
-function selectiveSearch(searchObject) {
+function andSearch(searchObject) {
     // console.log(searchObject);
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
@@ -200,7 +200,7 @@ function selectiveSearch(searchObject) {
     return db.any(result);
 }
 
-function nonSelectiveSearch(searchObject) {
+function orSearch(searchObject) {
 
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
@@ -277,7 +277,7 @@ function nonSelectiveSearch(searchObject) {
 }
 
 function checkUserExistence(github_id) {
-    return db.any('SELECT COUNT(*) = 1 AS user_exists FROM users WHERE github_id = $1;', [github_id]);
+    return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
 
 module.exports = {
@@ -299,8 +299,8 @@ module.exports = {
     getLanguages: getLanguages,
     getEditors: getEditors,
     hasUnreadMessages: hasUnreadMessages,
-    selectiveSearch: selectiveSearch,
-    nonSelectiveSearch: nonSelectiveSearch,
+    andSearch: andSearch,
+    orSearch: orSearch,
     checkUserExistence: checkUserExistence
 };
 
