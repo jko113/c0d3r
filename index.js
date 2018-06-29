@@ -248,10 +248,6 @@ function isProfile(session, dbUser){
     }
 };
 
-function hasUserId() {
-
-}
-
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
     // console.log('LINE 171!!!!!!!!!!!!!')
