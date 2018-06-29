@@ -194,7 +194,6 @@ app.get('/profile/:user_id', (req, res) => {
         db.getUserByUserId(req.params.user_id)
         .then((data) => {
             
-            isProfile(req.session.passport.user, data)
             res.render('profile', data)
         })    
     .catch(console.log)
