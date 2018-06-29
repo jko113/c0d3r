@@ -1,3 +1,18 @@
+CREATE TABLE tabs_preferences (
+    preference_id serial primary key,
+    description varchar(30)
+);
+
+CREATE TABLE same_line_curlies_preferences (
+    preference_id serial primary key,
+    description varchar(30)
+);
+
+CREATE TABLE single_quotes_preferences (
+    preference_id serial primary key,
+    description varchar(30)
+);
+
 CREATE TABLE users (
     user_id serial primary key,
     alias varchar(30) NOT NULL,
@@ -10,9 +25,9 @@ CREATE TABLE users (
     state varchar(30),
     zip integer,
     join_date timestamp NOT NULL,
-    tabs_preference varchar(30),
-    same_line_curlies_preference varchar(30),
-    single_quotes_preference varchar(30),
+    tabs_preference integer REFERENCES tabs_preferences(preference_id),
+    same_line_curlies_preference integer REFERENCES same_line_curlies_preferences(preference_id),
+    single_quotes_preference integer REFERENCES single_quotes_preferences(preference_id),
     bio varchar(2000)
 );
 

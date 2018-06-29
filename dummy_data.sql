@@ -1,3 +1,18 @@
+INSERT INTO tabs_preferences (description) VALUES
+('tabs'),
+('spaces'),
+('don''t care');
+
+INSERT INTO same_line_curlies_preferences (description) VALUES
+('same line'),
+('next line'),
+('don''t care');
+
+INSERT INTO single_quotes_preferences (description) VALUES
+('single quotes'),
+('double quotes'),
+('don''t care');
+
 INSERT INTO users (
     alias,
     github_id,
@@ -24,9 +39,9 @@ INSERT INTO users (
     'GA',
     30055,
     '2018-06-25 12:31:56',
-    'tabs',
-    'sameLine',
-    'single',
+    1,
+    1,
+    1,
     'I am a coder who enjoys coding.'
 ),
 (
@@ -40,9 +55,9 @@ INSERT INTO users (
     null,
     73678,
     '2018-06-24 11:02:13',
-    'tabs',
-    'sameLine',
-    'single',
+    2,
+    2,
+    2,
     'This is for testing purposes only. No more, no less.'
 ),
 (
@@ -53,12 +68,12 @@ INSERT INTO users (
     'www.github.com/farflig',
     'Microsoft',
     'Seattle',
-    'Washington',
+    'WA',
     48765,
     '2018-06-23 11:12:46',
-    'spaces',
-    'differentLine',
-    'double',
+    3,
+    3,
+    3,
     'If you were a coder, would you code as excellently as me?'
 );
 
