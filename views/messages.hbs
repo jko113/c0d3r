@@ -2,6 +2,9 @@
 
 {{#each messages}}
 <div>
-    {{this}}
+    @ {{this.date_time}}, {{this.sender_alias}} said
+</div>
+<div>
+    {{this.message_text}}
 </div>
 {{/each}}

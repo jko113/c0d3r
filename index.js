@@ -158,44 +158,40 @@ app.get('/home', (req, res) => {
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
     const github_id = userData.id;
-    //console.log(github_id);
 
     // check if user exists in database
     db.checkUserExistence(github_id)
         .then((data) => {
-            //console.log(data);
-            const isRegistered = data[0].user_exists;
 
-            // render messages page if user exists
-            if (isRegistered) {
-                const internalId = data[0].user_id;
-                //console.log(internalId);
-                db.getMessagesByRecipient(internalId)
-                    .then( (messageData) => {
-                        res.render('messages', {
-                            messages: messageData
-                        });
-                    })
-                    .catch(console.error);
+            if (data && data.length) {
 
-                // db.getUserByGithubId(github_id)
-                //     .then((userData) => {
-                //         // console.log(userData);
-                //         res.render('messages')
-                //     }).catch(console.error);
-            // otherwise, redirect to root
+                const isRegistered = data[0].user_exists;
+    
+                // render messages page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                    db.getMessagesByRecipient(internalId)
+                        .then( (messageData) => {
+                            messageData.forEach((message, index) => {
+                                message.date_time = message.date_time.toString();
+                            });
+
+                            res.render('messages', {
+                                messages: messageData
+                            });
+                        })
+                        .catch(console.error);
+
+                // otherwise, redirect to root
+                } else {
+                    res.redirect('/');
+                }
             } else {
                 res.redirect('/');
             }
         })
         .catch(console.error);
 
-    // db.getMessagesByRecipient(req.session.passport.user);
-    //res.render('messages');
-    // .then((returnVal) => {
-    //     console.log(returnVal);
-    //     res.render('messages')
-    // })
 });
 app.post('/messages', (req, res) => {
     res.render('messages')

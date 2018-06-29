@@ -74,9 +74,10 @@ function getMessagesBySender (author_id) {
 }
 
 function getMessagesByRecipient (recipient_id) {
-    return db.any('SELECT mess.* FROM messages AS mess JOIN \
+    return db.any('SELECT mess.*, users.alias AS sender_alias FROM messages AS mess JOIN \
     message_recipients AS ma ON mess.message_id = ma.message_id \
-    WHERE ma.recipient_id = $1;', [recipient_id]);
+    JOIN users ON mess.author_id = users.user_id \
+    WHERE ma.recipient_id = $1 ORDER BY date_time DESC;', [recipient_id]);
 }
 
 function createMessage(author_id, now, message_text) {
@@ -279,6 +280,10 @@ function orSearch(searchObject) {
 function checkUserExistence(github_id) {
     return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
+
+// checkUserExistence(5)
+//     .then(console.log)
+//     .catch(console.error);
 
 module.exports = {
     getUserByUserId: getUserByUserId,
