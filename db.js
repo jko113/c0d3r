@@ -70,7 +70,9 @@ function getUsersByEmployer(employer) {
 }
 
 function getMessagesBySender (author_id) {
-    return db.any('SELECT * FROM messages WHERE author_id = $1;', [author_id]);
+    return db.any('SELECT mess.*, users.alias FROM messages AS mess \
+    JOIN users ON users.user_id = mess.author_id \
+    WHERE author_id = $1;', [author_id]);
 }
 
 function getMessagesByRecipient (recipient_id) {

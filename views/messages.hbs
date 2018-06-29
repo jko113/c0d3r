@@ -1,10 +1,27 @@
-<h1>This is the logged in messages thinger.</h1>
+<h1><strong>This is the logged in messages thinger.</strong></h1>
 
-{{#each messages}}
-<div>
-    @ {{this.date_time}}, {{this.sender_alias}} said
+{{!-- <div class="is-hidden" data-display> --}}
+<div data-display class='is-hidden'>
+    <div>Outbox</div>
+
+    {{#each messages.sent}}
+        <div>
+            @ {{this.date_time}}, {{this.sender_alias}} said
+        </div>
+        <div>
+            {{this.message_text}}
+        </div>
+    {{/each}}
 </div>
-<div>
-    {{this.message_text}}
+
+<div data-display>
+    <div>Inbox</div>
+    {{#each messages.received}}
+        <div>
+            @ {{this.date_time}}, {{this.sender_alias}} said
+        </div>
+        <div>
+            {{this.message_text}}
+        </div>
+    {{/each}}
 </div>
-{{/each}}
