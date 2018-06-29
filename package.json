@@ -1,7 +1,6 @@
 {
   "name": "c0d3r",
   "version": "1.0.0",
-  "description": "",
   "main": "db.js",
   "scripts": {
     "dev": "nodemon index.js",
@@ -24,5 +23,14 @@
   },
   "devDependencies": {
     "nodemon": "^1.17.5"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jko113/c0d3r.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jko113/c0d3r/issues"
+  },
+  "homepage": "https://github.com/jko113/c0d3r#readme",
+  "description": ""
 }

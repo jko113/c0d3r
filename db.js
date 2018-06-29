@@ -43,7 +43,6 @@ function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies
     return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
         tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
         WHERE github_id = $10',
-
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
             single_quotes_preference,bio,github_id]);
 }
@@ -117,16 +116,16 @@ function hasUnreadMessages(user_id) {
 // let parameters = {
 //     editors: [1,2],
 //     languages: [3,4],
-//     tabs_preference: [1],
-//     same_line_curlies_preference: 1,
-//     single_quotes_preference: 1,
+//     tabs_preference: [1,2],
+//     same_line_curlies_preference: [1],
+//     single_quotes_preference: [1],
 //     city: 'Seattle',
 //     state: 'WA',
 //     zip: 48765
 // };
 
 function selectiveSearch(searchObject) {
-
+    // console.log(searchObject);
     let chunks = {
         editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
         languages: 'JOIN user_languages ul ON ul.user_id = users.user_id JOIN languages ON languages.lang_id = ul.lang_id ',
@@ -135,9 +134,9 @@ function selectiveSearch(searchObject) {
         single_quotes_preference: 'JOIN single_quotes_preferences sq ON sq.preference_id = users.single_quotes_preference ',
         editorsWhere: 'editors.editor_id IN ',
         languagesWhere: 'languages.lang_id IN ',
-        tabs_preferenceWhere: 'tp.preference_id = ',
-        same_line_curlies_preferenceWhere: 'sl.preference_id = ',
-        single_quotes_preferenceWhere: 'sq.preference_id = ',
+        tabs_preferenceWhere: 'tp.preference_id IN ',
+        same_line_curlies_preferenceWhere: 'sl.preference_id IN ',
+        single_quotes_preferenceWhere: 'sq.preference_id IN ',
         cityWhere: 'users.city ILIKE ',
         stateWhere: 'users.state ILIKE ',
         zipWhere: 'users.zip = '
@@ -197,7 +196,7 @@ function selectiveSearch(searchObject) {
         }
     });
     result = select + where + ';';
-    console.log(result);
+    // console.log(result);
     return db.any(result);
 }
 
@@ -211,9 +210,9 @@ function nonSelectiveSearch(searchObject) {
         single_quotes_preference: 'JOIN single_quotes_preferences sq ON sq.preference_id = users.single_quotes_preference ',
         editorsWhere: 'editors.editor_id IN ',
         languagesWhere: 'languages.lang_id IN ',
-        tabs_preferenceWhere: 'tp.preference_id = ',
-        same_line_curlies_preferenceWhere: 'sl.preference_id = ',
-        single_quotes_preferenceWhere: 'sq.preference_id = ',
+        tabs_preferenceWhere: 'tp.preference_id IN ',
+        same_line_curlies_preferenceWhere: 'sl.preference_id IN ',
+        single_quotes_preferenceWhere: 'sq.preference_id IN ',
         cityWhere: 'users.city ILIKE ',
         stateWhere: 'users.state ILIKE ',
         zipWhere: 'users.zip = '
