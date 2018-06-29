@@ -109,11 +109,11 @@ INSERT INTO user_editors (user_id, editor_id) VALUES
 
 INSERT INTO messages (author_id, date_time, message_text) VALUES
 (1, '2018-05-05 00:00:00', 'This is a test message'),
-(2, '2018-05-05 00:00:00', 'This is a second message'),
-(3, '2018-05-05 00:00:00', 'This is a third message'),
-(2, '2018-05-05 00:00:00', 'This is a fourth message'),
-(1, '2018-05-05 00:00:00', 'This is a fifth message'),
-(3, '2018-05-05 00:00:00', 'This is a sixth message');
+(2, '2018-05-06 00:00:00', 'This is a second message'),
+(3, '2018-05-07 00:00:00', 'This is a third message'),
+(2, '2018-05-08 00:00:00', 'This is a fourth message'),
+(1, '2018-05-09 00:00:00', 'This is a fifth message'),
+(3, '2018-05-10 00:00:00', 'This is a sixth message');
 
 INSERT INTO message_recipients (message_id, recipient_id, is_read) VALUES
 (1, 3, false),
