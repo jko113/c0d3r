@@ -63,10 +63,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 gitHubId: userSession.id,
                 gitHubAv: userSession._json.avatar_url,
                 username: userSession.username,
-                name: userSession.displayName,
+                name: userSession.displayName, // TODO: this isn't working
                 gitURL: userSession.profileUrl,
                 city: city,
-                state: state
+                state: state,
+                bio: rawParsed.bio
             });   
         }
     });
@@ -84,7 +85,7 @@ app.post('/newprofile', (req, res) => {
     console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
     .then((data) => {
         // res.send(data)
         res.redirect('/home');
