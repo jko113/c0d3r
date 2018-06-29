@@ -106,9 +106,26 @@ app.get('/search', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
+    // TODO Check if this contains post results, if so, display 'clear filter'
+    // button that redirects to home page
     req.queryObject = generateQueryObject(req.body);
-    // console.log(req.queryObject);
-    // res.redirect('/')
+    console.log(req.queryObject);
+    // TODO Handle case where user doesn't choose anything to filter on
+    // if(req.queryObject.length = 0)
+    if(req.body.searchType == 'and') {
+        db.andSearch(req.queryObject)
+            .then((data) => {
+                console.log(data);
+                res.render('home', data);
+            })
+            .catch(console.log);
+    } else {
+        db.orSearch(req.queryObject)
+            .then((data) => {
+                console.log(data);
+                res.render('home', data);
+            });
+    }
 
     // Helper functions
     function generateQueryObject(body) {
@@ -121,12 +138,13 @@ app.post('/search', (req, res) => {
                     queryObject[itemTable] = []
                 }
                 queryObject[itemTable].push(parseInt(itemId));
-                
             } else {
-                if(item == 'state' && req.body[item] == 'State') {
-                    queryObject[item] = '';
-                } else {
-                    queryObject[item] = req.body[item];
+                if(item != 'searchType' && req.body[item] != 'State' && req.body[item] != '') {
+                    if (item == 'zip') {
+                        queryObject[item] = parseInt(req.body[item]);
+                    } else {
+                        queryObject[item] = req.body[item];
+                    }
                 }
             }
         }
