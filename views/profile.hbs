@@ -1,7 +1,7 @@
 <div class="block">
     <form action="/profile" method="POST">
 
-    <input type="hidden" name="user_id" value="{{user_id}}">
+    <input type="hidden" name="user_id" value="{{data.user_id}}">
 
     <div class="field is-horizontal">
         <div class="field-label">
@@ -10,8 +10,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{name}}</div>
-                    <input class="input is-hidden" type="text" value="{{name}}" data-display></label>
+                    <div data-display>{{data.name}}</div>
+                    <input class="input is-hidden" type="text" value="{{data.name}}" data-display></label>
                 </div>
             </div>
         </div>
@@ -24,8 +24,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{employer}}</div>
-                    <input class="input is-hidden" type="text" value="{{employer}}" data-display></label>
+                    <div data-display>{{data.employer}}</div>
+                    <input class="input is-hidden" type="text" value="{{data.employer}}" data-display></label>
                 </div>
             </div>
         </div>
@@ -38,8 +38,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{city}}, {{state}}</div>
-                    <input class="input is-hidden is-expanded" type="text" value="{{city}}" data-display></label>
+                    <div data-display>{{data.city}}, {{data.state}}</div>
+                    <input class="input is-hidden is-expanded" type="text" value="{{data.city}}" data-display></label>
                 </div>
             </div>
             <div class="field">
@@ -56,7 +56,7 @@
             </div>
             <div class="field">
                 <div class="control">
-                    <input class="input is-hidden" type="text" value="{{zip}}" placeholder="Zip..." data-display></label>
+                    <input class="input is-hidden" type="text" value="{{data.zip}}" placeholder="Zip..." data-display></label>
                 </div>
             </div>
         </div>
@@ -69,8 +69,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{bio}}</div>
-                    <textarea class="textarea is-hidden" placeholder="Bio..." data-display>{{bio}}</textarea>
+                    <div data-display>{{data.bio}}</div>
+                    <textarea class="textarea is-hidden" placeholder="Bio..." data-display>{{data.bio}}</textarea>
                 </div>
             </div>
         </div>
@@ -83,8 +83,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{alias}}</div>
-                    <input class="input is-hidden" type="text" value="{{alias}}" data-display></label>
+                    <div data-display>{{data.alias}}</div>
+                    <input class="input is-hidden" type="text" value="{{data.alias}}" data-display></label>
                 </div>
             </div>
         </div>
@@ -97,7 +97,117 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <a href="{{github_url}}">{{github_url}}</a>
+                    <a href="{{data.github_url}}">{{data.github_url}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Tabs or Spaces?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="tabs_preference" value="1">
+                        Tabs
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="tabs_preference" value="2">
+                        Spaces
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Brackets: same line or next?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="same_line_curlies_preference" value="1">
+                        Same line
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="same_line_curlies_preference" value="2">
+                        Next line
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Quotes: single or double?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="single_quotes_preference" value="1">
+                        Single
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="single_quotes_preference" value="2">
+                        Double
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Preferred languages</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="1">
+                        Java
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="2">
+                        JavaScript
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Preferred text editor</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="editors" value="1">
+                        VS Code
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="editors" value="2">
+                        Atom
+                    </label>
                 </div>
             </div>
         </div>
@@ -110,7 +220,7 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div>{{join_date}}</div>
+                    <div>{{data.join_date}}</div>
                 </div>
             </div>
         </div>

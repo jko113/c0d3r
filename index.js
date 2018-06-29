@@ -186,18 +186,20 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
         })
 })
 app.post('/profile', (req, res) => {
-        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
-                .then((data) => {
-                    res.redirect('/profile')
-})
-})
+    db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+        .then((data) => {
+            res.redirect('/profile');
+        })
+});
 
 app.get('/profile/:user_id', (req, res) => {
         db.getUserByUserId(req.params.user_id)
         .then((data) => {
             
-            isProfile(req.session.passport.user, data)
-            res.render('profile', data)
+            res.render('profile', {
+                data: data,
+                isProfile: null
+            })
         })    
     .catch(console.log)
 });
