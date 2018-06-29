@@ -79,11 +79,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     var githubid = Number(req.body.githubid);
     var zip = Number(req.body.zip_code);
-    console.log('!!!!!!!!!!!!!!!!!!!!!');
-    console.log(req.body);
-    console.log(req.body.tabs);
-    console.log(req.body.curly_braces);
-    console.log(req.body.quotes);
+    // console.log('!!!!!!!!!!!!!!!!!!!!!');
+    // console.log(req.body);
+    // console.log(req.body.tabs);
+    // console.log(req.body.curly_braces);
+    // console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
     db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
@@ -158,7 +158,7 @@ app.get('/home', (req, res) => {
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
     const github_id = userData.id;
-    console.log(github_id);
+    //console.log(github_id);
 
     // check if user exists in database
     db.checkUserExistence(github_id)
@@ -183,14 +183,6 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
 app.post('/messages', (req, res) => {
     res.render('messages')
 });
-    
-    
-    app.get('/messages/new', (req, res) => {
-        res.render('messages-new')
-    });
-    app.post('/messages/new', (req, res) => {
-        res.redirect('/messages')
-    });
 
 app.get('/messages/new', (req, res) => {
     res.render('messages-new')
