@@ -26,7 +26,8 @@ app.get('/', (req, res) => {
     // res.send(raw)
     console.log('here');
     if (req.session.passport){
-        res.send(`WELCOME ${req.session.passport.user.username}!`);
+        // res.send(`WELCOME ${req.session.passport.user.username}!`);
+        res.redirect('home');
     } else {
         // res.send('Welcome!')
         res.sendFile(__dirname + '/public/frontpage.html');
@@ -63,10 +64,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 gitHubId: userSession.id,
                 gitHubAv: userSession._json.avatar_url,
                 username: userSession.username,
-                name: userSession.displayName,
+                name: userSession.displayName, // TODO: this isn't working
                 gitURL: userSession.profileUrl,
                 city: city,
-                state: state
+                state: state,
+                bio: rawParsed.bio
             });   
         }
     });
@@ -84,7 +86,7 @@ app.post('/newprofile', (req, res) => {
     console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
     .then((data) => {
         // res.send(data)
         res.redirect('/home');
@@ -153,24 +155,22 @@ app.get('/home', (req, res) => {
         })
         .catch(console.log)
     });
-    
-    
-    
-    app.get('/messages', (req, res) => {
-        db.getMessagesByRecipient(req.session.passport.user)
-        res.render('messages')
-    });
-    app.post('/messages', (req, res) => {
-        res.render('messages')
-    });
-    
-    
-    app.get('/messages/new', (req, res) => {
-        res.render('messages-new')
-    });
-    app.post('/messages/new', (req, res) => {
-        res.redirect('/messages')
-    });
+
+app.get('/messages', (req, res) => {
+    db.getMessagesByRecipient(req.session.passport.user)
+    res.render('messages')
+});
+app.post('/messages', (req, res) => {
+    res.render('messages')
+});
+
+
+app.get('/messages/new', (req, res) => {
+    res.render('messages-new')
+});
+app.post('/messages/new', (req, res) => {
+    res.redirect('/messages')
+});
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
         console.log(req.session.passport.user)
