@@ -39,12 +39,16 @@ function addUser(alias,github_id,github_avatar_url,name,github_url,employer,city
         [alias,github_id,github_avatar_url,name,github_url,employer,city,state,zip,join_date,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio]);
 }
 
-function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio,user_id) {
+function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio,github_id) {
     return db.query('UPDATE users SET name = $1, employer = $2, city = $3, state = $4, zip = $5, \
         tabs_preference = $6, same_line_curlies_preference = $7, single_quotes_preference = $8, bio = $9 \
+<<<<<<< HEAD
+        WHERE github_id = $10',
+=======
         WHERE user_id = $10 RETURNING true',
+>>>>>>> 322ef402a920e8e42349b60d730f65f32870c532
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
-            single_quotes_preference,bio,user_id]);
+            single_quotes_preference,bio,github_id]);
 }
 
 function getUserByAlias(searchString) {

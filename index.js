@@ -40,34 +40,35 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
-    // console.log(userSession._raw);
-    // console.log(rawParsed)
-    console.log(typeof userSession.id)
-    console.log(userSession.id + ' LOOK FOR ME!!!')
+    console.log(userSession._json.avatar_url);
+    console.log(userSession._json.avatar_url)
+    // console.log(typeof userSession.id)
+    // console.log(userSession.id + ' LOOK FOR ME!!!')
     console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
-        console.log(data)
+        // console.log(data)
         if(data){
-            console.log('data exists');
+            // console.log('data exists');
             res.redirect('/home')
         } else {
-            console.log('data doesnt exist');
+            // console.log('data doesnt exist');
             // res.send(userSession)
             var rawParsed = JSON.parse(userSession._raw)
-                var locArr = rawParsed.location.split(',');
-                var city = locArr[0];
-                var state = locArr[1];
-                res.render('makeprofile', {
-                   alias: userSession.username,
-                   gitHubId: userSession.id,
-                   username: userSession.username,
-                   name: userSession.displayName,
-                   gitURL: userSession.profileUrl,
-                   city: city,
-                   state: state
-                });   
-            }
+            var locArr = rawParsed.location.split(',');
+            var city = locArr[0];
+            var state = locArr[1];
+            res.render('makeprofile', {
+                alias: userSession.username,
+                gitHubId: userSession.id,
+                gitHubAv: userSession._json.avatar_url,
+                username: userSession.username,
+                name: userSession.displayName,
+                gitURL: userSession.profileUrl,
+                city: city,
+                state: state
+            });   
+        }
     });
     // console.log(req.session.passport.user.username);
     // res.send(req.session.passport.user.username);
@@ -81,18 +82,19 @@ app.post('/newprofile', (req, res) => {
     console.log(typeof zip);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), true, true, true, 'Hey')
-        .then((data) => {
-            // res.send(data)
-            res.redirect('/home');
-        })
-        .catch(console.log);
+    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), req.body.tabs, req.body.curly_braces, req.body.bio, 'Hey')
+    .then((data) => {
+        // res.send(data)
+        res.redirect('/home');
+    })
+    .catch(console.log);
 });
-  
+
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
 // can revisit and reassess later as needed !!!!!!!!!!!!!!
 // app.get('/setup', ensureAuthenticated, (req, res) => {
+
 //     res.send(req.session.passport.user)
 // });
 
@@ -145,46 +147,70 @@ app.get('/home', (req, res) => {
         .then((check) => {
             console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
             console.log(check)
-            res.render('home', {
-                check: check
-            })
+            res.render('home', check)
         })
         .catch(console.log)
-});
-
-
-app.get('/messages', (req, res) => {
-    res.render('messages')
-});
-app.post('/messages', (req, res) => {
-    res.render('messages')
-});
-
-
-app.get('/messages/new', (req, res) => {
-    res.render('messages-new')
-});
-app.post('/messages/new', (req, res) => {
-    res.redirect('/messages')
-});
-
-app.get('/profile', (req, res) => {
-    console.log(req.session.passport.user.id)
-    db.getUserByGithubId((req.session.passport.user.id))
+    });
+    
+    
+    
+    app.get('/messages', (req, res) => {
+        db.getMessagesByRecipient(req.session.passport.user)
+        res.render('messages')
+    });
+    app.post('/messages', (req, res) => {
+        res.render('messages')
+    });
+    
+    
+    app.get('/messages/new', (req, res) => {
+        res.render('messages-new')
+    });
+    app.post('/messages/new', (req, res) => {
+        res.redirect('/messages')
+    });
+    
+    app.get('/profile', ensureAuthenticated, (req, res) => {
+        console.log(req.session.passport.user)
+        console.log(req.session.passport.user.id)
+        db.getUserByGithubId((req.session.passport.user.id))
         .then((data) => {
             console.log('LINE 142!!!!!!!!!!!!');
             console.log(data)
             res.render('profile', data)
         })
-})
-
-app.get('/profile/:user_id', (req, res) => {
-    db.getUserByUserId(req.params.user_id)
-    .then((data) => {
-
-        isProfile(req.session.passport.user, data)
-        res.render('profile', data)
-    })    
+    })
+    app.get('/profile/edit', (req, res) => {
+        var userSession = req.session.passport.user
+        var rawParsed = JSON.parse(userSession._raw)
+        var locArr = rawParsed.location.split(',');
+        var city = locArr[0];
+        var state = locArr[1];
+        res.render('editprofile', {
+            alias: userSession.username,
+            gitHubId: userSession.id,
+            gitHubAv: userSession._json.avatar_url,
+            username: userSession.username,
+            name: userSession.displayName,
+            gitURL: userSession.profileUrl,
+            city: city,
+            state: state
+        });   
+    })
+    app.post('/profile/edit', (req, res) => {
+        console.log('User information updated')
+        db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+            .then((data) => {
+                res.redirect('/profile')
+            })
+    })
+    app.get('/profile/:user_id', (req, res) => {
+        db.getUserByUserId(req.params.user_id)
+        .then((data) => {
+            
+            isProfile(req.session.passport.user, data)
+            res.render('profile', data)
+        })    
     .catch(console.log)
 });
 
