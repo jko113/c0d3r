@@ -1,10 +1,130 @@
-<h1>{{alias}}</h1>
-<h1>{{github_url}}</h1>
-<h1>{{name}}</h1>
-<h1>{{employer}}</h1>
-<h1>{{city}},{{state}}</h1>
-<h1>{{zip}}</h1>
-<h1>Member Since: {{join_date}}</h1>
-{{#if isProfile}}
-    <h1>Make some changes</h1>
-{{/if}}
+<div class="block">
+    <form action="/profile" method="POST">
+
+    <input type="hidden" name="user_id" value="{{user_id}}">
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Name</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{name}}</div>
+                    <input class="input is-hidden" type="text" value="{{name}}" data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Employer</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{employer}}</div>
+                    <input class="input is-hidden" type="text" value="{{employer}}" data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Location</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{city}}, {{state}}</div>
+                    <input class="input is-hidden is-expanded" type="text" value="{{city}}" data-display></label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <div class="select is-hidden" data-display>
+                        <select name="state">
+                            <option>State</option>
+                            <option value="AL">AL</option>
+                            <option value="AK">AK</option>
+                            <option value="AS">AS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-hidden" type="text" value="{{zip}}" placeholder="Zip..." data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Bio</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{bio}}</div>
+                    <textarea class="textarea is-hidden" placeholder="Bio..." data-display>{{bio}}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">GitHub Alias</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{alias}}</div>
+                    <input class="input is-hidden" type="text" value="{{alias}}" data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">GitHub URL</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <a href="{{github_url}}">{{github_url}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Member since</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div>{{join_date}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        {{#if isProfile}}
+            <div class="field">
+                <div class="control">
+                    <input type="button" value="Edit Profile" class="button is-primary" data-edit-button>
+                    <input type="submit" value="Save Profile" class="button is-primary is-hidden" data-save-button>
+                    <input type="button" value="Cancel" class="button is-primary is-hidden" data-cancel-button>
+                    
+                </div>
+            </div>
+        {{/if}}
+    </form>
+</div>
+<script src="/js/profile.js"></script>
