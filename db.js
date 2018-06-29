@@ -113,16 +113,16 @@ function hasUnreadMessages(user_id) {
     WHERE ma.is_read = false AND ma.recipient_id = $1;', [user_id]);
 }
 
-let parameters = {
-    editors: [1,2],
-    languages: [3,4],
-    tabs_preference: [1],
-    same_line_curlies_preference: 1,
-    single_quotes_preference: 1,
-    city: 'Seattle',
-    state: 'WA',
-    zip: 48765
-};
+// let parameters = {
+//     editors: [1,2],
+//     languages: [3,4],
+//     tabs_preference: [1],
+//     same_line_curlies_preference: 1,
+//     single_quotes_preference: 1,
+//     city: 'Seattle',
+//     state: 'WA',
+//     zip: 48765
+// };
 
 function selectiveSearch(searchObject) {
 
