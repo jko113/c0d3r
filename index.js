@@ -75,14 +75,16 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/newprofile', (req, res) => {
-    var githubid = Number(req.body.githubid)
-    var zip = Number(req.body.zip_code)
+    var githubid = Number(req.body.githubid);
+    var zip = Number(req.body.zip_code);
     console.log('!!!!!!!!!!!!!!!!!!!!!');
-    console.log(typeof githubid);
-    console.log(typeof zip);
+    console.log(req.body);
+    console.log(req.body.tabs);
+    console.log(req.body.curly_braces);
+    console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), req.body.tabs, req.body.curly_braces, req.body.bio, 'Hey')
+    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), 'Hey')
     .then((data) => {
         // res.send(data)
         res.redirect('/home');
