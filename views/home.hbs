@@ -1,6 +1,122 @@
+<link rel="stylesheet" href="/stylesheets/home.css">
+
+
 {{#each this}}
 
+    
+<div class="profile-container">
 <a href="/profile/{{user_id}}">
-<h1>{{alias}}</h1>
+<div>
+<img src="{{github_avatar_url}}">
+<div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Name</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Location</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{city}}, {{state}}</div>
+                    <input class="input is-hidden is-expanded" type="text" value="{{city}}" data-display></label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <div class="select is-hidden" data-display>
+                        <select name="state">
+                            <option>State</option>
+                            <option value="AL">AL</option>
+                            <option value="AK">AK</option>
+                            <option value="AS">AS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-hidden" type="text" value="{{zip}}" placeholder="Zip..." data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Employer</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{employer}}</div>
+                    <input class="input is-hidden" type="text" value="{{employer}}" data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">GitHub Alias</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{alias}}</div>
+                    <input class="input is-hidden" type="text" value="{{alias}}" data-display></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Preferred languages</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="1">
+                        Java
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="2">
+                        JavaScript
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Member since</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div>{{join_date}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </a>
+</div>
+</div>
+
 {{/each}}
+<form action="/home" method="post">
+<input type="submit" class="add-profiles" value="More Users">
+</form>
+
+
+{{!-- <script src="/js/home.js"></script> --}}
