@@ -277,18 +277,26 @@ app.post('/messages/new', (req, res) => {
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        // console.log(req.session.passport.user)
-        // console.log(req.session.passport.user.id)
-        db.getUserByGithubId((req.session.passport.user.id))
-        .then((data) => {
-            // console.log('LINE 142!!!!!!!!!!!!');
-            // console.log(data)
-            res.render('profile', {
-                data: data,
-                isProfile: isProfile(req.session.passport.user, data)
+        let id = req.session.passport.user.id;
+        db.getUserByGithubId(id)
+            .then(data => {
+                let languages = db.getUserLanguages(data.user_id);
+                let editors = db.getUserEditors(data.user_id);
+                Promise.all([languages, editors])
+                    .then(moreData => {
+                        console.log(data);
+                        res.render('profile', {
+                            data: data,
+                            isProfile: isProfile(req.session.passport.user, data),
+                            language: moreData[0],
+                            editor: moreData[1]
+                        })
+                    })
+                    .catch(console.log);
             })
-        })
-})
+            .catch(console.log);
+        });
+
 app.post('/profile', (req, res) => {
     db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
         .then((data) => {
