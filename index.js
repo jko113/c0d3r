@@ -10,6 +10,7 @@ const setupAuth = require('./auth');
 const ensureAuthenticated = require('./auth').ensureAuthenticated;
 const expressHbs = require('express-handlebars');
 const bodyParser = require('body-parser');
+const port = 5000;
 
 app.engine('.hbs', expressHbs({defaultLayout: 'layout', extname: '.hbs'}));
 app.set('view engine', '.hbs');
@@ -49,29 +50,29 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
         // console.log(data)
-        if(data){
-            // console.log('data exists');
-            res.redirect('/home');
-        } else {
-            // console.log('data doesnt exist');
-            // res.send(userSession)
-            console.log(userSession)
-            var rawParsed = JSON.parse(userSession._raw);
-            var locArr = rawParsed.location.split(',');
-            var city = locArr[0];
-            var state = locArr[1];
-            res.render('makeprofile', {
-                alias: userSession.username,
-                gitHubId: userSession.id,
-                gitHubAv: userSession._json.avatar_url,
-                username: userSession.username,
-                name: userSession.displayName, // TODO: this isn't working
-                gitURL: userSession.profileUrl,
-                city: city,
-                state: state,
-                bio: rawParsed.bio
-            });   
-        }
+            if(data){
+                // console.log('data exists');
+                res.redirect('/home');
+            } else {
+                // console.log('data doesnt exist');
+                // res.send(userSession)
+                // console.log(userSession)
+                var rawParsed = JSON.parse(userSession._raw);
+                var locArr = rawParsed.location.split(',');
+                var city = locArr[0];
+                var state = locArr[1];
+                res.render('makeprofile', {
+                    alias: userSession.username,
+                    gitHubId: userSession.id,
+                    gitHubAv: userSession._json.avatar_url,
+                    username: userSession.username,
+                    name: userSession.displayName, // TODO: this isn't working
+                    gitURL: userSession.profileUrl,
+                    city: city,
+                    state: state,
+                    bio: rawParsed.bio
+                });   
+            }
     });
     // console.log(req.session.passport.user.username);
     // res.send(req.session.passport.user.username);
@@ -109,20 +110,20 @@ app.post('/search', (req, res) => {
     // TODO Check if this contains post results, if so, display 'clear filter'
     // button that redirects to home page
     req.queryObject = generateQueryObject(req.body);
-    console.log(req.queryObject);
+    // console.log(req.queryObject);
     // TODO Handle case where user doesn't choose anything to filter on
     // if(req.queryObject.length = 0)
     if(req.body.searchType == 'and') {
         db.andSearch(req.queryObject)
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 res.render('home', data);
             })
             .catch(console.log);
     } else {
         db.orSearch(req.queryObject)
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 res.render('home', data);
             });
     }
@@ -159,55 +160,61 @@ app.post('/search', (req, res) => {
 
 
 app.get('/home', (req, res) => {
-    db.getAllUsers()
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+
+    db.checkUserExistence(github_id)
         .then((data) => {
-            var check = arrayIsProfile(req.session.passport.user, data)
-            console.log(check)
-            return check
-        }).then((check) => {
-            let shrunkArr = [];
-            let firstProfile = check[Math.floor(Math.random() * 4)];
-            let secondPRofile = check[Math.floor(Math.random() * 4)];
-            shrunkArr.push(firstProfile);
-            shrunkArr.push(secondPRofile);
-            // console.log(shrunkArr);
-            return shrunkArr;
-        })
-        .then((shrunkArr) => {
-            console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
-            console.log(shrunkArr);
-            console.log(shrunkArr.length);
-            // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
-            // console.log(check)
-            res.render('home', shrunkArr)
-        })
-        .catch(console.log)
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render home page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                
+                    db.getRandomUsers(internalId, 5)
+                        .then((randomUsersArray) => {
+                            res.render('home', randomUsersArray);
+                        })
+                    .catch(console.log)
+                
+                // otherwise redirect to login page
+                } else {
+                    res.redirect('/login');
+                }
+            } else {
+                res.redirect('/login');
+            }
     });
-    app.post('/home', (req, res) => {
-        db.getAllUsers()
-        .then((data) => {
-            var check = arrayIsProfile(req.session.passport.user, data)
-            console.log(check)
-            return check
-        }).then((check) => {
-            let shrunkArr = [];
-            let firstProfile = check[Math.floor(Math.random() * 4)];
-            let secondPRofile = check[Math.floor(Math.random() * 4)];
-            shrunkArr.push(firstProfile);
-            shrunkArr.push(secondPRofile);
-            // console.log(shrunkArr);
-            return shrunkArr;
-        })
-        .then((shrunkArr) => {
-            console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
-            console.log(shrunkArr);
-            console.log(shrunkArr.length);
-            // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
-            // console.log(check)
-            res.render('home', shrunkArr)
-        })
-        .catch(console.log)
+});
+
+app.post('/home', (req, res) => {
+    db.getAllUsers()
+    .then((data) => {
+        var check = arrayIsProfile(req.session.passport.user, data)
+        // console.log(check)
+        return check
+    }).then((check) => {
+        let shrunkArr = [];
+        let firstProfile = check[Math.floor(Math.random() * 4)];
+        let secondPRofile = check[Math.floor(Math.random() * 4)];
+        shrunkArr.push(firstProfile);
+        shrunkArr.push(secondPRofile);
+        // console.log(shrunkArr);
+        return shrunkArr;
     })
+    .then((shrunkArr) => {
+        // console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
+        // console.log(shrunkArr);
+        // console.log(shrunkArr.length);
+        // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
+        // console.log(check)
+        res.render('home', shrunkArr)
+    })
+    .catch(console.log)
+})
 
 app.get('/messages', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
@@ -231,26 +238,21 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                             });
 
                             db.getMessagesBySender(internalId)
-                                // console.log(receivedMessages);
+                               
                                 .then(sentMessages => {
-                                    // console.log("sentMessages");
-                                    // console.log(sentMessages);
+
                                     sentMessages.forEach((message, index) => {
                                         message.date_time = message.date_time.toString();
                                     });
                                     let messageObject = {};
                                     messageObject.sent = sentMessages;
                                     messageObject.received = receivedMessages;
-                                    console.log("messageObject");
-                                    console.log(messageObject);
+
                                     res.render('messages', {
                                         messages: messageObject
                                     });
                                 })
                                 .catch(console.error);
-                            // res.render('messages', {
-                            //     messages: messageData
-                            // });
                         })
                         .catch(console.error);
 
@@ -277,17 +279,22 @@ app.post('/messages/new', (req, res) => {
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        // console.log(req.session.passport.user)
-        // console.log(req.session.passport.user.id)
+
         db.getUserByGithubId((req.session.passport.user.id))
-        .then((data) => {
-            // console.log('LINE 142!!!!!!!!!!!!');
-            // console.log(data)
-            res.render('profile', {
-                data: data,
-                isProfile: isProfile(req.session.passport.user, data)
+            .then((data) => {
+
+                // if user is authenticated, render the profile page
+                if (data) {
+                    res.render('profile', {
+                        data: data,
+                        isProfile: isProfile(req.session.passport.user, data)
+                    })
+
+                // otherwise, redirect to login page
+                } else {
+                    res.redirect('/login');
+                }
             })
-        })
 })
 app.post('/profile', (req, res) => {
     db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
@@ -310,8 +317,8 @@ app.get('/profile/:user_id', (req, res) => {
 
 
 
-app.listen(5000, () => {
-    console.log('Someones here');
+app.listen(port, () => {
+    console.log(`Application running at http://localhost:${port}`);
 });
 
 
@@ -319,9 +326,11 @@ function isProfile(session, dbUser){
     // console.log(session.id)
     // console.log(dbUser.github_id)
     // console.log(dbUser)
-    if(Number(session.id) === Number(dbUser.github_id)){
+    if (Number(session.id) === Number(dbUser.github_id)) {
         // console.log('they are the same')
         return true
+    } else {
+        return null;
     }
 };
 
@@ -332,7 +341,7 @@ function arrayIsProfile(session, dbUser){
     dbUser.forEach(function(data){
         // console.log(session.id);
         // console.log(data.github_id);
-        if(Number(session.id) !== Number(data.github_id)){
+        if (Number(session.id) !== Number(data.github_id)) {
             fixedArr.push(data);
         }
     })
