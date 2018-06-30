@@ -2,12 +2,15 @@
 
 
 function addLoadToggle(){
-    let load = document.body.querySelector('.add-profiles');
+    let load = document.body.querySelectorAll('.add-profiles');
     if(load){
         load.addEventListener('click', function(event) {
             // console.log('button licked');
-            app.get('/home', (req, res) => {
-                console.log(req.body)
+            var xhttp;
+            xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = () => {
+
+            }
             })
         });
     } else {
