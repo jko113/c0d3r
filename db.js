@@ -284,6 +284,14 @@ function checkUserExistence(github_id) {
     return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
 
+function addUserLanguage(lang_id, user_id) {
+    return db.one('INSERT INTO user_languages (lang_id, user_id) VALUES ($1, $2) RETURNING true', [lang_id, user_id]);
+}
+
+function addUserEditor(editor_id, user_id) {
+    return db.one('INSERT INTO user_editors (editor_id, user_id) VALUES ($1, $2) RETURNING true', [editor_id, user_id]);
+}
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -305,7 +313,9 @@ module.exports = {
     hasUnreadMessages: hasUnreadMessages,
     andSearch: andSearch,
     orSearch: orSearch,
-    checkUserExistence: checkUserExistence
+    checkUserExistence: checkUserExistence,
+    addUserLanguage: addUserLanguage,
+    addUserEditor: addUserEditor
 };
 
 // TESTS
@@ -367,6 +377,12 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // checkUserExistence(10101)
+//     .then(console.log)
+//     .catch(console.error);
+// addUserLanguage(1, 202)
+//     .then(console.log)
+//     .catch(console.error);
+// addUserEditor(1, 202)
 //     .then(console.log)
 //     .catch(console.error);
 
