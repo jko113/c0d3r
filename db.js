@@ -284,9 +284,55 @@ function checkUserExistence(github_id) {
     return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
 
-// checkUserExistence(5)
-//     .then(console.log)
-//     .catch(console.error);
+function addUserLanguage(lang_id, user_id) {
+    return db.one('INSERT INTO user_languages (lang_id, user_id) VALUES ($1, $2) RETURNING true', [lang_id, user_id]);
+}
+
+function addUserEditor(editor_id, user_id) {
+    return db.one('INSERT INTO user_editors (editor_id, user_id) VALUES ($1, $2) RETURNING true', [editor_id, user_id]);
+}
+
+function getAllUserIds() {
+    return db.any('SELECT DISTINCT user_id FROM users;');
+}
+
+function getRandomUsers(current_user_id, num_users) {
+
+    return getAllUserIds()
+        .then((arrayOfAllUserIds) => {
+
+            let intIds = [];
+            arrayOfAllUserIds.forEach((obj) => {
+                intIds.push(obj.user_id);
+            });
+            
+            if (num_users > arrayOfAllUserIds.length) {
+                throw new Error('number of users specified must be <= the dataset');
+            }
+
+            let randomIds = [];
+            for (let i = 0; i < num_users; i++) {
+                let randomIndex = Math.floor(Math.random() * intIds.length);
+                let randomValue = intIds[randomIndex];
+                randomIds.push(randomValue);
+                intIds.splice(randomIndex, 1);
+            }
+            //console.log(randomIds);
+            
+            let initial = 'SELECT * FROM users WHERE user_id != $1 AND user_id IN (';
+            let userIds = '';
+            let final = ');';
+
+            randomIds.forEach((item, index) => {
+                index === randomIds.length - 1 ? userIds += item: userIds += item + ', '; 
+            });
+
+            results = initial + userIds + final;
+            //console.log(results);
+            return db.any(results, [current_user_id]);
+        })
+        .catch(console.error);
+}
 
 module.exports = {
     getUserByUserId: getUserByUserId,
@@ -309,7 +355,10 @@ module.exports = {
     hasUnreadMessages: hasUnreadMessages,
     andSearch: andSearch,
     orSearch: orSearch,
-    checkUserExistence: checkUserExistence
+    checkUserExistence: checkUserExistence,
+    addUserLanguage: addUserLanguage,
+    addUserEditor: addUserEditor,
+    getRandomUsers: getRandomUsers
 };
 
 // TESTS
@@ -364,13 +413,22 @@ module.exports = {
 // hasUnreadMessages(3)
 //     .then(console.log)
 //     .catch(console.error);
-// selectiveSearch(parameters)
+// andSearch(parameters)
 //     .then(console.log)
 //     .catch(console.error);
-// nonSelectiveSearch(parameters)
+// orSearch(parameters)
 //     .then(console.log)
 //     .catch(console.error);
 // checkUserExistence(10101)
+//     .then(console.log)
+//     .catch(console.error);
+// addUserLanguage(1, 202)
+//     .then(console.log)
+//     .catch(console.error);
+// addUserEditor(1, 202)
+//     .then(console.log)
+//     .catch(console.error);
+// getRandomUsers(1, 2)
 //     .then(console.log)
 //     .catch(console.error);
 
