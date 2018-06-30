@@ -20,6 +20,23 @@ function getUserByGithubId(id) {
     return db.oneOrNone('SELECT * FROM users WHERE github_id = $1;', [id]);
 }
 
+function getUserLanguages(id) {
+    return db.any('SELECT DISTINCT l.name, l.lang_id, \
+	    CASE WHEN l.lang_id IN (SELECT lang_id FROM user_languages WHERE user_id = $1) \
+		     THEN true \
+		     ELSE false END AS userLang \
+        FROM languages l \
+        ORDER BY l.name', [id]);
+}
+
+function getUserEditors(id) {
+    return db.any('SELECT DISTINCT e.name, e.editor_id, \
+        CASE WHEN e.editor_id IN (SELECT editor_id FROM user_editors WHERE user_id = $1) \
+              THEN true ELSE false END AS userEditor \
+        FROM editors e \
+        ORDER BY e.name', [id]);
+}
+
 function getUsersByCity(city) {
     return db.any('SELECT * FROM users WHERE city ILIKE \'$1#\'', [city]);
 }
@@ -343,6 +360,8 @@ module.exports = {
     editUser: editUser,
     getUserByAlias: getUserByAlias,
     getUserByGithubId: getUserByGithubId,
+    getUserLanguages: getUserLanguages,
+    getUserEditors: getUserEditors,
     getUsersByLanguage: getUsersByLanguage,
     getUsersByEditor: getUsersByEditor,
     getUsersByEmployer: getUsersByEmployer,
@@ -383,6 +402,12 @@ module.exports = {
 // getUserByGithubId(12321)
 //     .then(console.log)
 //     .catch(console.error);
+// getUserLanguages(1)
+//     .then(console.log)
+//     .catch(console.log)
+// getUserEditors(1)
+//     .then(console.log)
+//     .catch(console.log)
 // getUsersByLanguage(1)
 //     .then(console.log)
 //     .catch(console.error);
