@@ -284,10 +284,6 @@ function checkUserExistence(github_id) {
     return db.any('SELECT COUNT(*) = 1 AS user_exists, user_id FROM users WHERE github_id = $1 GROUP BY user_id;', [github_id]);
 }
 
-// checkUserExistence(5)
-//     .then(console.log)
-//     .catch(console.error);
-
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -364,10 +360,10 @@ module.exports = {
 // hasUnreadMessages(3)
 //     .then(console.log)
 //     .catch(console.error);
-// selectiveSearch(parameters)
+// andSearch(parameters)
 //     .then(console.log)
 //     .catch(console.error);
-// nonSelectiveSearch(parameters)
+// orSearch(parameters)
 //     .then(console.log)
 //     .catch(console.error);
 // checkUserExistence(10101)
