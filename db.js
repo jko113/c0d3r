@@ -292,6 +292,48 @@ function addUserEditor(editor_id, user_id) {
     return db.one('INSERT INTO user_editors (editor_id, user_id) VALUES ($1, $2) RETURNING true', [editor_id, user_id]);
 }
 
+function getAllUserIds() {
+    return db.any('SELECT DISTINCT user_id FROM users;');
+}
+
+function getRandomUsers(current_user_id, num_users) {
+
+    return getAllUserIds()
+        .then((arrayOfAllUserIds) => {
+
+            let intIds = [];
+            arrayOfAllUserIds.forEach((obj) => {
+                intIds.push(obj.user_id);
+            });
+            
+            if (num_users > arrayOfAllUserIds.length) {
+                throw new Error('number of users specified must be <= the dataset');
+            }
+
+            let randomIds = [];
+            for (let i = 0; i < num_users; i++) {
+                let randomIndex = Math.floor(Math.random() * intIds.length);
+                let randomValue = intIds[randomIndex];
+                randomIds.push(randomValue);
+                intIds.splice(randomIndex, 1);
+            }
+            //console.log(randomIds);
+            
+            let initial = 'SELECT * FROM users WHERE user_id != $1 AND user_id IN (';
+            let userIds = '';
+            let final = ');';
+
+            randomIds.forEach((item, index) => {
+                index === randomIds.length - 1 ? userIds += item: userIds += item + ', '; 
+            });
+
+            results = initial + userIds + final;
+            //console.log(results);
+            return db.any(results, [current_user_id]);
+        })
+        .catch(console.error);
+}
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -315,7 +357,8 @@ module.exports = {
     orSearch: orSearch,
     checkUserExistence: checkUserExistence,
     addUserLanguage: addUserLanguage,
-    addUserEditor: addUserEditor
+    addUserEditor: addUserEditor,
+    getRandomUsers: getRandomUsers
 };
 
 // TESTS
@@ -383,6 +426,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // addUserEditor(1, 202)
+//     .then(console.log)
+//     .catch(console.error);
+// getRandomUsers(1, 2)
 //     .then(console.log)
 //     .catch(console.error);
 
