@@ -67,6 +67,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                         // res.send(userSession)
                         // console.log(userSession)
                         var rawParsed = JSON.parse(userSession._raw);
+                        console.log(rawParsed.bio)
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
                         var state = locArr[1];
@@ -105,7 +106,7 @@ app.post('/newprofile', (req, res) => {
     if(!quotes || !tabs || !lines){
         res.redirect('/newprofile')
     } else {
-        db.addUser(newBody.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
             .then((data) => {
