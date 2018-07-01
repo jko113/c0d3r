@@ -94,27 +94,47 @@ app.post('/newprofile', (req, res) => {
     console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
+    console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
-    db.addUser(newBody.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+    if(!quotes || !tabs || !lines){
+        res.redirect('/newprofile')
+    } else {
+        db.addUser(newBody.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
-                .then((data) => {
-                    console.log(data);
-                    db.addUserEditor(newBody.editor, data.user_id)
-                        .then((data) => {
-                            console.log(data)
-                        })
+            .then((data) => {
+                let user_id = data.user_id
+                if (newBody.editor && newBody.language){
+                    db.editUserEditors(user_id, newBody.editor)
+                    .then((data) => {
+                        db.editUserLanguages(user_id, newBody.editor)
+                        .then((data) => {})
                         .catch(console.log)
-                    res.redirect('/home')
+                    })
+                    .catch(console.log)
+                } else {
+                    if(newBody.language && !newBody.editor){
+                        db.editUserLanguages(user_id, newBody.language)
+                        .catch(console.log)
+                    } else {
+
+                        if(!newBody.language && newBody.editor){
+                            db.editUserEditors(user_id, newBody.editor)
+                            .catch(console.log)
+                        }
+                    }
+                }
+                res.redirect('/home')
                 })
                 .catch(console.log)
-        })
-        .catch(console.log)
-});
-
-// dunno why this is here or if it is needed !!!!!!!!!!!!!
+            })
+            .catch(console.log)
+        }
+    })
+    
+    // dunno why this is here or if it is needed !!!!!!!!!!!!!
 // can revisit and reassess later as needed !!!!!!!!!!!!!!
 // app.get('/setup', ensureAuthenticated, (req, res) => {
 
