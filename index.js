@@ -180,15 +180,20 @@ app.post('/search', (req, res) => {
     if(req.body.searchType == 'and') {
         db.andSearch(req.queryObject)
             .then((data) => {
-                // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             })
             .catch(console.log);
     } else {
         db.orSearch(req.queryObject)
             .then((data) => {
                 // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             });
     }
 
@@ -215,7 +220,10 @@ app.get('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             // console.log(randomUsersArray)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
                     .catch(console.log)
                 
@@ -247,9 +255,12 @@ app.post('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             console.log(randomUsersArray.length)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
-                    .catch(console.log)
+                        .catch(console.log)
                 
                 // otherwise redirect to login page
                 } else {
