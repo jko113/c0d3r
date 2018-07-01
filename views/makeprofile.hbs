@@ -1,45 +1,221 @@
 <form method="POST" action="/newprofile">
-alias:&nbsp;<input type="text" name="alias" value="{{alias}}">
+
+        <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Name</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div data-display>{{name}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">GitHub Alias</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <input type="text" name="alias" value="{{alias}}"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">GitHub URL</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <a href="{{gitURL}}" name="gitURL">{{gitURL}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 <br>
 <br>
-githubid&nbsp;<input type="text" name="githubid" value="{{gitHubId}}">
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Employer</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    &nbsp;<input type="text" name="employer">
+                </div>
+            </div>
+        </div>
+    </div>
 <br>
 <br>
-githubav&nbsp;<input type="text" name="githubav" value="{{gitHubAv}}">
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Location</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <input type="text" name="city" value="{{city}}">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <div>   
+                        <select name="state">
+                            <option>State</option>
+                            <option value="AL">AL</option>
+                            <option value="AK">AK</option>
+                            <option value="AS">AS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input type="number" name="zip_code" value="zip"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 <br>
 <br>
-name&nbsp;<input type="text" name="name" value="{{name}}">
-<br>
-<br>
-gitURL&nbsp;<input type="text" name="gitURL" value="{{gitURL}}">
-<br>
-<br>
-employer&nbsp;<input type="text" name="employer">
-<br>
-<br>
-city&nbsp;<input type="text" name="city" value="{{city}}">
-<br>
-<br>
-state&nbsp;<input type="text" name="state" value="{{state}}">
-<br>
-<br>
-zip&nbsp;<input type="number" name="zip_code">
-<br>
-<br>
-<select name="tabs">
-    <option value="1">Tabs</option>
-    <option value="2">Spaces</option>
-</select>
-<br>
-<select name="curly_braces">
-    <option value="1">Same Line</option>
-    <option value="2">Next Line</option>
-</select>
-<br>
-<select name="quotes">
-    <option value="1">Single Quotes</option>
-    <option value="2">Double Quotes</option>
-</select>
-bio&nbsp;<input type="text" name="bio" value="{{bio}}">
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Bio</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <textarea class="textarea" type="text" name="bio" value="{{bio}}"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Tabs or Spaces?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="tabs_preference" value="1">
+                        Tabs
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="tabs_preference" value="2">
+                        Spaces
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Brackets: same line or next?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="same_line_curlies_preference" value="1">
+                        Same line
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="same_line_curlies_preference" value="2">
+                        Next line
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+        <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Quotes: single or double?</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="single_quotes_preference" value="1">
+                        Single
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="single_quotes_preference" value="2">
+                        Double
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+        <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Preferred languages</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="1">
+                        Java
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="languages" value="2">
+                        JavaScript
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+        <div class="field is-horizontal">
+        <div class="field-label">
+            <label class="label">Preferred text editor</label>
+        </div>
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="editors" value="1">
+                        VS Code
+                    </label>
+                </div>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="editors" value="2">
+                        Atom
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 <input type="submit">
 </form>
+
+{{!-- <div class="block">
+    <form action="/profile" method="POST">
+
+    {{!-- <input type="hidden" name="user_id" value="{{data.user_id}}"> --}}
