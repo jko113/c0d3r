@@ -175,17 +175,26 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="languages" value="1">
-                        Java
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="languages" value="2">
-                        JavaScript
-                    </label>
+                {{#each language}}
+                    <div class="control is-hidden" data-display>
+                        <label class="checkbox">
+                            <input type="checkbox" name="languages_{{lang_id}}"
+                            {{#if userlang}}
+                            checked
+                            {{/if}}
+                            >
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
+                <div class="control" data-display>
+                    <ul>
+                        {{#each language}}
+                            {{#if userlang}}
+                                <li>{{name}}</li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -197,17 +206,26 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="editors" value="1">
-                        VS Code
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="editors" value="2">
-                        Atom
-                    </label>
+                {{#each editor}}
+                    <div class="control is-hidden" data-display>
+                        <label class="checkbox">
+                            <input type="checkbox" name="editors_{{editor_id}}"
+                            {{#if usereditor}}
+                            checked
+                            {{/if}}
+                            >
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
+                <div class="control" data-display>
+                    <ul>
+                        {{#each editor}}
+                            {{#if usereditor}}
+                                <li>{{name}}</li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>

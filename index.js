@@ -54,63 +54,64 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 // console.log('data exists');
                 res.redirect('/home');
             } else {
-                // console.log('data doesnt exist');
-                // res.send(userSession)
-                // console.log(userSession)
-                var rawParsed = JSON.parse(userSession._raw);
-                var locArr = rawParsed.location.split(',');
-                var city = locArr[0];
-                var state = locArr[1];
-                res.render('makeprofile', {
-                    alias: userSession.username,
-                    gitHubId: userSession.id,
-                    gitHubAv: userSession._json.avatar_url,
-                    username: userSession.username,
-                    name: userSession.displayName,
-                    gitURL: userSession.profileUrl,
-                    city: city,
-                    state: state,
-                    bio: rawParsed.bio
-                });   
-            }
-    });
+                let languages = db.getLanguages();
+                let editors = db.getEditors();
+                Promise.all([languages, editors])
+                    .then((moreData) => {
+                        // console.log(moreData);
+                        // console.log('data doesnt exist');
+                        // res.send(userSession)
+                        // console.log(userSession)
+                        var rawParsed = JSON.parse(userSession._raw);
+                        var locArr = rawParsed.location.split(',');
+                        var city = locArr[0];
+                        var state = locArr[1];
+                        res.render('makeprofile', {
+                            alias: userSession.username,
+                            gitHubId: userSession.id,
+                            gitHubAv: userSession._json.avatar_url,
+                            username: userSession.username,
+                            name: userSession.displayName,
+                            gitURL: userSession.profileUrl,
+                            city: city,
+                            state: state,
+                            bio: rawParsed.bio,
+                            language: moreData[0],
+                            editors: moreData[1]
+                        });   
+                    })
+                    .catch(console.log)
+                    }
+                });
+    
     // console.log(req.session.passport.user.username);
     // res.send(req.session.passport.user.username);
 });
 
 app.post('/newprofile', (req, res) => {
-    let githubid = Number(req.body.githubid);
+    // let githubid = Number(req.body.githubid);
+    let newBody = generateConvertedObject(req.body);
+    console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    let quotes = req.body.single_quotes_preference;
+    let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
-    let editor = req.body.editors;
-    let languages = req.body.languages;
-    console.log(req.body);
-    // console.log(typeof new Date());
-    // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
-    .then((data) => {
-        if (!languages){
-            res.redirect('home');
-        } else {
-        db.getUserByGithubId(userSession.id)
-            .then((data) => {
-                let languages = Number(req.body.languages);
-                let editor = Number(req.body.editors);
-                db.addUserLanguage(languages, data.user_id)
-                if (!editor){
+    db.addUser(newBody.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+        .then((data) => {
+            db.getUserByGithubId(userSession.id)
+                .then((data) => {
+                    console.log(data);
+                    db.addUserEditor(newBody.editor, data.user_id)
+                        .then((data) => {
+                            console.log(data)
+                        })
+                        .catch(console.log)
                     res.redirect('/home')
-                } else {
-
-                    db.addUserEditor(editor, data.user_id)
-                }
-            })
-            res.redirect('/home');
-        }
-    })
-    .catch(console.log);
+                })
+                .catch(console.log)
+        })
+        .catch(console.log)
 });
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
@@ -304,23 +305,31 @@ app.post('/messages/new', (req, res) => {
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-
-        db.getUserByGithubId((req.session.passport.user.id))
-            .then((data) => {
-
+        db.getUserByGithubId(req.session.passport.user.id)
+            .then(data => {
                 // if user is authenticated, render the profile page
-                if (data) {
-                    res.render('profile', {
-                        data: data,
-                        isProfile: isProfile(req.session.passport.user, data)
-                    })
-
+                if(data) {
+                    let languages = db.getUserLanguages(data.user_id);
+                    let editors = db.getUserEditors(data.user_id);
+                    Promise.all([languages, editors])
+                        .then(moreData => {
+                            console.log(data);
+                            res.render('profile', {
+                                data: data,
+                                isProfile: isProfile(req.session.passport.user, data),
+                                language: moreData[0],
+                                editor: moreData[1]
+                            })
+                        })
+                        .catch(console.log);
                 // otherwise, redirect to login page
                 } else {
                     res.redirect('/login');
                 }
             })
-})
+            .catch(console.log);
+});
+
 app.post('/profile', (req, res) => {
     console.log(req.body)
     let userSession = req.session.passport.user;
@@ -376,3 +385,33 @@ function arrayIsProfile(session, dbUser){
     })
     return fixedArr;
 };
+
+function generateConvertedObject(body) {
+    let propertiesToConvertToNumber = ['zip', 'tabs_preference', 'same_line_curlies_preference', 'single_quotes_preference']
+    let queryObject = {};
+    for (let item in body) {
+        let itemId = getId(item)[0];
+        let itemTable = getId(item)[1];
+        if(parseInt(itemId)){
+            if(!queryObject[itemTable]) {
+                queryObject[itemTable] = []
+            }
+            queryObject[itemTable].push(parseInt(itemId));
+        } else {
+            if(item != 'searchType' && body[item] != 'State' && body[item] != '') {
+                if (propertiesToConvertToNumber.includes(item)) {
+                    queryObject[item] = Number(body[item]);
+                } else {
+                    queryObject[item] = body[item];
+                }
+            }
+        }
+    }
+    return queryObject;
+    // Internal helper function for generateConvertedObject
+    function getId(itemName) {
+        itemName = itemName.split('_');
+        let id = itemName.pop();
+        return [id, itemName.join('_')];
+    }
+}
