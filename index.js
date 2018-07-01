@@ -102,14 +102,14 @@ app.post('/newprofile', (req, res) => {
     // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    // console.log(userSession)
+    console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
     if(!quotes || !tabs || !lines){
         res.redirect('/newprofile')
     } else {
-        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
             .then((data) => {
