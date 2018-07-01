@@ -40,21 +40,61 @@
     <div class="field">
       <div class="columns">
           <div class="column">
-            <div class="block">
-              <label class="label">Tabs or Spaces?</label>
-              <input type="checkbox" class="checkbox" name="tabs_preference_1">&nbsp;Tabs<br>
-              <input type="checkbox" name="tabs_preference_2">&nbsp;Spaces<br>
+
+            <div class="field is-horizontal">
+              <div class="field-label">
+                  <label class="label">Tabs or Spaces?</label>
+              </div>
+              <div class="field-body">
+                  <div class="field">
+                      {{#each tabsPrefs}}
+                          <div class="control" data-display>
+                              <label class="checkbox">
+                                  <input type="checkbox" name="tabs_preference" value="{{preference_id}}">
+                                  {{description}}
+                              </label>
+                          </div>
+                      {{/each}}
+                  </div>
+              </div>
             </div>
-            <div class="block">
-              <label class="label">Brackets: same line or next?</label>
-              <input type="checkbox" name="same_line_curlies_preference_1">&nbsp;Same line<br>
-              <input type="checkbox" name="same_line_curlies_preference_2">&nbsp;Next line
+
+            <div class="field is-horizontal">
+              <div class="field-label">
+                  <label class="label">Brackets: same line or next?</label>
+              </div>
+              <div class="field-body">
+                  <div class="field">
+                      {{#each curlyPrefs}}
+                          <div class="control" data-display>
+                              <label class="checkbox">
+                                  <input type="checkbox" name="same_line_curlies_preference" value="{{preference_id}}">
+                                  {{description}}
+                              </label>
+                          </div>
+                      {{/each}}
+                  </div>
+              </div>
             </div>
-            <div class="block">
-              <label class="label">Quotes: single or double?</label>
-              <input type="checkbox" name="single_quotes_preference_1">&nbsp;Single<br>
-              <input type="checkbox" name="single_quotes_preference_2">&nbsp;Double
-            </div>
+          
+            <div class="field is-horizontal">
+              <div class="field-label">
+                  <label class="label">Quotes: single or double?</label>
+              </div>
+              <div class="field-body">
+                  <div class="field">
+                      {{#each quotesPrefs}}
+                          <div class="control" data-display>
+                              <label class="checkbox">
+                                  <input type="checkbox" name="single_quotes_preference" value="{{preference_id}}">
+                                  {{description}}
+                              </label>
+                          </div>
+                      {{/each}}
+                  </div>
+              </div>
+          </div>
+
           </div>
           <div class="column">
             <div class="block">
