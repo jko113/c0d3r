@@ -58,66 +58,87 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 // console.log('data exists');
                 res.redirect('/home');
             } else {
-                // console.log('data doesnt exist');
-                // res.send(userSession)
-                // console.log(userSession)
-                var rawParsed = JSON.parse(userSession._raw);
-                var locArr = rawParsed.location.split(',');
-                var city = locArr[0];
-                var state = locArr[1];
-                res.render('makeprofile', {
-                    alias: userSession.username,
-                    gitHubId: userSession.id,
-                    gitHubAv: userSession._json.avatar_url,
-                    username: userSession.username,
-                    name: userSession.displayName,
-                    gitURL: userSession.profileUrl,
-                    city: city,
-                    state: state,
-                    bio: rawParsed.bio
-                });   
-            }
-    });
+                let languages = db.getLanguages();
+                let editors = db.getEditors();
+                Promise.all([languages, editors])
+                    .then((moreData) => {
+                        // console.log(moreData);
+                        // console.log('data doesnt exist');
+                        // res.send(userSession)
+                        // console.log(userSession)
+                        var rawParsed = JSON.parse(userSession._raw);
+                        var locArr = rawParsed.location.split(',');
+                        var city = locArr[0];
+                        var state = locArr[1];
+                        res.render('makeprofile', {
+                            alias: userSession.username,
+                            gitHubId: userSession.id,
+                            gitHubAv: userSession._json.avatar_url,
+                            username: userSession.username,
+                            name: userSession.displayName,
+                            gitURL: userSession.profileUrl,
+                            city: city,
+                            state: state,
+                            bio: rawParsed.bio,
+                            language: moreData[0],
+                            editors: moreData[1]
+                        });   
+                    })
+                    .catch(console.log)
+                    }
+                });
+    
     // console.log(req.session.passport.user.username);
     // res.send(req.session.passport.user.username);
 });
 
 app.post('/newprofile', (req, res) => {
-    let githubid = Number(req.body.githubid);
+    // let githubid = Number(req.body.githubid);
+    let newBody = generateConvertedObject(req.body);
+    console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    let quotes = req.body.single_quotes_preference;
+    console.log(userSession)
+    let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
-    let editor = req.body.editors;
-    let languages = req.body.languages;
-    console.log(req.body);
-    // console.log(typeof new Date());
-    // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
-    .then((data) => {
-        if (!languages){
-            res.redirect('home');
-        } else {
-        db.getUserByGithubId(userSession.id)
+    if(!quotes || !tabs || !lines){
+        res.redirect('/newprofile')
+    } else {
+        db.addUser(newBody.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+        .then((data) => {
+            db.getUserByGithubId(userSession.id)
             .then((data) => {
-                let languages = Number(req.body.languages);
-                let editor = Number(req.body.editors);
-                db.addUserLanguage(languages, data.user_id)
-                if (!editor){
-                    res.redirect('/home')
+                let user_id = data.user_id
+                if (newBody.editor && newBody.language){
+                    db.editUserEditors(user_id, newBody.editor)
+                    .then((data) => {
+                        db.editUserLanguages(user_id, newBody.editor)
+                        .then((data) => {})
+                        .catch(console.log)
+                    })
+                    .catch(console.log)
                 } else {
+                    if(newBody.language && !newBody.editor){
+                        db.editUserLanguages(user_id, newBody.language)
+                        .catch(console.log)
+                    } else {
 
-                    db.addUserEditor(editor, data.user_id)
+                        if(!newBody.language && newBody.editor){
+                            db.editUserEditors(user_id, newBody.editor)
+                            .catch(console.log)
+                        }
+                    }
                 }
+                res.redirect('/home')
+                })
+                .catch(console.log)
             })
-            res.redirect('/home');
+            .catch(console.log)
         }
     })
-    .catch(console.log);
-});
-
-// dunno why this is here or if it is needed !!!!!!!!!!!!!
+    
+    // dunno why this is here or if it is needed !!!!!!!!!!!!!
 // can revisit and reassess later as needed !!!!!!!!!!!!!!
 // app.get('/setup', ensureAuthenticated, (req, res) => {
 
