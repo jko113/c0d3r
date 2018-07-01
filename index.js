@@ -46,15 +46,9 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
-    // console.log(userSession._json.avatar_url);
-    // console.log(userSession._json.avatar_url)
-    // console.log(typeof userSession.id)
-    // console.log(userSession.id + ' LOOK FOR ME!!!')
-    // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
             if(data){
-                // console.log('data exists');
                 res.redirect('/home');
             } else {
                 let userStateArray = [];
@@ -65,11 +59,14 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                         };
                     userStateArray.push(stateEntry);
                 });
-                console.log(userStateArray);
                 let languages = db.getLanguages();
                 let editors = db.getEditors();
-                Promise.all([languages, editors])
+                let curlies = db.getCurlyPrefs();
+                let quotes = db.getQuotePrefs();
+                let tabsPre = db.getTabsPrefs();
+                Promise.all([languages, editors, curlies, quotes, tabsPre])
                     .then((moreData) => {
+                        console.log(moreData);
                         var rawParsed = JSON.parse(userSession._raw);
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
@@ -85,7 +82,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                             city: city,
                             bio: rawParsed.bio,
                             language: moreData[0],
-                            editors: moreData[1]
+                            editors: moreData[1],
+                            curlies: moreData[2],
+                            quotes: moreData[3],
+                            tabsPref: moreData[4]
+
                         });   
                     })
                     .catch(console.log)

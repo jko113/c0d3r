@@ -363,6 +363,15 @@ function getAllUserIds() {
 function getAllGithubIds() {
     return db.any('SELECT DISTINCT github_id FROM users;');
 }
+function getCurlyPrefs() {
+    return db.any('SELECT * from same_line_curlies_preferences');
+}
+function getQuotePrefs() {
+    return db.any('SELECT * from single_quotes_preferences');
+}
+function getTabsPrefs() {
+    return db.any('SELECT * from tabs_preferences');
+}
 
 function getRandomUsers(current_user_id, num_users) {
 
@@ -443,7 +452,10 @@ module.exports = {
     addUserEditor: addUserEditor,
     getRandomUsers: getRandomUsers,
     getAllGithubIds: getAllGithubIds,
-    getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray
+    getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray,
+    getCurlyPrefs: getCurlyPrefs,
+    getQuotePrefs: getQuotePrefs,
+    getTabsPrefs: getTabsPrefs
 };
 
 // TESTS
