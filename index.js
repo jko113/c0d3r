@@ -308,16 +308,41 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
             .then(data => {
                 // if user is authenticated, render the profile page
                 if(data) {
+                    let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
+                    let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
+                    let tabsPrefs = db.getUserTabPrefs(data.user_id);
                     let languages = db.getUserLanguages(data.user_id);
                     let editors = db.getUserEditors(data.user_id);
-                    Promise.all([languages, editors])
+                    Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
                         .then(moreData => {
-                            console.log(data);
+                            // console.log(data);
+                            // console.log(moreData[0]);
+                            // console.log(moreData[4]);
+                            let userStateArray = [];
+                            stateArray.forEach(state => {
+                                let stateEntry = {}
+                                if(state == data.state) {
+                                    stateEntry = {
+                                        name: state,
+                                        userPref: true
+                                    };
+                                } else {
+                                    stateEntry = {
+                                        name: state,
+                                        userPref: false
+                                    };
+                                }
+                                userStateArray.push(stateEntry);
+                            });
                             res.render('profile', {
                                 data: data,
+                                state: userStateArray,
                                 isProfile: isProfile(req.session.passport.user, data),
-                                language: moreData[0],
-                                editor: moreData[1]
+                                curlyPrefs: moreData[0],
+                                quotesPrefs: moreData[1],
+                                tabsPrefs: moreData[2],
+                                language: moreData[3],
+                                editor: moreData[4]
                             })
                         })
                         .catch(console.log);
@@ -330,14 +355,15 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     let userSession = req.session.passport.user;
-    // console.log(req.session.passport);
-    db.editUser(userSession.displayName, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+    let state = req.body.state == 'State' ? null : req.body.state;
+    db.editUser(req.body.name, req.body.employer, req.body.city, state, Number(req.body.zip), Number(req.body.tabs_preference), Number(req.body.same_line_curlies_preference), Number(req.body.single_quotes_preference), req.body.bio, req.session.passport.user.id)
         .then((data) => {
             console.log()
             res.redirect('/profile');
         })
+        .catch(console.log);
 });
 
 app.get('/profile/:user_id', (req, res) => {
