@@ -99,10 +99,10 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     // let githubid = Number(req.body.githubid);
     let newBody = generateConvertedObject(req.body);
-    console.log(newBody);
+    // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    console.log(userSession)
+    // console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
@@ -141,16 +141,37 @@ app.post('/newprofile', (req, res) => {
             .catch(console.log)
         }
     })
-    
-    // dunno why this is here or if it is needed !!!!!!!!!!!!!
-// can revisit and reassess later as needed !!!!!!!!!!!!!!
-// app.get('/setup', ensureAuthenticated, (req, res) => {
-
-//     res.send(req.session.passport.user)
-// });
 
 app.get('/search', (req, res) => {
-    res.render('search')
+    // res.render('search')
+
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+
+    // check if user exists in database
+    db.checkUserExistence(github_id)
+        .then((data) => {
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render new messages page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                    res.render('search', {
+                        user_id: internalId
+                    })
+
+                // otherwise, redirect to root
+                } else {
+                    res.redirect('/');
+                }
+            } else {
+                res.redirect('/');
+            }
+        })
+        .catch(console.error);
 });
 
 app.post('/search', (req, res) => {
@@ -163,15 +184,20 @@ app.post('/search', (req, res) => {
     if(req.body.searchType == 'and') {
         db.andSearch(req.queryObject)
             .then((data) => {
-                // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             })
             .catch(console.log);
     } else {
         db.orSearch(req.queryObject)
             .then((data) => {
                 // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             });
     }
 
@@ -198,7 +224,10 @@ app.get('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             // console.log(randomUsersArray)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
                     .catch(console.log)
                 
@@ -230,9 +259,12 @@ app.post('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             console.log(randomUsersArray.length)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
-                    .catch(console.log)
+                        .catch(console.log)
                 
                 // otherwise redirect to login page
                 } else {
@@ -241,7 +273,7 @@ app.post('/home', (req, res) => {
             } else {
                 res.redirect('/login');
             }
-})
+        })
 })
 
 app.get('/messages', ensureAuthenticated, (req, res) => {
@@ -370,54 +402,11 @@ app.post('/messages/new', (req, res) => {
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        db.getUserByGithubId(req.session.passport.user.id)
-            .then(data => {
-                // if user is authenticated, render the profile page
-                if(data) {
-                    let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
-                    let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
-                    let tabsPrefs = db.getUserTabPrefs(data.user_id);
-                    let languages = db.getUserLanguages(data.user_id);
-                    let editors = db.getUserEditors(data.user_id);
-                    Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
-                        .then(moreData => {
-                            // console.log(data);
-                            // console.log(moreData[0]);
-                            // console.log(moreData[4]);
-                            let userStateArray = [];
-                            stateArray.forEach(state => {
-                                let stateEntry = {}
-                                if(state == data.state) {
-                                    stateEntry = {
-                                        name: state,
-                                        userPref: true
-                                    };
-                                } else {
-                                    stateEntry = {
-                                        name: state,
-                                        userPref: false
-                                    };
-                                }
-                                userStateArray.push(stateEntry);
-                            });
-                            res.render('profile', {
-                                data: data,
-                                state: userStateArray,
-                                isProfile: isProfile(req.session.passport.user, data),
-                                curlyPrefs: moreData[0],
-                                quotesPrefs: moreData[1],
-                                tabsPrefs: moreData[2],
-                                language: moreData[3],
-                                editor: moreData[4]
-                            })
-                        })
-                        .catch(console.log);
-                // otherwise, redirect to login page
-                } else {
-                    res.redirect('/login');
-                }
-            })
-            .catch(console.log);
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then(data => {
+            displayProfile(data, req, res)
+        })
+        .catch(console.log);
 });
 
 app.post('/profile', (req, res) => {
@@ -429,26 +418,20 @@ app.post('/profile', (req, res) => {
     let editLanguagesPromise = db.editUserLanguages(newBody.user_id, newBody.languages);
     let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
     Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
-    .then((data) => {
-            console.log()
-            res.redirect('/profile');
-        })
-        .catch(console.log);
+        .then((data) => {
+                console.log()
+                res.redirect('/profile');
+            })
+            .catch(console.log);
 });
 
 app.get('/profile/:user_id', (req, res) => {
-        db.getUserByUserId(req.params.user_id)
-        .then((data) => {
-            
-            res.render('profile', {
-                data: data,
-                isProfile: null
-            })
-        })    
-    .catch(console.log)
+    db.getUserByUserId(req.params.user_id)
+        .then(data => {
+            displayProfile(data, req, res)
+        })
+        .catch(console.log)
 });
-
-
 
 app.listen(port, () => {
     console.log(`Application running at http://localhost:${port}`);
@@ -508,5 +491,54 @@ function generateConvertedObject(body) {
         itemName = itemName.split('_');
         let id = itemName.pop();
         return [id, itemName.join('_')];
+    }
+}
+
+function displayProfile(data, req, res) {
+    // if user is authenticated, render the profile page
+    if(data) {
+        let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
+        let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
+        let tabsPrefs = db.getUserTabPrefs(data.user_id);
+        let languages = db.getUserLanguages(data.user_id);
+        let editors = db.getUserEditors(data.user_id);
+        Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
+            .then(moreData => {
+                // console.log(data);
+                // console.log(moreData[0]);
+                // console.log(moreData[4]);
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                    if(state == data.state) {
+                        stateEntry = {
+                            name: state,
+                            userPref: true
+                        };
+                    } else {
+                        stateEntry = {
+                            name: state,
+                            userPref: false
+                        };
+                    }
+                    userStateArray.push(stateEntry);
+                });
+                console.log(moreData[2]);
+                console.log(data);
+                res.render('profile', {
+                    data: data,
+                    state: userStateArray,
+                    isProfile: isProfile(req.session.passport.user, data),
+                    curlyPrefs: moreData[0],
+                    quotesPrefs: moreData[1],
+                    tabsPrefs: moreData[2],
+                    language: moreData[3],
+                    editor: moreData[4]
+                })
+            })
+            .catch(console.log);
+    // otherwise, redirect to login page
+    } else {
+        res.redirect('/login');
     }
 }

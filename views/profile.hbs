@@ -11,7 +11,7 @@
             <div class="field">
                 <div class="control">
                     <div data-display>{{data.name}}</div>
-                    <input class="input is-hidden" type="text" name="name" value="{{data.name}}" data-display></label>
+                    <input class="input is-hidden" type="text" name="name" value="{{data.name}}" placeholder="Display name..." data-display></label>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
             <div class="field">
                 <div class="control">
                     <div data-display>{{data.employer}}</div>
-                    <input class="input is-hidden" type="text" name="employer" value="{{data.employer}}" data-display></label>
+                    <input class="input is-hidden" type="text" name="employer" value="{{data.employer}}" placeholder="Employer..." data-display></label>
                 </div>
             </div>
         </div>
@@ -38,8 +38,12 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{data.city}}, {{data.state}} {{data.zip}}</div>
-                    <input class="input is-hidden is-expanded" type="text" name="city" value="{{data.city}}" data-display></label>
+                    {{#if data.state}}
+                        <div data-display>{{data.city}}, {{data.state}} {{data.zip}}</div>
+                    {{else}}
+                        <div data-display>{{data.city}} {{data.state}} {{data.zip}}</div>
+                    {{/if}}
+                    <input class="input is-hidden is-expanded" type="text" name="city" value="{{data.city}}" placeholder="City..." data-display></label>
                 </div>
             </div>
             <div class="field">

@@ -1,8 +1,14 @@
 <link rel="stylesheet" href="/stylesheets/home.css">
 
+{{#if isSearchResults}}
+<a href="/home">Clear Search Results</a><br>
+<a href="/search">Search Again</a>
+<h1><strong>Search Results</strong></h1>
+{{else}}
+<h1>Highlighted Users</h1>
+{{/if}}
 
-{{#each this}}
-
+{{#each data}}
     
 <div class="profile-container">
 <a href="/profile/{{user_id}}">
@@ -117,6 +123,5 @@
 <form action="/home" method="post"> 
 <input type="submit" class="add-profiles" value="More Users">
 </form>
-
 
 {{!-- <script src="/js/home.js"></script> --}}
