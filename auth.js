@@ -87,6 +87,7 @@ const setupAuth = (app) => {
   app.get('/logout', function(req, res, next) {
     // console.log('logging out');
     req.logout();
+    req.session.destroy();
     res.redirect('/');
   });
 
