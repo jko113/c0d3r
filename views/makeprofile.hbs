@@ -68,9 +68,10 @@
                 <div class="control">
                     <div>   
                         <select name="state">
-                            {{!-- <option>State</option> --}}
                             {{#each state}}
-                            <option value="{{name}}">{{name}}</option>
+                            <option value="{{name}}">
+                                {{name}}
+                            </option>
                             {{/each}}
                             {{!-- <option value=>AL</option> --}}
                             {{!-- <option value="AK">AK</option> --}}

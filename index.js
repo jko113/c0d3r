@@ -65,6 +65,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                         };
                     userStateArray.push(stateEntry);
                 });
+                console.log(userStateArray);
                 let languages = db.getLanguages();
                 let editors = db.getEditors();
                 Promise.all([languages, editors])
@@ -82,7 +83,6 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                             name: userSession.displayName,
                             gitURL: userSession.profileUrl,
                             city: city,
-                            state: state,
                             bio: rawParsed.bio,
                             language: moreData[0],
                             editors: moreData[1]
