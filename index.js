@@ -81,14 +81,17 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     var githubid = Number(req.body.githubid);
     var zip = Number(req.body.zip_code);
-    // console.log('!!!!!!!!!!!!!!!!!!!!!');
+    var userSession = req.session.passport.user;
+
+    console.log('!!!!!!!!!!!!!!!!!!!!!');
+    console.log(userSession);
     console.log(req.body);
     // console.log(req.body.tabs);
     // console.log(req.body.curly_braces);
     // console.log(req.body.quotes);
     // console.log(typeof new Date());
     // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
+    db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs_preference), Number(req.body.same_line_curlies_preference), Number(req.body.single_quotes_preference), req.body.bio)
     .then((data) => {
         res.redirect('/home');
     })
@@ -304,7 +307,7 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
             })
 })
 app.post('/profile', (req, res) => {
-    console.log(req.socket)
+    console.log(req.body)
     let userSession = req.session.passport.user;
     // console.log(req.session.passport);
     db.editUser(userSession.displayName, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
