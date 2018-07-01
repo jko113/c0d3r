@@ -1,7 +1,11 @@
+<link rel="stylesheet" href="/stylesheets/profile.css">
+
 <div class="block">
     <form action="/profile" method="POST">
 
     <input type="hidden" name="user_id" value="{{data.user_id}}">
+
+    <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar">
 
     <div class="field is-horizontal">
         <div class="field-label">
