@@ -127,7 +127,7 @@ app.get('/search', (req, res) => {
 app.post('/search', (req, res) => {
     // TODO Check if this contains post results, if so, display 'clear filter'
     // button that redirects to home page
-    req.queryObject = generateQueryObject(req.body);
+    req.queryObject = generateConvertedObject(req.body);
     // console.log(req.queryObject);
     // TODO Handle case where user doesn't choose anything to filter on
     // if(req.queryObject.length = 0)
@@ -146,34 +146,8 @@ app.post('/search', (req, res) => {
             });
     }
 
-    // Helper functions
-    function generateQueryObject(body) {
-        let queryObject = {};
-        for (let item in req.body) {
-            let itemId = getId(item)[0];
-            let itemTable = getId(item)[1];
-            if(parseInt(itemId)){
-                if(!queryObject[itemTable]) {
-                    queryObject[itemTable] = []
-                }
-                queryObject[itemTable].push(parseInt(itemId));
-            } else {
-                if(item != 'searchType' && req.body[item] != 'State' && req.body[item] != '') {
-                    if (item == 'zip') {
-                        queryObject[item] = parseInt(req.body[item]);
-                    } else {
-                        queryObject[item] = req.body[item];
-                    }
-                }
-            }
-        }
-        return queryObject;
-    }
-    function getId(itemName) {
-        itemName = itemName.split('_');
-        let id = itemName.pop();
-        return [id, itemName.join('_')];
-    }
+    
+    
 });
 
 
@@ -308,16 +282,41 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
             .then(data => {
                 // if user is authenticated, render the profile page
                 if(data) {
+                    let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
+                    let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
+                    let tabsPrefs = db.getUserTabPrefs(data.user_id);
                     let languages = db.getUserLanguages(data.user_id);
                     let editors = db.getUserEditors(data.user_id);
-                    Promise.all([languages, editors])
+                    Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
                         .then(moreData => {
-                            console.log(data);
+                            // console.log(data);
+                            // console.log(moreData[0]);
+                            // console.log(moreData[4]);
+                            let userStateArray = [];
+                            stateArray.forEach(state => {
+                                let stateEntry = {}
+                                if(state == data.state) {
+                                    stateEntry = {
+                                        name: state,
+                                        userPref: true
+                                    };
+                                } else {
+                                    stateEntry = {
+                                        name: state,
+                                        userPref: false
+                                    };
+                                }
+                                userStateArray.push(stateEntry);
+                            });
                             res.render('profile', {
                                 data: data,
+                                state: userStateArray,
                                 isProfile: isProfile(req.session.passport.user, data),
-                                language: moreData[0],
-                                editor: moreData[1]
+                                curlyPrefs: moreData[0],
+                                quotesPrefs: moreData[1],
+                                tabsPrefs: moreData[2],
+                                language: moreData[3],
+                                editor: moreData[4]
                             })
                         })
                         .catch(console.log);
@@ -330,14 +329,19 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body);
+    let newBody = generateConvertedObject(req.body);
+    // console.log(newBody);
     let userSession = req.session.passport.user;
-    // console.log(req.session.passport);
-    db.editUser(userSession.displayName, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
-        .then((data) => {
+    let editUserPromise = db.editUser(newBody.name, newBody.employer, newBody.city, newBody.state, newBody.zip, newBody.tabs_preference, newBody.same_line_curlies_preference, newBody.single_quotes_preference, newBody.bio, userSession.id)
+    let editLanguagesPromise = db.editUserLanguages(newBody.user_id, newBody.languages);
+    let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
+    Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
+    .then((data) => {
             console.log()
             res.redirect('/profile');
         })
+        .catch(console.log);
 });
 
 app.get('/profile/:user_id', (req, res) => {
@@ -384,3 +388,33 @@ function arrayIsProfile(session, dbUser){
     })
     return fixedArr;
 };
+
+function generateConvertedObject(body) {
+    let propertiesToConvertToNumber = ['zip', 'tabs_preference', 'same_line_curlies_preference', 'single_quotes_preference']
+    let queryObject = {};
+    for (let item in body) {
+        let itemId = getId(item)[0];
+        let itemTable = getId(item)[1];
+        if(parseInt(itemId)){
+            if(!queryObject[itemTable]) {
+                queryObject[itemTable] = []
+            }
+            queryObject[itemTable].push(parseInt(itemId));
+        } else {
+            if(item != 'searchType' && body[item] != 'State' && body[item] != '') {
+                if (propertiesToConvertToNumber.includes(item)) {
+                    queryObject[item] = Number(body[item]);
+                } else {
+                    queryObject[item] = body[item];
+                }
+            }
+        }
+    }
+    return queryObject;
+    // Internal helper function for generateConvertedObject
+    function getId(itemName) {
+        itemName = itemName.split('_');
+        let id = itemName.pop();
+        return [id, itemName.join('_')];
+    }
+}
