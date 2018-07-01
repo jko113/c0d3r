@@ -88,29 +88,29 @@ app.post('/newprofile', (req, res) => {
     let editor = req.body.editors;
     let languages = req.body.languages;
     console.log(req.body);
-    if (!languages || !editor || !quotes || !tabs || !lines){
-        res.send('please resubmit form');
-    } else {
-        // console.log(typeof new Date());
-        // console.log(Date.parse(new Date()));
-        db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
-        .then((data) => {
-            db.getUserByGithubId(userSession.id)
+    // console.log(typeof new Date());
+    // console.log(Date.parse(new Date()));
+    db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
+    .then((data) => {
+        if (!languages){
+            res.redirect('home');
+        } else {
+        db.getUserByGithubId(userSession.id)
             .then((data) => {
                 let languages = Number(req.body.languages);
                 let editor = Number(req.body.editors);
                 db.addUserLanguage(languages, data.user_id)
-                .then((data) => {
-                });
-                db.addUserEditor(editor, data.user_id)
-                .then((data) => {
-                    console.log(data);
-                })
+                if (!editor){
+                    res.redirect('/home')
+                } else {
+
+                    db.addUserEditor(editor, data.user_id)
+                }
             })
             res.redirect('/home');
-        })
-        .catch(console.log);
-    }
+        }
+    })
+    .catch(console.log);
 });
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
