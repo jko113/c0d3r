@@ -453,10 +453,8 @@ function isProfile(session, dbUser){
 
 function formatDateTime(dateTime) {
     let stringDate = dateTime.toString();
-    console.log(stringDate);
     let idx = stringDate.indexOf('GMT');
     let formattedDate = stringDate.slice(0, idx - 1);
-    console.log(formattedDate);
     return formattedDate;
 }
 
