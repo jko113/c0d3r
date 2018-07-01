@@ -91,6 +91,26 @@ function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies
             single_quotes_preference,bio,github_id]);
 }
 
+function editUserLanguages(id, languageArray) {
+    let queryString = 'DELETE FROM user_languages WHERE user_id = $1;';
+    let values = [id];
+    for (let index = 0; index < languageArray.length; index++) {
+        queryString += `INSERT INTO user_languages (lang_id, user_id) VALUES ($${index+2},$1);`
+        values.push(languageArray[index]);
+    }
+    return db.multi(queryString, values);
+}
+
+function editUserEditors(id, editorArray) {
+    let queryString = 'DELETE FROM user_editors WHERE user_id = $1;';
+    let values = [id];
+    for (let index = 0; index < editorArray.length; index++) {
+        queryString += `INSERT INTO user_editors (editor_id, user_id) VALUES ($${index+2},$1);`
+        values.push(editorArray[index]);
+    }
+    return db.multi(queryString, values);
+}
+
 function getUserByAlias(searchString) {
     return db.oneOrNone('SELECT * FROM users WHERE alias ILIKE $1;', [searchString]);
 }
@@ -385,6 +405,8 @@ module.exports = {
     getUsersByZip: getUsersByZip,
     addUser: addUser,
     editUser: editUser,
+    editUserLanguages: editUserLanguages,
+    editUserEditors: editUserEditors,
     getUserByAlias: getUserByAlias,
     getUserByGithubId: getUserByGithubId,
     getUserTabPrefs: getUserTabPrefs,
@@ -501,7 +523,12 @@ module.exports = {
 //     .catch(console.error);
 /**** FIELDS NEEDED TO EDIT USER:
 user_id,name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio */
-
+// editUserLanguages(4, [1, 2, 3, 4]);
+//     .then(console.log)
+//     .catch(console.error);
+// editUserEditors(4, [1,2])
+//     .then(console.log)
+//     .catch(console.error);
 /**** SEARCH FIELDS
 tabs, curlies, quotes, languages, editors, city, state, zip, company
 */
