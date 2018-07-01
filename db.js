@@ -360,6 +360,10 @@ function getAllUserIds() {
     return db.any('SELECT DISTINCT user_id FROM users;');
 }
 
+function getAllGithubIds() {
+    return db.any('SELECT DISTINCT github_id FROM users;');
+}
+
 function getRandomUsers(current_user_id, num_users) {
 
     return getAllUserIds()
@@ -438,6 +442,7 @@ module.exports = {
     addUserLanguage: addUserLanguage,
     addUserEditor: addUserEditor,
     getRandomUsers: getRandomUsers,
+    getAllGithubIds: getAllGithubIds,
     getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray
 };
 
