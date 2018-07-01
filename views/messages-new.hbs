@@ -3,7 +3,9 @@
 <a href="/messages">Back to Messages</a>
 
 <form method="POST" action="/messages/new">
-    <label for="">Recipients:</label><br><input type="text" name="recipients">
+    <label for="">Recipients:</label>
+    <div>(Use recipients' github_ids. For multiple recipients, separate ids with a comma and space, such as 'user1, user2, user3'.)</div>
+    <input type="text" name="recipients">
     <br>
     <label for="">Message:</label><br><textarea rows="2" cols="25" placeholder="This is the default text" name="message"></textarea><br>
     <input type="submit">
