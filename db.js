@@ -92,23 +92,31 @@ function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies
 }
 
 function editUserLanguages(id, languageArray) {
-    let queryString = 'DELETE FROM user_languages WHERE user_id = $1;';
-    let values = [id];
-    for (let index = 0; index < languageArray.length; index++) {
-        queryString += `INSERT INTO user_languages (lang_id, user_id) VALUES ($${index+2},$1);`
-        values.push(languageArray[index]);
+    if(languageArray && languageArray.length > 0) {
+        let queryString = 'DELETE FROM user_languages WHERE user_id = $1;';
+        let values = [id];
+        for (let index = 0; index < languageArray.length; index++) {
+            queryString += `INSERT INTO user_languages (lang_id, user_id) VALUES ($${index+2},$1);`
+            values.push(languageArray[index]);
+        }
+        return db.multi(queryString, values);
+    } else {
+        return;
     }
-    return db.multi(queryString, values);
 }
 
 function editUserEditors(id, editorArray) {
-    let queryString = 'DELETE FROM user_editors WHERE user_id = $1;';
-    let values = [id];
-    for (let index = 0; index < editorArray.length; index++) {
-        queryString += `INSERT INTO user_editors (editor_id, user_id) VALUES ($${index+2},$1);`
-        values.push(editorArray[index]);
+    if(editorArray && editorArray.length > 0) {
+        let queryString = 'DELETE FROM user_editors WHERE user_id = $1;';
+        let values = [id];
+        for (let index = 0; index < editorArray.length; index++) {
+            queryString += `INSERT INTO user_editors (editor_id, user_id) VALUES ($${index+2},$1);`
+            values.push(editorArray[index]);
+        }
+        return db.multi(queryString, values);
+    } else {
+        return;
     }
-    return db.multi(queryString, values);
 }
 
 function getUserByAlias(searchString) {
@@ -136,7 +144,7 @@ function getUsersByEmployer(employer) {
 function getMessagesBySender (author_id) {
     return db.any('SELECT mess.*, users.alias FROM messages AS mess \
     JOIN users ON users.user_id = mess.author_id \
-    WHERE author_id = $1;', [author_id]);
+    WHERE author_id = $1 ORDER BY date_time DESC;', [author_id]);
 }
 
 function getMessagesByRecipient (recipient_id) {
