@@ -1,9 +1,17 @@
 {{!-- <h1><strong>This is the logged in new messages page.</strong></h1>--}}
 
+{{#if this.justSentMessage}}
+<h1>Message Sent Successfully!</h1>
+{{/if}}
+
 <form method="POST" action="/messages/new">
     <label for="">Recipients:</label><br><input type="text" name="recipients">
     <br>
     <label for="">Message:</label><br><textarea rows="2" cols="25" placeholder="This is the default text" name="message"></textarea><br>
     <input type="submit">
     <input type="reset">
+    <input type="hidden" name="user_id" value={{this.user_id}}>
+    {{!-- <br><div>{{this</div> --}}
 </form> 
+
+{{!-- author_id, recipient_id_array, message_text --}}

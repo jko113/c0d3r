@@ -311,7 +311,9 @@ app.get('/messages/new', ensureAuthenticated, (req, res) => {
                 // render new messages page if user exists
                 if (isRegistered) {
                     const internalId = data[0].user_id;
-                    res.render('messages-new')
+                    res.render('messages-new', {
+                        user_id: internalId
+                    })
 
                 // otherwise, redirect to root
                 } else {
@@ -326,9 +328,13 @@ app.get('/messages/new', ensureAuthenticated, (req, res) => {
 
 app.post('/messages/new', (req, res) => {
     const postedObject = req.body;
+    // console.log(postedObject);
     const recipients = postedObject.recipients;
     const message = postedObject.message;
+    const author_id = Number(postedObject.user_id);
+    // console.log(author_id);
     let recipientIds = [];
+    let justSentMessage = false;
 
     // make sure recipients and message have both been entered before attempting to send
     if (recipients && message) {
@@ -337,11 +343,20 @@ app.post('/messages/new', (req, res) => {
             return recipient.replace(',','');
         });
 
-        //console.log(cleanedArray);
-        getUserIdsByGitHubAliasArray()
+        db.getUserIdsByGitHubAliasArray(cleanedArray)
             .then((userIds) => {
-                console.log(userIds);
-                res.render('messages-new')
+                userIds.forEach((item) => {
+                    recipientIds.push(item.user_id);
+                });
+                // console.log(recipientIds);
+                db.sendMessage(author_id, recipientIds, message)
+                    .then((data) => {
+                        justSentMessage = true;
+                        res.render('messages-new', {
+                            justSentMessage: justSentMessage
+                        })
+                    })
+                    .catch(console.error);
             })
             .catch(console.error);
     } else {
