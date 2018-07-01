@@ -96,10 +96,10 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 app.post('/newprofile', (req, res) => {
     // let githubid = Number(req.body.githubid);
     let newBody = generateConvertedObject(req.body);
-    console.log(newBody);
+    // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    console.log(userSession)
+    // console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
@@ -138,16 +138,37 @@ app.post('/newprofile', (req, res) => {
             .catch(console.log)
         }
     })
-    
-    // dunno why this is here or if it is needed !!!!!!!!!!!!!
-// can revisit and reassess later as needed !!!!!!!!!!!!!!
-// app.get('/setup', ensureAuthenticated, (req, res) => {
-
-//     res.send(req.session.passport.user)
-// });
 
 app.get('/search', (req, res) => {
-    res.render('search')
+    // res.render('search')
+
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+
+    // check if user exists in database
+    db.checkUserExistence(github_id)
+        .then((data) => {
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render new messages page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                    res.render('search', {
+                        user_id: internalId
+                    })
+
+                // otherwise, redirect to root
+                } else {
+                    res.redirect('/');
+                }
+            } else {
+                res.redirect('/');
+            }
+        })
+        .catch(console.error);
 });
 
 app.post('/search', (req, res) => {
@@ -160,15 +181,20 @@ app.post('/search', (req, res) => {
     if(req.body.searchType == 'and') {
         db.andSearch(req.queryObject)
             .then((data) => {
-                // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             })
             .catch(console.log);
     } else {
         db.orSearch(req.queryObject)
             .then((data) => {
                 // console.log(data);
-                res.render('home', data);
+                res.render('home', {
+                    data: data,
+                    isSearchResults: true
+                });
             });
     }
 
@@ -195,7 +221,10 @@ app.get('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             // console.log(randomUsersArray)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
                     .catch(console.log)
                 
@@ -227,9 +256,12 @@ app.post('/home', (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             console.log(randomUsersArray.length)
-                            res.render('home', randomUsersArray);
+                            res.render('home', {
+                                data: randomUsersArray,
+                                isSearchResults: false
+                            });
                         })
-                    .catch(console.log)
+                        .catch(console.log)
                 
                 // otherwise redirect to login page
                 } else {
@@ -238,7 +270,7 @@ app.post('/home', (req, res) => {
             } else {
                 res.redirect('/login');
             }
-})
+        })
 })
 
 app.get('/messages', ensureAuthenticated, (req, res) => {
