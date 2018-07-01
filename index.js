@@ -17,8 +17,12 @@ app.set('view engine', '.hbs');
 
 const static = express.static;
 app.use(static('public'));
-setupAuth(app);
 app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.urlencoded({
+//     extended: true
+// }));
+// app.use(bodyParser.json());
+setupAuth(app);
 
 // need to handle 
 app.get('/', (req, res) => {
@@ -270,11 +274,59 @@ app.post('/messages', (req, res) => {
     res.render('messages')
 });
 
-app.get('/messages/new', (req, res) => {
-    res.render('messages-new')
+app.get('/messages/new', ensureAuthenticated, (req, res) => {
+    // res.render('messages-new')
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+
+    // check if user exists in database
+    db.checkUserExistence(github_id)
+        .then((data) => {
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render new messages page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                    res.render('messages-new')
+
+                // otherwise, redirect to root
+                } else {
+                    res.redirect('/');
+                }
+            } else {
+                res.redirect('/');
+            }
+        })
+        .catch(console.error);
 });
+
 app.post('/messages/new', (req, res) => {
-    res.redirect('/messages')
+    const postedObject = req.body;
+    const recipients = postedObject.recipients;
+    const message = postedObject.message;
+    let recipientIds = [];
+
+    // make sure recipients and message have both been entered before attempting to send
+    if (recipients && message) {
+        let recipientsArray = recipients.split(' ');
+        let cleanedArray = recipientsArray.map((recipient) => {
+            return recipient.replace(',','');
+        });
+
+        //console.log(cleanedArray);
+        getUserIdsByGitHubAliasArray()
+            .then((userIds) => {
+                console.log(userIds);
+                res.render('messages-new')
+            })
+            .catch(console.error);
+    } else {
+        res.redirect('/messages');
+    }
+
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {

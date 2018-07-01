@@ -398,6 +398,14 @@ function getRandomUsers(current_user_id, num_users) {
         .catch(console.error);
 }
 
+function getUserIdsByGitHubAliasArray(aliasArray) {
+    let values = '';
+    aliasArray.forEach((alias, index) => {
+        index === aliasArray.length - 1 ? values += '\'' + alias + '\'': values += '\'' + alias + '\', ';       
+    });
+    return db.any('SELECT DISTINCT user_id FROM users WHERE alias IN (' + values + ');');
+}
+
 module.exports = {
     getUserByUserId: getUserByUserId,
     getUsersByCity: getUsersByCity,
@@ -429,7 +437,8 @@ module.exports = {
     checkUserExistence: checkUserExistence,
     addUserLanguage: addUserLanguage,
     addUserEditor: addUserEditor,
-    getRandomUsers: getRandomUsers
+    getRandomUsers: getRandomUsers,
+    getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray
 };
 
 // TESTS
@@ -515,6 +524,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // getRandomUsers(1, 2)
+//     .then(console.log)
+//     .catch(console.error);
+// getUserIdsByGitHubAliasArray(['funName', 'sillyAlias'])
 //     .then(console.log)
 //     .catch(console.error);
 
