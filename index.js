@@ -366,54 +366,11 @@ app.post('/messages/new', (req, res) => {
 });
     
 app.get('/profile', ensureAuthenticated, (req, res) => {
-        db.getUserByGithubId(req.session.passport.user.id)
-            .then(data => {
-                // if user is authenticated, render the profile page
-                if(data) {
-                    let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
-                    let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
-                    let tabsPrefs = db.getUserTabPrefs(data.user_id);
-                    let languages = db.getUserLanguages(data.user_id);
-                    let editors = db.getUserEditors(data.user_id);
-                    Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
-                        .then(moreData => {
-                            // console.log(data);
-                            // console.log(moreData[0]);
-                            // console.log(moreData[4]);
-                            let userStateArray = [];
-                            stateArray.forEach(state => {
-                                let stateEntry = {}
-                                if(state == data.state) {
-                                    stateEntry = {
-                                        name: state,
-                                        userPref: true
-                                    };
-                                } else {
-                                    stateEntry = {
-                                        name: state,
-                                        userPref: false
-                                    };
-                                }
-                                userStateArray.push(stateEntry);
-                            });
-                            res.render('profile', {
-                                data: data,
-                                state: userStateArray,
-                                isProfile: isProfile(req.session.passport.user, data),
-                                curlyPrefs: moreData[0],
-                                quotesPrefs: moreData[1],
-                                tabsPrefs: moreData[2],
-                                language: moreData[3],
-                                editor: moreData[4]
-                            })
-                        })
-                        .catch(console.log);
-                // otherwise, redirect to login page
-                } else {
-                    res.redirect('/login');
-                }
-            })
-            .catch(console.log);
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then(data => {
+            displayProfile(data, req, res)
+        })
+        .catch(console.log);
 });
 
 app.post('/profile', (req, res) => {
@@ -425,26 +382,20 @@ app.post('/profile', (req, res) => {
     let editLanguagesPromise = db.editUserLanguages(newBody.user_id, newBody.languages);
     let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
     Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
-    .then((data) => {
-            console.log()
-            res.redirect('/profile');
-        })
-        .catch(console.log);
+        .then((data) => {
+                console.log()
+                res.redirect('/profile');
+            })
+            .catch(console.log);
 });
 
 app.get('/profile/:user_id', (req, res) => {
-        db.getUserByUserId(req.params.user_id)
-        .then((data) => {
-            
-            res.render('profile', {
-                data: data,
-                isProfile: null
-            })
-        })    
-    .catch(console.log)
+    db.getUserByUserId(req.params.user_id)
+        .then(data => {
+            displayProfile(data, req, res)
+        })
+        .catch(console.log)
 });
-
-
 
 app.listen(port, () => {
     console.log(`Application running at http://localhost:${port}`);
@@ -504,5 +455,54 @@ function generateConvertedObject(body) {
         itemName = itemName.split('_');
         let id = itemName.pop();
         return [id, itemName.join('_')];
+    }
+}
+
+function displayProfile(data, req, res) {
+    // if user is authenticated, render the profile page
+    if(data) {
+        let curlyPrefs = db.getUserCurlyPrefs(data.user_id);
+        let quotesPrefs = db.getUserQuotesPrefs(data.user_id);
+        let tabsPrefs = db.getUserTabPrefs(data.user_id);
+        let languages = db.getUserLanguages(data.user_id);
+        let editors = db.getUserEditors(data.user_id);
+        Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
+            .then(moreData => {
+                // console.log(data);
+                // console.log(moreData[0]);
+                // console.log(moreData[4]);
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                    if(state == data.state) {
+                        stateEntry = {
+                            name: state,
+                            userPref: true
+                        };
+                    } else {
+                        stateEntry = {
+                            name: state,
+                            userPref: false
+                        };
+                    }
+                    userStateArray.push(stateEntry);
+                });
+                console.log(moreData[2]);
+                console.log(data);
+                res.render('profile', {
+                    data: data,
+                    state: userStateArray,
+                    isProfile: isProfile(req.session.passport.user, data),
+                    curlyPrefs: moreData[0],
+                    quotesPrefs: moreData[1],
+                    tabsPrefs: moreData[2],
+                    language: moreData[3],
+                    editor: moreData[4]
+                })
+            })
+            .catch(console.log);
+    // otherwise, redirect to login page
+    } else {
+        res.redirect('/login');
     }
 }
