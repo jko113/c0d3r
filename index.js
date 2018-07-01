@@ -294,7 +294,8 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                     db.getMessagesByRecipient(internalId)
                         .then( (receivedMessages) => {
                             receivedMessages.forEach((message, index) => {
-                                message.date_time = message.date_time.toString();
+                                // message.date_time = message.date_time.toString();
+                                message.date_time = formatDateTime(message.date_time);
                             });
 
                             db.getMessagesBySender(internalId)
@@ -449,6 +450,15 @@ function isProfile(session, dbUser){
         return null;
     }
 };
+
+function formatDateTime(dateTime) {
+    let stringDate = dateTime.toString();
+    console.log(stringDate);
+    let idx = stringDate.indexOf('GMT');
+    let formattedDate = stringDate.slice(0, idx - 1);
+    console.log(formattedDate);
+    return formattedDate;
+}
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
