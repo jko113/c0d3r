@@ -31,7 +31,7 @@ INSERT INTO users (
 ) VALUES (
     'test',
     12345,
-    'avatar.com',
+    'https://avatars3.githubusercontent.com/u/5435082?s=88&v=4',
     'Tom Jones',
     'www.github.com/test',
     null,
@@ -47,7 +47,7 @@ INSERT INTO users (
 (
     'funName',
     54321,
-    'picture.com',
+    'https://avatars3.githubusercontent.com/u/5435082?s=88&v=4',
     'Martha Washington',
     'www.github.com/funUser',
     'El presidente',
@@ -63,7 +63,7 @@ INSERT INTO users (
 (
     'sillyAlias',
     10101,
-    'funImage.com',
+    'https://avatars3.githubusercontent.com/u/5435082?s=88&v=4',
     'Timothy Farflignugen',
     'www.github.com/farflig',
     'Microsoft',
@@ -75,6 +75,38 @@ INSERT INTO users (
     3,
     3,
     'If you were a coder, would you code as excellently as me?'
+),
+(
+    'anAlias',
+    14345,
+    'https://avatars3.githubusercontent.com/u/5435082?s=88&v=4',
+    'Sandra Parker',
+    'www.github.com/test',
+    null,
+    'Atlanta',
+    'GA',
+    30055,
+    '2018-03-25 12:31:56',
+    3,
+    2,
+    1,
+    'I love the blue skies of Atlanta.'
+),
+(
+    'anotherAlias',
+    93378,
+    'https://avatars3.githubusercontent.com/u/5435082?s=88&v=4',
+    'Timmy Robinson',
+    'www.github.com/test',
+    null,
+    'Atlanta',
+    'GA',
+    30055,
+    '2018-01-25 12:31:56',
+    1,
+    2,
+    3,
+    'I watch owls at night.'
 );
 
 INSERT INTO languages (name) VALUES
