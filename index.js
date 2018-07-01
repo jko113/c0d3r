@@ -79,23 +79,38 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/newprofile', (req, res) => {
-    var githubid = Number(req.body.githubid);
-    var zip = Number(req.body.zip_code);
-    var userSession = req.session.passport.user;
-
-    console.log('!!!!!!!!!!!!!!!!!!!!!');
-    console.log(userSession);
+    let githubid = Number(req.body.githubid);
+    let zip = Number(req.body.zip_code);
+    let userSession = req.session.passport.user;
+    let quotes = req.body.single_quotes_preference;
+    let tabs = req.body.tabs_preference;
+    let lines = req.body.same_line_curlies_preference;
+    let editor = req.body.editors;
+    let languages = req.body.languages;
     console.log(req.body);
-    // console.log(req.body.tabs);
-    // console.log(req.body.curly_braces);
-    // console.log(req.body.quotes);
-    // console.log(typeof new Date());
-    // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs_preference), Number(req.body.same_line_curlies_preference), Number(req.body.single_quotes_preference), req.body.bio)
-    .then((data) => {
-        res.redirect('/home');
-    })
-    .catch(console.log);
+    if (!languages || !editor || !quotes || !tabs || !lines){
+        res.send('please resubmit form');
+    } else {
+        // console.log(typeof new Date());
+        // console.log(Date.parse(new Date()));
+        db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
+        .then((data) => {
+            db.getUserByGithubId(userSession.id)
+            .then((data) => {
+                let languages = Number(req.body.languages);
+                let editor = Number(req.body.editors);
+                db.addUserLanguage(languages, data.user_id)
+                .then((data) => {
+                });
+                db.addUserEditor(editor, data.user_id)
+                .then((data) => {
+                    console.log(data);
+                })
+            })
+            res.redirect('/home');
+        })
+        .catch(console.log);
+    }
 });
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
