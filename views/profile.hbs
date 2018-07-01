@@ -11,7 +11,7 @@
             <div class="field">
                 <div class="control">
                     <div data-display>{{data.name}}</div>
-                    <input class="input is-hidden" type="text" value="{{data.name}}" data-display></label>
+                    <input class="input is-hidden" type="text" name="name" value="{{data.name}}" data-display></label>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
             <div class="field">
                 <div class="control">
                     <div data-display>{{data.employer}}</div>
-                    <input class="input is-hidden" type="text" value="{{data.employer}}" data-display></label>
+                    <input class="input is-hidden" type="text" name="employer" value="{{data.employer}}" data-display></label>
                 </div>
             </div>
         </div>
@@ -38,8 +38,8 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <div data-display>{{data.city}}, {{data.state}}</div>
-                    <input class="input is-hidden is-expanded" type="text" value="{{data.city}}" data-display></label>
+                    <div data-display>{{data.city}}, {{data.state}} {{data.zip}}</div>
+                    <input class="input is-hidden is-expanded" type="text" name="city" value="{{data.city}}" data-display></label>
                 </div>
             </div>
             <div class="field">
@@ -47,16 +47,20 @@
                     <div class="select is-hidden" data-display>
                         <select name="state">
                             <option>State</option>
-                            <option value="AL">AL</option>
-                            <option value="AK">AK</option>
-                            <option value="AS">AS</option>
+                            {{#each state}}
+                            <option value="{{name}}"
+                            {{#if userPref}}
+                            selected
+                            {{/if}}
+                            >{{name}}</option>
+                            {{/each}}
                         </select>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <input class="input is-hidden" type="text" value="{{data.zip}}" placeholder="Zip..." data-display></label>
+                    <input class="input is-hidden" type="text" name="zip" value="{{data.zip}}" placeholder="Zip..." data-display></label>
                 </div>
             </div>
         </div>
@@ -70,7 +74,7 @@
             <div class="field">
                 <div class="control">
                     <div data-display>{{data.bio}}</div>
-                    <textarea class="textarea is-hidden" placeholder="Bio..." data-display>{{data.bio}}</textarea>
+                    <textarea class="textarea is-hidden" placeholder="Bio..." name="bio" data-display>{{data.bio}}</textarea>
                 </div>
             </div>
         </div>
@@ -83,8 +87,12 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
+                    {{!-- Not allowing edits on this --}}
+                    <div>{{data.alias}}</div>
+                    {{!-- 
                     <div data-display>{{data.alias}}</div>
-                    <input class="input is-hidden" type="text" value="{{data.alias}}" data-display></label>
+                    <input class="input is-hidden" type="text" name="alias" value="{{data.alias}}" data-display></label>
+                     --}}
                 </div>
             </div>
         </div>
@@ -109,17 +117,26 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="tabs_preference" value="1">
-                        Tabs
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="tabs_preference" value="2">
-                        Spaces
-                    </label>
+                {{#each tabsPrefs}}
+                    <div class="control is-hidden" data-display>
+                        <label class="radio">
+                            <input type="radio" name="tabs_preference" value="{{preference_id}}"
+                            {{#if userpref}}
+                            checked
+                            {{/if}}
+                            >
+                            {{description}}
+                        </label>
+                    </div>
+                {{/each}}
+                <div class="control" data-display>
+                    <ul>
+                        {{#each tabsPrefs}}
+                            {{#if userpref}}
+                                <li>{{description}}</li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -131,17 +148,26 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="same_line_curlies_preference" value="1">
-                        Same line
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="same_line_curlies_preference" value="2">
-                        Next line
-                    </label>
+                {{#each curlyPrefs}}
+                    <div class="control is-hidden" data-display>
+                        <label class="radio">
+                            <input type="radio" name="same_line_curlies_preference" value="{{preference_id}}"
+                            {{#if userpref}}
+                            checked
+                            {{/if}}
+                            >
+                            {{description}}
+                        </label>
+                    </div>
+                {{/each}}
+                <div class="control" data-display>
+                    <ul>
+                        {{#each curlyPrefs}}
+                            {{#if userpref}}
+                                <li>{{description}}</li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -153,17 +179,26 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="single_quotes_preference" value="1">
-                        Single
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="single_quotes_preference" value="2">
-                        Double
-                    </label>
+                {{#each quotesPrefs}}
+                    <div class="control is-hidden" data-display>
+                        <label class="radio">
+                            <input type="radio" name="single_quotes_preference" value="{{preference_id}}"
+                            {{#if userpref}}
+                            checked
+                            {{/if}}
+                            >
+                            {{description}}
+                        </label>
+                    </div>
+                {{/each}}
+                <div class="control" data-display>
+                    <ul>
+                        {{#each quotesPrefs}}
+                            {{#if userpref}}
+                                <li>{{description}}</li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -179,7 +214,7 @@
                     <div class="control is-hidden" data-display>
                         <label class="checkbox">
                             <input type="checkbox" name="languages_{{lang_id}}"
-                            {{#if userlang}}
+                            {{#if userpref}}
                             checked
                             {{/if}}
                             >
@@ -190,7 +225,7 @@
                 <div class="control" data-display>
                     <ul>
                         {{#each language}}
-                            {{#if userlang}}
+                            {{#if userpref}}
                                 <li>{{name}}</li>
                             {{/if}}
                         {{/each}}
@@ -210,7 +245,7 @@
                     <div class="control is-hidden" data-display>
                         <label class="checkbox">
                             <input type="checkbox" name="editors_{{editor_id}}"
-                            {{#if usereditor}}
+                            {{#if userpref}}
                             checked
                             {{/if}}
                             >
@@ -221,7 +256,7 @@
                 <div class="control" data-display>
                     <ul>
                         {{#each editor}}
-                            {{#if usereditor}}
+                            {{#if userpref}}
                                 <li>{{name}}</li>
                             {{/if}}
                         {{/each}}
@@ -249,7 +284,6 @@
                     <input type="button" value="Edit Profile" class="button is-primary" data-edit-button>
                     <input type="submit" value="Save Profile" class="button is-primary is-hidden" data-save-button>
                     <input type="button" value="Cancel" class="button is-primary is-hidden" data-cancel-button>
-                    
                 </div>
             </div>
         {{/if}}

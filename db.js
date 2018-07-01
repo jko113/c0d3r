@@ -20,11 +20,38 @@ function getUserByGithubId(id) {
     return db.oneOrNone('SELECT * FROM users WHERE github_id = $1;', [id]);
 }
 
+function getUserTabPrefs(id) {
+    return db.any('SELECT DISTINCT t.description, t.preference_id, \
+        CASE WHEN t.preference_id = (SELECT tabs_preference FROM users WHERE user_id = $1) \
+            THEN true \
+            ELSE false END AS userPref \
+        FROM tabs_preferences t \
+        ORDER BY t.preference_id', [id]);
+}
+
+function getUserCurlyPrefs(id) {
+    return db.any('SELECT DISTINCT c.description, c.preference_id, \
+        CASE WHEN c.preference_id = (SELECT same_line_curlies_preference FROM users WHERE user_id = $1) \
+            THEN true \
+            ELSE false END AS userPref \
+        FROM same_line_curlies_preferences c \
+        ORDER BY c.preference_id', [id]);
+}
+
+function getUserQuotesPrefs(id) {
+    return db.any('SELECT DISTINCT q.description, q.preference_id, \
+        CASE WHEN q.preference_id = (SELECT single_quotes_preference FROM users WHERE user_id = $1) \
+            THEN true \
+            ELSE false END AS userPref \
+        FROM single_quotes_preferences q \
+        ORDER BY q.preference_id', [id]);
+}
+
 function getUserLanguages(id) {
     return db.any('SELECT DISTINCT l.name, l.lang_id, \
 	    CASE WHEN l.lang_id IN (SELECT lang_id FROM user_languages WHERE user_id = $1) \
 		     THEN true \
-		     ELSE false END AS userLang \
+		     ELSE false END AS userpref \
         FROM languages l \
         ORDER BY l.name', [id]);
 }
@@ -32,7 +59,7 @@ function getUserLanguages(id) {
 function getUserEditors(id) {
     return db.any('SELECT DISTINCT e.name, e.editor_id, \
         CASE WHEN e.editor_id IN (SELECT editor_id FROM user_editors WHERE user_id = $1) \
-              THEN true ELSE false END AS userEditor \
+              THEN true ELSE false END AS userpref \
         FROM editors e \
         ORDER BY e.name', [id]);
 }
@@ -62,6 +89,26 @@ function editUser(name,employer,city,state,zip,tabs_preference,same_line_curlies
         WHERE github_id = $10',
         [name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,
             single_quotes_preference,bio,github_id]);
+}
+
+function editUserLanguages(id, languageArray) {
+    let queryString = 'DELETE FROM user_languages WHERE user_id = $1;';
+    let values = [id];
+    for (let index = 0; index < languageArray.length; index++) {
+        queryString += `INSERT INTO user_languages (lang_id, user_id) VALUES ($${index+2},$1);`
+        values.push(languageArray[index]);
+    }
+    return db.multi(queryString, values);
+}
+
+function editUserEditors(id, editorArray) {
+    let queryString = 'DELETE FROM user_editors WHERE user_id = $1;';
+    let values = [id];
+    for (let index = 0; index < editorArray.length; index++) {
+        queryString += `INSERT INTO user_editors (editor_id, user_id) VALUES ($${index+2},$1);`
+        values.push(editorArray[index]);
+    }
+    return db.multi(queryString, values);
 }
 
 function getUserByAlias(searchString) {
@@ -358,8 +405,13 @@ module.exports = {
     getUsersByZip: getUsersByZip,
     addUser: addUser,
     editUser: editUser,
+    editUserLanguages: editUserLanguages,
+    editUserEditors: editUserEditors,
     getUserByAlias: getUserByAlias,
     getUserByGithubId: getUserByGithubId,
+    getUserTabPrefs: getUserTabPrefs,
+    getUserCurlyPrefs: getUserCurlyPrefs,
+    getUserQuotesPrefs: getUserQuotesPrefs,
     getUserLanguages: getUserLanguages,
     getUserEditors: getUserEditors,
     getUsersByLanguage: getUsersByLanguage,
@@ -400,6 +452,15 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByGithubId(12321)
+//     .then(console.log)
+//     .catch(console.error);
+// getUserTabPrefs(1)
+//     .then(console.log)
+//     .catch(console.error);
+// getUserCurlyPrefs(4)
+//     .then(console.log)
+//     .catch(console.error);
+// getUserQuotesPrefs(1)
 //     .then(console.log)
 //     .catch(console.error);
 // getUserLanguages(1)
@@ -462,7 +523,12 @@ module.exports = {
 //     .catch(console.error);
 /**** FIELDS NEEDED TO EDIT USER:
 user_id,name,employer,city,state,zip,tabs_preference,same_line_curlies_preference,single_quotes_preference,bio */
-
+// editUserLanguages(4, [1, 2, 3, 4]);
+//     .then(console.log)
+//     .catch(console.error);
+// editUserEditors(4, [1,2])
+//     .then(console.log)
+//     .catch(console.error);
 /**** SEARCH FIELDS
 tabs, curlies, quotes, languages, editors, city, state, zip, company
 */
