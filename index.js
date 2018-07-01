@@ -53,26 +53,29 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
     // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
-        // console.log(data)
             if(data){
                 // console.log('data exists');
                 res.redirect('/home');
             } else {
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                        stateEntry = {
+                            name: state
+                        };
+                    userStateArray.push(stateEntry);
+                });
                 let languages = db.getLanguages();
                 let editors = db.getEditors();
                 Promise.all([languages, editors])
                     .then((moreData) => {
-                        // console.log(moreData);
-                        // console.log('data doesnt exist');
-                        // res.send(userSession)
-                        // console.log(userSession)
                         var rawParsed = JSON.parse(userSession._raw);
-                        console.log(rawParsed.bio)
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
                         var state = locArr[1];
                         res.render('makeprofile', {
                             alias: userSession.username,
+                            state: userStateArray,
                             gitHubId: userSession.id,
                             gitHubAv: userSession._json.avatar_url,
                             username: userSession.username,
@@ -99,14 +102,14 @@ app.post('/newprofile', (req, res) => {
     // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    // console.log(userSession)
+    console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
     if(!quotes || !tabs || !lines){
         res.redirect('/newprofile')
     } else {
-        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
             .then((data) => {
