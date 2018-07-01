@@ -66,7 +66,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                     gitHubId: userSession.id,
                     gitHubAv: userSession._json.avatar_url,
                     username: userSession.username,
-                    name: userSession.displayName, // TODO: this isn't working
+                    name: userSession.displayName,
                     gitURL: userSession.profileUrl,
                     city: city,
                     state: state,
@@ -79,20 +79,38 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/newprofile', (req, res) => {
-    var githubid = Number(req.body.githubid);
-    var zip = Number(req.body.zip_code);
-    // console.log('!!!!!!!!!!!!!!!!!!!!!');
-    // console.log(req.body);
-    // console.log(req.body.tabs);
-    // console.log(req.body.curly_braces);
-    // console.log(req.body.quotes);
-    // console.log(typeof new Date());
-    // console.log(Date.parse(new Date()));
-    db.addUser(req.body.alias, githubid, req.body.githubav, req.body.name, req.body.gitURL, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(req.body.tabs), Number(req.body.curly_braces), Number(req.body.quotes), req.body.bio)
-    .then((data) => {
-        res.redirect('/home');
-    })
-    .catch(console.log);
+    let githubid = Number(req.body.githubid);
+    let zip = Number(req.body.zip_code);
+    let userSession = req.session.passport.user;
+    let quotes = req.body.single_quotes_preference;
+    let tabs = req.body.tabs_preference;
+    let lines = req.body.same_line_curlies_preference;
+    let editor = req.body.editors;
+    let languages = req.body.languages;
+    console.log(req.body);
+    if (!languages || !editor || !quotes || !tabs || !lines){
+        res.send('please resubmit form');
+    } else {
+        // console.log(typeof new Date());
+        // console.log(Date.parse(new Date()));
+        db.addUser(req.body.alias, userSession.id, userSession._json.avatar_url, userSession.displayName, userSession.id, req.body.employer, req.body.city, req.body.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), req.body.bio)
+        .then((data) => {
+            db.getUserByGithubId(userSession.id)
+            .then((data) => {
+                let languages = Number(req.body.languages);
+                let editor = Number(req.body.editors);
+                db.addUserLanguage(languages, data.user_id)
+                .then((data) => {
+                });
+                db.addUserEditor(editor, data.user_id)
+                .then((data) => {
+                    console.log(data);
+                })
+            })
+            res.redirect('/home');
+        })
+        .catch(console.log);
+    }
 });
 
 // dunno why this is here or if it is needed !!!!!!!!!!!!!
@@ -176,6 +194,7 @@ app.get('/home', (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
+                            // console.log(randomUsersArray)
                             res.render('home', randomUsersArray);
                         })
                     .catch(console.log)
@@ -191,29 +210,35 @@ app.get('/home', (req, res) => {
 });
 
 app.post('/home', (req, res) => {
-    db.getAllUsers()
-    .then((data) => {
-        var check = arrayIsProfile(req.session.passport.user, data)
-        // console.log(check)
-        return check
-    }).then((check) => {
-        let shrunkArr = [];
-        let firstProfile = check[Math.floor(Math.random() * 4)];
-        let secondPRofile = check[Math.floor(Math.random() * 4)];
-        shrunkArr.push(firstProfile);
-        shrunkArr.push(secondPRofile);
-        // console.log(shrunkArr);
-        return shrunkArr;
-    })
-    .then((shrunkArr) => {
-        // console.log('!!!!!!!!!!!!line155!!!!!!!!!!!');
-        // console.log(shrunkArr);
-        // console.log(shrunkArr.length);
-        // console.log('LINE 114!!!!!!!!!!!!!!!!!!!!')
-        // console.log(check)
-        res.render('home', shrunkArr)
-    })
-    .catch(console.log)
+    const userData = req.session.passport.user;
+    const github_id = userData.id;
+
+    db.checkUserExistence(github_id)
+        .then((data) => {
+
+            if (data && data.length) {
+
+                const isRegistered = data[0].user_exists;
+    
+                // render home page if user exists
+                if (isRegistered) {
+                    const internalId = data[0].user_id;
+                
+                    db.getRandomUsers(internalId, 5)
+                        .then((randomUsersArray) => {
+                            console.log(randomUsersArray.length)
+                            res.render('home', randomUsersArray);
+                        })
+                    .catch(console.log)
+                
+                // otherwise redirect to login page
+                } else {
+                    res.redirect('/login');
+                }
+            } else {
+                res.redirect('/login');
+            }
+})
 })
 
 app.get('/messages', ensureAuthenticated, (req, res) => {
@@ -305,8 +330,12 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
-    db.editUser(req.body.name, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
+    console.log(req.body)
+    let userSession = req.session.passport.user;
+    // console.log(req.session.passport);
+    db.editUser(userSession.displayName, req.body.employer, req.body.city, req.body.state, req.body.zip_code, req.body.tabs, req.body.curly_braces, req.body.quotes, req.body.bio, req.session.passport.user.id)
         .then((data) => {
+            console.log()
             res.redirect('/profile');
         })
 });
