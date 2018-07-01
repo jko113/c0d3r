@@ -367,7 +367,6 @@ app.post('/messages/new', (req, res) => {
     const author_id = Number(postedObject.user_id);
     // console.log(author_id);
     let recipientIds = [];
-    let justSentMessage = false;
 
     // make sure recipients and message have both been entered before attempting to send
     if (recipients && message) {
@@ -383,11 +382,18 @@ app.post('/messages/new', (req, res) => {
                 });
                 // console.log(recipientIds);
                 db.sendMessage(author_id, recipientIds, message)
-                    .then((data) => {
-                        justSentMessage = true;
-                        res.render('messages-new', {
-                            justSentMessage: justSentMessage
-                        })
+                    .then((sentSuccessfully) => {
+                        if (sentSuccessfully) {
+                            res.render('messages-new', {
+                                justSentMessage: true,
+                                user_id: author_id
+                            });
+                        } else {
+                            res.render('messages-new', {
+                                messageFailed: true,
+                                user_id: author_id
+                            });
+                        }
                     })
                     .catch(console.error);
             })
