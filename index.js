@@ -107,9 +107,15 @@ app.post('/newprofile', (req, res) => {
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
-    if(!quotes || !tabs || !lines){
-        res.redirect('/newprofile')
-    } else {
+    if(!quotes){
+        quotes = 3
+    }if(!tabs){
+        tabs = 3
+    }if(!lines){
+        lines = 3
+    }if(!zip){
+        zip = null
+    }
         db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
@@ -140,7 +146,6 @@ app.post('/newprofile', (req, res) => {
                 .catch(console.log)
             })
             .catch(console.log)
-        }
     })
 
 app.get('/search', (req, res) => {
