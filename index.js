@@ -53,26 +53,29 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
     // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
-        // console.log(data)
             if(data){
                 // console.log('data exists');
                 res.redirect('/home');
             } else {
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                        stateEntry = {
+                            name: state
+                        };
+                    userStateArray.push(stateEntry);
+                });
                 let languages = db.getLanguages();
                 let editors = db.getEditors();
                 Promise.all([languages, editors])
                     .then((moreData) => {
-                        // console.log(moreData);
-                        // console.log('data doesnt exist');
-                        // res.send(userSession)
-                        // console.log(userSession)
                         var rawParsed = JSON.parse(userSession._raw);
-                        console.log(rawParsed.bio)
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
                         var state = locArr[1];
                         res.render('makeprofile', {
                             alias: userSession.username,
+                            state: userStateArray,
                             gitHubId: userSession.id,
                             gitHubAv: userSession._json.avatar_url,
                             username: userSession.username,
