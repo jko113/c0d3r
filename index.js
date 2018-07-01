@@ -543,8 +543,9 @@ function displayProfile(data, req, res) {
                     }
                     userStateArray.push(stateEntry);
                 });
+                console.log('logging tabsprefs');
                 console.log(moreData[2]);
-                console.log(data);
+                // console.log(data);
                 res.render('profile', {
                     data: data,
                     state: userStateArray,
