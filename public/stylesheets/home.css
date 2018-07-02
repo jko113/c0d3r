@@ -35,31 +35,23 @@
 }
 .sidebutton{
     height: auto;
-    width: auto;  
-    position: fixed;
+    width: 100%;  
+    /* position: fixed; */
     z-index: 1;
-    bottom: 5%;
-    right: 5%;
     overflow-x: hidden;
     text-align: center;
+    align-items: center;
 }
 .inline{
     color: #fffcf8;
     background-color: #dea1ad;
     align-items: left;
     text-align: left;
-    justify-content: center;
     border: none;
-    padding: 10px 20px;
-    display: block;
-    width: 30%;
-    margin-bottom: 5%;
+    display: inline;
+    width: auto;
+    margin-bottom: 1%;
 }
-.load{
-
-}
-
-
 .hide{
     display: none;
 }
