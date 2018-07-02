@@ -10,6 +10,13 @@
         <h1>Highlighted Users</h1>
         {{/if}}
     </div>
+    {{#if isSearchResults}}
+        {{#if error}}
+        <div class="notification is-warning">
+        {{error}}
+        </div>
+        {{/if}}
+    {{/if}}
 
     {{#each data}}
 

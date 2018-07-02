@@ -171,7 +171,7 @@ app.get('/search', ensureAuthenticated, (req, res) => {
                     let editorPrefsPromise = db.getEditors();
                     Promise.all([curlyPrefsPromise, quotesPrefsPromise, tabPrefsPromise, languagePrefsPromise, editorPrefsPromise])
                         .then(moreData => {
-                            console.log(moreData[2]);
+                            // console.log(moreData[2]);
                             res.render('search', {
                                 user_id: internalId,
                                 state: stateArray,
@@ -196,27 +196,42 @@ app.get('/search', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-    req.queryObject = generateConvertedObject(req.body);
-    // console.log(req.queryObject);
-    if(req.body.searchType == 'and') {
-        db.andSearch(req.queryObject)
-            .then((data) => {
-                res.render('home', {
-                    data: data,
-                    isSearchResults: true
-                });
-            })
-            .catch(console.log);
-    } else {
-        db.orSearch(req.queryObject)
-            .then((data) => {
-                // console.log(data);
-                res.render('home', {
-                    data: data,
-                    isSearchResults: true
-                });
+    if(req.body.alias) {
+        db.getUsersByAlias(req.body.alias)
+            .then(data => {
+                console.log(data);
+                renderResults(data);
             })
             .catch(console.error);
+    } else {
+        req.queryObject = generateConvertedObject(req.body);
+        if(req.body.searchType == 'and') {
+            db.andSearch(req.queryObject)
+                .then((data) => {
+                    renderResults(data);
+                })
+                .catch(console.error);
+        } else {
+            db.orSearch(req.queryObject)
+                .then((data) => {
+                    renderResults(data);
+                })
+                .catch(console.error);
+        }
+    }
+    function renderResults(data) {
+        if(data) {
+            res.render('home', {
+                data: data,
+                isSearchResults: true
+            });
+        } else {
+            res.render('home', {
+                data: data,
+                isSearchResults: true,
+                error: 'No results found'
+            });
+        }
     }
 });
 

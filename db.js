@@ -123,6 +123,10 @@ function getUserByAlias(searchString) {
     return db.oneOrNone('SELECT * FROM users WHERE alias ILIKE $1;', [searchString]);
 }
 
+function getUsersByAlias(searchString) {
+    return db.any('SELECT * FROM users WHERE alias ILIKE $1;', [searchString]);
+}
+
 function getUsersByLanguage(lang_id) {
     return db.any('SELECT users.* FROM languages AS lang JOIN user_languages \
     AS ul ON ul.lang_id = lang.lang_id \
@@ -449,6 +453,7 @@ module.exports = {
     editUserLanguages: editUserLanguages,
     editUserEditors: editUserEditors,
     getUserByAlias: getUserByAlias,
+    getUsersByAlias: getUsersByAlias,
     getUserByGithubId: getUserByGithubId,
     getUserTabPrefs: getUserTabPrefs,
     getUserCurlyPrefs: getUserCurlyPrefs,
@@ -498,6 +503,9 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByAlias('testAlias')
+//     .then(console.log)
+//     .catch(console.error);
+// getUsersByAlias('lisadean')
 //     .then(console.log)
 //     .catch(console.error);
 // getUserByGithubId(12321)
