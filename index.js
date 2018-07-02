@@ -462,10 +462,12 @@ app.get('/profile/:user_id', ensureAuthenticated, (req, res) => {
 app.post('/delete', (req, res) => {
     db.getUserByGithubId(req.session.passport.user.id)
         .then((data) => {
-            res.redirect('/logout')
-        })
-        .then(() => {
             db.deleteUser(data.user_id)
+                .then((deleteData) => {
+                    req.session.destroy();
+                    res.redirect('/');
+                })
+                .catch(console.log)
         })
         .catch(console.log)
 });

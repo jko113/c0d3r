@@ -205,7 +205,7 @@ function hasUnreadMessages(user_id) {
 }
 
 function deleteUser(id) {
-    ('DELETE from users WHERE user_id = $1', [id]);
+    return db.result('DELETE from users WHERE user_id = $1', [id]);
 }
 // let parameters = {
 //     editors: [1,2],
