@@ -19,9 +19,10 @@
     {{/if}}
 
     {{#each data}}
-
+    
     <div class="profile-container">
         <img class="app-avatar" src="{{github_avatar_url}}">
+        {{#if name}}
         <div class="profile-info">
             <div class="field is-horizontal">
                 <div class="field-label">
@@ -35,6 +36,8 @@
                     </div>
                 </div>
             </div>
+        {{/if}}
+        {{#if city}}
             <div class="field is-horizontal">
                 <div class="field-label">
                     <label class="label">Location</label>
@@ -65,6 +68,8 @@
                         </div>
                     </div>
                 </div>
+                {{/if}}
+                {{#if employer}}
                 <div class="field is-horizontal">
                     <div class="field-label">
                         <label class="label">Employer</label>
@@ -78,6 +83,7 @@
                         </div>
                     </div>
                 </div>
+                {{/if}}
                 <div class="field is-horizontal">
                     <div class="field-label">
                         <label class="label">GitHub Alias</label>
@@ -123,8 +129,9 @@
 
 {{#if isSearchResults}}
 <div class="sidebutton">
-        <input type="button" value="Load More Results" class="load inline">
-        <a href="#top-of-page"><input type="button" value="Top" class="inline"></a>
+        <button type="button" class="load inline"><i class="fas fa-sync"></i></button>
+        <a href="#top-of-page"><button type="button" value="Top" class="inline"><i class="fas fa-angle-up"></i></button></a>
 </div>
 {{/if}}
- <script src="/js/home.js"></script> 
+
+<script src="/js/home.js"></script> 
