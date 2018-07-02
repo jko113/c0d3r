@@ -174,6 +174,18 @@ function sendMessage(author_id, recipient_id_array, message_text) {
         .catch(console.error);
 }
 
+function getTabsPrefsList(){
+    return db.any('SELECT * FROM tabs_preferences;');
+}
+
+function getQuotesPrefsList() {
+    return db.any('SELECT * FROM single_quotes_preferences;');
+}
+
+function getCurlyPrefsList() {
+    return db.any('SELECT * FROM same_line_curlies_preferences;');
+}
+
 function getLanguages() {
     return db.any('SELECT * FROM languages;');
 }
@@ -450,6 +462,9 @@ module.exports = {
     getMessagesByRecipient: getMessagesByRecipient,
     sendMessage: sendMessage,
     getAllUsers: getAllUsers,
+    getTabsPrefsList: getTabsPrefsList,
+    getQuotesPrefsList: getQuotesPrefsList,
+    getCurlyPrefsList: getCurlyPrefsList,
     getLanguages: getLanguages,
     getEditors: getEditors,
     hasUnreadMessages: hasUnreadMessages,
@@ -522,6 +537,15 @@ module.exports = {
 //     .then(console.log)
 //     .catch(console.error);
 // getAllUsers()
+    // .then(console.log)
+    // .catch(console.error);
+// getTabsPrefsList()
+//     .then(console.log)
+//     .catch(console.error);
+// getQuotesPrefsList()
+//     .then(console.log)
+//     .catch(console.error);
+// getCurlyPrefsList()
 //     .then(console.log)
 //     .catch(console.error);
 // getLanguages()
