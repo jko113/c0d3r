@@ -431,7 +431,7 @@ app.post('/messages/new', (req, res) => {
 app.get('/profile', ensureAuthenticated, (req, res) => {
     db.getUserByGithubId(req.session.passport.user.id)
         .then(data => {
-            data.memberSince = formatDateTime(data.join_date);
+            data.memberSince = formatDate(data.join_date);
             displayProfile(data, req, res)
         })
         .catch(console.log);
@@ -479,16 +479,27 @@ function isProfile(session, dbUser){
 };
 
 function formatDateTime(dateTime) {
-    // let stringDate = dateTime.toString();
-    // let idx = stringDate.indexOf('GMT');
-    // let formattedDate = stringDate.slice(0, idx - 1);
-    // return formattedDate;
+    let dateObject = new Date(dateTime);
+    // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+    let dateString = dateObject.toLocaleDateString('en-US', options);
+    return dateString;
+}
+
+function formatDate(dateTime) {
     let dateObject = new Date(dateTime);
     // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     let options = { year: 'numeric', month: 'long', day: 'numeric' };
     let dateString = dateObject.toLocaleDateString('en-US', options);
     return dateString;
 }
+
+// function formatDateTime(dateTime) {
+    // let stringDate = dateTime.toString();
+    // let idx = stringDate.indexOf('GMT');
+    // let formattedDate = stringDate.slice(0, idx - 1);
+    // return formattedDate;
+// }
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
