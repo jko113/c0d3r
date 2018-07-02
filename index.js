@@ -154,6 +154,7 @@ app.get('/search', ensureAuthenticated, (req, res) => {
 
     const userData = req.session.passport.user;
     const github_id = userData.id;
+    console.log(userData);
 
     // check if user exists in database
     db.checkUserExistence(github_id)

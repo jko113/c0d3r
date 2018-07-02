@@ -4,8 +4,8 @@
     <div class="app-profile-header">
         {{#if isSearchResults}}
         <a href="/home">Clear Search Results</a><br>
-        <a href="/search">Search Again</a>
-        <h1><strong>Search Results</strong></h1>
+        &nbsp;<a href="/search">Search Again</a>
+        &nbsp;<h1><strong>Search Results</strong></h1>
         {{else}}
         <h1>Highlighted Users</h1>
         {{/if}}
@@ -121,4 +121,9 @@
     {{/unless}}
 </div>
 
-{{!-- <script src="/js/home.js"></script> --}}
+{{#if isSearchResults}}
+<div>
+    <input type="button" value="Load More Results" class="sidebutton app-button-2">
+</div>
+{{/if}}
+ <script src="/js/home.js"></script> 
