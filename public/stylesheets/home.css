@@ -48,16 +48,10 @@
     align-items: left;
     text-align: left;
     border: none;
-    padding: 10px 20px;
     display: inline;
     width: auto;
     margin-bottom: 1%;
 }
-.load{
-
-}
-
-
 .hide{
     display: none;
 }

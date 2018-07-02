@@ -9,7 +9,7 @@ function addLoadToggle(){
         console.log(hiddenArr);
         load.addEventListener('click', function(event) {
             let count = 0;
-            for (i=0; i<4; i++){
+            for (i=0; i<5; i++){
                 if (hiddenArr[0]){
                     hiddenArr[0].classList.remove('hide');
                     hiddenArr = hiddenArr.slice(1, hiddenArr.length)
