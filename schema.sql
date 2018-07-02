@@ -38,7 +38,7 @@ CREATE TABLE languages (
 
 CREATE TABLE user_languages (
     lang_id integer REFERENCES languages (lang_id),
-    user_id integer REFERENCES users (user_id),
+    user_id integer REFERENCES users (user_id) ON DELETE CASCADE,
     PRIMARY KEY (lang_id, user_id)
 );
 
@@ -49,20 +49,20 @@ CREATE TABLE editors (
 
 CREATE TABLE user_editors (
     editor_id integer REFERENCES editors (editor_id),
-    user_id integer REFERENCES users (user_id),
+    user_id integer REFERENCES users (user_id) ON DELETE CASCADE,
     PRIMARY KEY (editor_id, user_id)
 );
 
 CREATE TABLE messages (
     message_id serial primary key,
-    author_id integer REFERENCES users (user_id),
+    author_id integer REFERENCES users (user_id) ON DELETE CASCADE,
     date_time timestamp,
     message_text varchar(3000)
 );
 
 CREATE TABLE message_recipients (
-    message_id integer REFERENCES messages (message_id),
-    recipient_id integer REFERENCES users (user_id),
+    message_id integer REFERENCES messages (message_id) ON DELETE CASCADE,
+    recipient_id integer REFERENCES users (user_id) ON DELETE CASCADE,
     is_read boolean,
     PRIMARY KEY (message_id, recipient_id)
 );

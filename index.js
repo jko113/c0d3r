@@ -459,6 +459,17 @@ app.get('/profile/:user_id', ensureAuthenticated, (req, res) => {
         .catch(console.log)
 });
 
+app.post('/delete', (req, res) => {
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then((data) => {
+            res.redirect('/logout')
+        })
+        .then(() => {
+            db.deleteUser(data.user_id)
+        })
+        .catch(console.log)
+});
+
 app.listen(port, () => {
     console.log(`Application running at http://localhost:${port}`);
 });
