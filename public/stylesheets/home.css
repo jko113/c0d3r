@@ -14,7 +14,7 @@
 }
 
 .control {
-    font-size: 10px !important;
+    font-size: 12px !important;
 }
 
 .profile-info {
@@ -32,4 +32,23 @@
     align-items: center;
     justify-content: center;
     padding-bottom: 20px;
+}
+.sidebutton{
+    height: auto; /* Full-height: remove this if you want "auto" height */    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 40%; /* Stay at the top */
+    left: 0;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+    margin-top:23px;
+    text-align: center;
+    transform:rotate(7deg);
+    -ms-transform:rotate(90deg); /* IE 9 */
+    -moz-transform:rotate(90deg); /* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari and Chrome */
+    -o-transform:rotate(90deg);
+}
+
+.hide{
+    display: none;
 }

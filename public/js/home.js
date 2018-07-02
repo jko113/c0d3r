@@ -2,31 +2,33 @@
 
 
 function addLoadToggle(){
-    let load = document.body.querySelectorAll('.add-profiles');
+    let load = document.body.querySelector('.sidebutton');
     if(load){
+        let hiddenCards = document.querySelectorAll('.hide');
+        let hiddenArr = Array.from(hiddenCards);
         load.addEventListener('click', function(event) {
-            // console.log('button licked');
-            var xhttp;
-            xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = () => {
-
+            let count = 0;
+            for (i=0; i<4; i++){
+                if (hiddenArr[0]){
+                    hiddenArr[0].classList.remove('hide');
+                    hiddenArr = hiddenArr.slice(1, hiddenArr.length - 1)
+                } else {
+                    load.classList.add('hide');
+                }
             }
-            })
-        });
-    } else {
-        //console.log('no button selected')
-    };
+        })
+    }
 };
+function hideAllCards(){
+    let profileCards = document.body.querySelectorAll('.profile-container');
+    let cardsArr = Array.from(profileCards);
+    let cutCardsArr = cardsArr.slice(4, cardsArr.length - 1);
+    console.log(cutCardsArr);
+    for (i=0; i<cutCardsArr.length; i++){
+        cutCardsArr[i].classList.add('hide');
+    }
+}
 
 
-function get(url) {
-    return new Promise((resolve, reject) => {
-      const req = new XMLHttpRequest();
-      req.open('GET', url);
-      req.onload = () => req.status === 200 ? resolve(req.response) : reject(Error(req.statusText));
-      req.onerror = (e) => reject(Error(`Network Error: ${e}`));
-      req.send();
-    });
-};
-
+hideAllCards();
 addLoadToggle();
