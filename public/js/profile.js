@@ -13,6 +13,7 @@ function addEditButtonListener() {
       toggleHidden('[data-save-button]');
       toggleHidden('[data-cancel-button]');
       toggleHidden('[data-display]');
+      toggleHidden('[data-delete-button]');
     });
   }
 }
