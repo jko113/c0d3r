@@ -48,3 +48,51 @@ html, body {
     padding: 10px 20px;
     cursor: pointer;
 }
+
+.app-button-2 {
+    color: #fffcf8;
+    background-color: #dea1ad;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer; 
+}
+
+.app-background {
+    background-color: #fffcf8; 
+}
+
+.app-header {
+    color: #fffcf8;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.app-notification {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #dea1ad;
+    padding: 10px;
+}
+
+.app-header-menu {
+    display: flex;
+    align-items: center;
+}
+
+.app-header-item-container {
+    display: flex;
+    align-items: center;
+}
+
+.app-header-item {
+    color: #fffcf8;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+.app-header-item:hover {
+    color: #cad7f2;
+}
