@@ -1,7 +1,14 @@
 .github-avatar {
-    height: 200px;
+    height: 150px;
     width: auto;
     border-radius: 50%;
     margin: 0 20px 20px 20px;
     border: #dea1ad 5px solid;
   }
+
+
+@media screen and (min-width: 640px) {       
+.github-avatar {
+    height: 200px;
+}
+}
