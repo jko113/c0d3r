@@ -1,4 +1,8 @@
+<div class="block">
 <form method="POST" action="/newprofile">
+
+    <img src="{{gitHubAv}}" alt="GitHub Avatar" class="github-avatar">
+
 
         <div class="field is-horizontal">
         <div class="field-label">
@@ -7,7 +11,7 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <input type="text" name="name" value="{{name}}"></label>
+                    <input class="input" type="text" name="name" value="{{name}}"></label>
                 </div>
             </div>
         </div>
@@ -47,7 +51,7 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    &nbsp;<input type="text" name="employer">
+                    <input class="input" type="text" name="employer" placeholder="Enter Company Name"></label>
                 </div>
             </div>
         </div>
@@ -61,24 +65,27 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <input type="text" name="city" value="{{city}}">
+                    <input class="input is-expanded" type="text" name="city" value="{{city}}" placeholder="Enter City"></label>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <div>   
-                        <select name="state">
-                            <option>State</option>
-                            <option value="AL">AL</option>
-                            <option value="AK">AK</option>
-                            <option value="AS">AS</option>
-                        </select>
+                    <div class="select">
+                        <div>   
+                            <select name="state">
+                                {{#each state}}
+                                <option value="{{name}}">
+                                    {{name}}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="number" name="zip_code" value="zip"></label>
+                    <input class="input" type="number" name="zip_code" value="zip" placeholder="Enter Zip Code"></label>
                 </div>
             </div>
         </div>
@@ -99,27 +106,24 @@
             </div>
         </div>
     </div>
-  <div class="field is-horizontal">
+    <div class="field is-horizontal">
         <div class="field-label">
             <label class="label">Tabs or Spaces?</label>
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="tabs_preference" value="1">
-                        Tabs
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="tabs_preference" value="2">
-                        Spaces
-                    </label>
-                </div>
+                {{#each tabsPref}}
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="tabs_preference" value="{{preference_id}}">
+                            {{description}}
+                        </label>
+                    </div>
+                {{/each}}
             </div>
         </div>
     </div>
+
     <br>
     <div class="field is-horizontal">
         <div class="field-label">
@@ -127,42 +131,33 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="same_line_curlies_preference" value="1">
-                        Same line
-                    </label>
-                </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="same_line_curlies_preference" value="2">
-                        Next line
-                    </label>
-                </div>
+                {{#each curlies}}
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="same_line_curlies_preference" value="{{preference_id}}">
+                            {{description}}
+                        </label>
+                    </div>
+                {{/each}}
             </div>
         </div>
     </div>
-    <br>
-        <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Quotes: single or double?</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
+    <div class="field is-horizontal">
+    <div class="field-label">
+        <label class="label">Quotes: single or double?</label>
+    </div>
+    <div class="field-body">
+        <div class="field">
+            {{#each quotes}}
                 <div class="control">
                     <label class="radio">
-                        <input type="radio" name="single_quotes_preference" value="1">
-                        Single
+                        <input type="radio" name="single_quotes_preference" value="{{preference_id}}">
+                        {{description}}
                     </label>
                 </div>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="single_quotes_preference" value="2">
-                        Double
-                    </label>
-                </div>
-            </div>
+            {{/each}}
         </div>
+    </div>
     </div>
     <br>
         <div class="field is-horizontal">
@@ -203,6 +198,7 @@
 
 <input type="submit">
 </form>
+</div>
 
 {{!-- <div class="block">
     <form action="/profile" method="POST">

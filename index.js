@@ -1,3 +1,5 @@
+
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -46,43 +48,47 @@ app.get('/', (req, res) => {
 // will also make the remake the function after .then as a named function passed in
 app.get('/newprofile', ensureAuthenticated, (req, res) => {
     var userSession = req.session.passport.user
-    // console.log(userSession._json.avatar_url);
-    // console.log(userSession._json.avatar_url)
-    // console.log(typeof userSession.id)
-    // console.log(userSession.id + ' LOOK FOR ME!!!')
-    // console.log(typeof Number(userSession.id))
     db.getUserByGithubId(Number(userSession.id))
         .then((data) => {
-        // console.log(data)
             if(data){
-                // console.log('data exists');
                 res.redirect('/home');
             } else {
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                        stateEntry = {
+                            name: state
+                        };
+                    userStateArray.push(stateEntry);
+                });
                 let languages = db.getLanguages();
                 let editors = db.getEditors();
-                Promise.all([languages, editors])
+                let curlies = db.getCurlyPrefs();
+                let quotes = db.getQuotePrefs();
+                let tabsPre = db.getTabsPrefs();
+                Promise.all([languages, editors, curlies, quotes, tabsPre])
                     .then((moreData) => {
                         // console.log(moreData);
-                        // console.log('data doesnt exist');
-                        // res.send(userSession)
-                        // console.log(userSession)
                         var rawParsed = JSON.parse(userSession._raw);
-                        console.log(rawParsed.bio)
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
                         var state = locArr[1];
                         res.render('makeprofile', {
                             alias: userSession.username,
+                            state: userStateArray,
                             gitHubId: userSession.id,
                             gitHubAv: userSession._json.avatar_url,
                             username: userSession.username,
                             name: userSession.displayName,
                             gitURL: userSession.profileUrl,
                             city: city,
-                            state: state,
                             bio: rawParsed.bio,
                             language: moreData[0],
-                            editors: moreData[1]
+                            editors: moreData[1],
+                            curlies: moreData[2],
+                            quotes: moreData[3],
+                            tabsPref: moreData[4]
+
                         });   
                     })
                     .catch(console.log)
@@ -103,10 +109,16 @@ app.post('/newprofile', (req, res) => {
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
-    if(!quotes || !tabs || !lines){
-        res.redirect('/newprofile')
-    } else {
-        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession._json.url, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+    if(!quotes){
+        quotes = 3
+    }if(!tabs){
+        tabs = 3
+    }if(!lines){
+        lines = 3
+    }if(!zip){
+        zip = null
+    }
+        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
             .then((data) => {
@@ -136,7 +148,6 @@ app.post('/newprofile', (req, res) => {
                 .catch(console.log)
             })
             .catch(console.log)
-        }
     })
 
 app.get('/search', ensureAuthenticated, (req, res) => {
@@ -226,7 +237,9 @@ app.get('/home', ensureAuthenticated, (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
-                            // console.log(randomUsersArray)
+                            randomUsersArray.forEach(function(data){
+                                data.join_date = formatDateTime(data.join_date);
+                            });
                             res.render('home', {
                                 data: randomUsersArray,
                                 isSearchResults: false
@@ -261,6 +274,10 @@ app.post('/home', (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
+
+                            randomUsersArray.forEach(function(data){
+                                data.join_date = formatDateTime(data.join_date);
+                            });
                             console.log(randomUsersArray.length)
                             res.render('home', {
                                 data: randomUsersArray,
@@ -297,7 +314,8 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                     db.getMessagesByRecipient(internalId)
                         .then( (receivedMessages) => {
                             receivedMessages.forEach((message, index) => {
-                                message.date_time = message.date_time.toString();
+                                // message.date_time = message.date_time.toString();
+                                message.date_time = formatDateTime(message.date_time);
                             });
 
                             db.getMessagesBySender(internalId)
@@ -373,7 +391,6 @@ app.post('/messages/new', (req, res) => {
     const author_id = Number(postedObject.user_id);
     // console.log(author_id);
     let recipientIds = [];
-    let justSentMessage = false;
 
     // make sure recipients and message have both been entered before attempting to send
     if (recipients && message) {
@@ -389,11 +406,18 @@ app.post('/messages/new', (req, res) => {
                 });
                 // console.log(recipientIds);
                 db.sendMessage(author_id, recipientIds, message)
-                    .then((data) => {
-                        justSentMessage = true;
-                        res.render('messages-new', {
-                            justSentMessage: justSentMessage
-                        })
+                    .then((sentSuccessfully) => {
+                        if (sentSuccessfully) {
+                            res.render('messages-new', {
+                                justSentMessage: true,
+                                user_id: author_id
+                            });
+                        } else {
+                            res.render('messages-new', {
+                                messageFailed: true,
+                                user_id: author_id
+                            });
+                        }
                     })
                     .catch(console.error);
             })
@@ -422,7 +446,7 @@ app.post('/profile', (req, res) => {
     let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
     Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
         .then((data) => {
-                console.log()
+                // console.log()
                 res.redirect('/profile');
             })
             .catch(console.log);
@@ -452,6 +476,13 @@ function isProfile(session, dbUser){
         return null;
     }
 };
+
+function formatDateTime(dateTime) {
+    let stringDate = dateTime.toString();
+    let idx = stringDate.indexOf('GMT');
+    let formattedDate = stringDate.slice(0, idx - 1);
+    return formattedDate;
+}
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
@@ -526,8 +557,9 @@ function displayProfile(data, req, res) {
                     }
                     userStateArray.push(stateEntry);
                 });
-                console.log(moreData[2]);
-                console.log(data);
+                // console.log('logging tabsprefs');
+                // console.log(moreData[2]);
+                // console.log(data);
                 res.render('profile', {
                     data: data,
                     state: userStateArray,

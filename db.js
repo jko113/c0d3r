@@ -144,7 +144,7 @@ function getUsersByEmployer(employer) {
 function getMessagesBySender (author_id) {
     return db.any('SELECT mess.*, users.alias FROM messages AS mess \
     JOIN users ON users.user_id = mess.author_id \
-    WHERE author_id = $1;', [author_id]);
+    WHERE author_id = $1 ORDER BY date_time DESC;', [author_id]);
 }
 
 function getMessagesByRecipient (recipient_id) {
@@ -280,7 +280,7 @@ function andSearch(searchObject) {
             }
 
         } else {
-            console.log(typeof searchObject[key]);
+            // console.log(typeof searchObject[key]);
         }
     });
     result = select + where + ';';
@@ -356,7 +356,7 @@ function orSearch(searchObject) {
             }
 
         } else {
-            console.log(typeof searchObject[key]);
+            // console.log(typeof searchObject[key]);
         }
     });
     result = select + where + ';';
@@ -382,6 +382,15 @@ function getAllUserIds() {
 
 function getAllGithubIds() {
     return db.any('SELECT DISTINCT github_id FROM users;');
+}
+function getCurlyPrefs() {
+    return db.any('SELECT * from same_line_curlies_preferences');
+}
+function getQuotePrefs() {
+    return db.any('SELECT * from single_quotes_preferences');
+}
+function getTabsPrefs() {
+    return db.any('SELECT * from tabs_preferences');
 }
 
 function getRandomUsers(current_user_id, num_users) {
@@ -466,7 +475,10 @@ module.exports = {
     addUserEditor: addUserEditor,
     getRandomUsers: getRandomUsers,
     getAllGithubIds: getAllGithubIds,
-    getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray
+    getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray,
+    getCurlyPrefs: getCurlyPrefs,
+    getQuotePrefs: getQuotePrefs,
+    getTabsPrefs: getTabsPrefs
 };
 
 // TESTS
