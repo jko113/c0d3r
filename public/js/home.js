@@ -14,7 +14,7 @@ function addLoadToggle(){
             })
         });
     } else {
-        console.log('no button selected')
+        //console.log('no button selected')
     };
 };
 

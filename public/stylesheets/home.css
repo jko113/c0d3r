@@ -1,17 +1,35 @@
-body{
-    width: 100%;
-}
-.profile-container{
-    width: 60%;
-    margin-left: 35%;
-    margin-right: auto;
-    padding-top: 10%;
-    padding-bottom: 10%;
+.app-profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    font-family: 'Cormorant Garamond', serif;
 }
 
-img{
-    /* display: block; */
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 10%;
+.profile-container {
+    background-color: #d9d7cc;
+    font-size: 10px !important;
+    margin: 20px;
+    display: flex;
+}
+
+.control {
+    font-size: 10px !important;
+}
+
+.profile-info {
+    padding: 20px;
+}
+
+.app-avatar {
+    width: 100px;
+    height: 100px;
+    margin: 30px;
+}
+
+.app-profile-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
 }
