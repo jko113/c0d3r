@@ -268,7 +268,7 @@ function andSearch(searchObject) {
             }
 
         } else {
-            console.log(typeof searchObject[key]);
+            // console.log(typeof searchObject[key]);
         }
     });
     result = select + where + ';';
@@ -344,7 +344,7 @@ function orSearch(searchObject) {
             }
 
         } else {
-            console.log(typeof searchObject[key]);
+            // console.log(typeof searchObject[key]);
         }
     });
     result = select + where + ';';

@@ -68,7 +68,7 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 let tabsPre = db.getTabsPrefs();
                 Promise.all([languages, editors, curlies, quotes, tabsPre])
                     .then((moreData) => {
-                        console.log(moreData);
+                        // console.log(moreData);
                         var rawParsed = JSON.parse(userSession._raw);
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
@@ -105,7 +105,7 @@ app.post('/newprofile', (req, res) => {
     // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    console.log(userSession)
+    // console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
@@ -268,6 +268,7 @@ app.post('/home', (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
+
                             randomUsersArray.forEach(function(data){
                                 data.join_date = formatDateTime(data.join_date);
                             });
@@ -439,7 +440,7 @@ app.post('/profile', (req, res) => {
     let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
     Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
         .then((data) => {
-                console.log()
+                // console.log()
                 res.redirect('/profile');
             })
             .catch(console.log);
@@ -550,8 +551,9 @@ function displayProfile(data, req, res) {
                     }
                     userStateArray.push(stateEntry);
                 });
-                console.log(moreData[2]);
-                console.log(data);
+                // console.log('logging tabsprefs');
+                // console.log(moreData[2]);
+                // console.log(data);
                 res.render('profile', {
                     data: data,
                     state: userStateArray,
