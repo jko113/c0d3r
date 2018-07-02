@@ -23,7 +23,7 @@ function hideAllCards(){
     let profileCards = document.body.querySelectorAll('.profile-container');
     let cardsArr = Array.from(profileCards);
     let cutCardsArr = cardsArr.slice(4, cardsArr.length - 1);
-    console.log(cutCardsArr);
+    //console.log(cutCardsArr);
     for (i=0; i<cutCardsArr.length; i++){
         cutCardsArr[i].classList.add('hide');
     }

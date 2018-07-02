@@ -1,5 +1,3 @@
-
-
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -20,28 +18,17 @@ app.set('view engine', '.hbs');
 const static = express.static;
 app.use(static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(bodyParser.urlencoded({
-//     extended: true
-// }));
-// app.use(bodyParser.json());
 setupAuth(app);
 
-// need to handle 
+// root route
 app.get('/', (req, res) => {
-    // var raw = (req.session.passport.user._raw)
-    // raw = (JSON.parse(raw))
-    // res.send(raw)
-    // console.log('here');
-    if (req.session.passport){
-        // res.send(`WELCOME ${req.session.passport.user.username}!`);
+
+    if (req.session.passport) {
         res.redirect('home');
     } else {
-        // res.send('Welcome!')
         res.sendFile(__dirname + '/public/frontpage.html');
     }
 });
-
-
 
 // redirected here from login using the functions in auth
 // the stuff after the else will be handled through res.render and allow for user to input in form format
@@ -68,10 +55,11 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                 let tabsPre = db.getTabsPrefs();
                 Promise.all([languages, editors, curlies, quotes, tabsPre])
                     .then((moreData) => {
-                        // console.log(moreData);
+
                         var rawParsed = JSON.parse(userSession._raw);
                         var locArr = rawParsed.location.split(',');
                         var city = locArr[0];
+                        /******* SHOULD state VARIABLE BE SENT AS WELL? */
                         var state = locArr[1];
                         res.render('makeprofile', {
                             alias: userSession.username,
@@ -94,18 +82,13 @@ app.get('/newprofile', ensureAuthenticated, (req, res) => {
                     .catch(console.log)
                     }
                 });
-    
-    // console.log(req.session.passport.user.username);
-    // res.send(req.session.passport.user.username);
 });
 
 app.post('/newprofile', (req, res) => {
-    // let githubid = Number(req.body.githubid);
+
     let newBody = generateConvertedObject(req.body);
-    // console.log(newBody);
     let zip = Number(req.body.zip_code);
     let userSession = req.session.passport.user;
-    // console.log(userSession)
     let quotes = newBody.single_quotes_preference;
     let tabs = req.body.tabs_preference;
     let lines = req.body.same_line_curlies_preference;
@@ -118,43 +101,42 @@ app.post('/newprofile', (req, res) => {
     }if(!zip){
         zip = null
     }
-        db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
+    db.addUser(userSession.username, userSession.id, userSession._json.avatar_url, newBody.name, userSession.profileUrl, newBody.employer, newBody.city, newBody.state, zip, new Date(), Number(tabs), Number(lines), Number(quotes), newBody.bio)
         .then((data) => {
             db.getUserByGithubId(userSession.id)
-            .then((data) => {
-                let user_id = data.user_id
-                if (newBody.editor && newBody.language){
-                    db.editUserEditors(user_id, newBody.editor)
-                    .then((data) => {
-                        db.editUserLanguages(user_id, newBody.editor)
-                        .then((data) => {})
-                        .catch(console.log)
-                    })
-                    .catch(console.log)
-                } else {
-                    if(newBody.language && !newBody.editor){
-                        db.editUserLanguages(user_id, newBody.language)
+                .then((data) => {
+                    let user_id = data.user_id
+                    if (newBody.editor && newBody.language){
+                        db.editUserEditors(user_id, newBody.editor)
+                        .then((data) => {
+                            db.editUserLanguages(user_id, newBody.editor)
+                            .then((data) => {})
+                            .catch(console.log)
+                        })
                         .catch(console.log)
                     } else {
-
-                        if(!newBody.language && newBody.editor){
-                            db.editUserEditors(user_id, newBody.editor)
+                        if(newBody.language && !newBody.editor){
+                            db.editUserLanguages(user_id, newBody.language)
                             .catch(console.log)
+                        } else {
+
+                            if(!newBody.language && newBody.editor){
+                                db.editUserEditors(user_id, newBody.editor)
+                                .catch(console.log)
+                            }
                         }
                     }
-                }
-                res.redirect('/home')
+                    res.redirect('/home')
                 })
                 .catch(console.log)
-            })
-            .catch(console.log)
+        })
+        .catch(console.log)
     })
 
 app.get('/search', ensureAuthenticated, (req, res) => {
 
     const userData = req.session.passport.user;
     const github_id = userData.id;
-    console.log(userData);
 
     // check if user exists in database
     db.checkUserExistence(github_id)
@@ -172,7 +154,7 @@ app.get('/search', ensureAuthenticated, (req, res) => {
                     let editorPrefsPromise = db.getEditors();
                     Promise.all([curlyPrefsPromise, quotesPrefsPromise, tabPrefsPromise, languagePrefsPromise, editorPrefsPromise])
                         .then(moreData => {
-                            // console.log(moreData[2]);
+
                             res.render('search', {
                                 user_id: internalId,
                                 state: stateArray,
@@ -200,7 +182,7 @@ app.post('/search', (req, res) => {
     if(req.body.alias) {
         db.getUsersByAlias(req.body.alias)
             .then(data => {
-                // console.log(data);
+
                 renderResults(data);
             })
             .catch(console.error);
@@ -222,6 +204,10 @@ app.post('/search', (req, res) => {
     }
     function renderResults(data) {
         if(data) {
+
+            data.forEach((user) => {
+                user.join_date = formatDate(user.join_date);
+            });
             res.render('home', {
                 data: data,
                 isSearchResults: true
@@ -254,14 +240,14 @@ app.get('/home', ensureAuthenticated, (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             randomUsersArray.forEach(function(data){
-                                data.join_date = formatDateTime(data.join_date);
+                                data.join_date = formatDate(data.join_date);
                             });
                             res.render('home', {
                                 data: randomUsersArray,
                                 isSearchResults: false
                             });
                         })
-                    .catch(console.log)
+                        .catch(console.log)
                 
                 // otherwise redirect to login page
                 } else {
@@ -292,9 +278,9 @@ app.post('/home', (req, res) => {
                         .then((randomUsersArray) => {
 
                             randomUsersArray.forEach(function(data){
-                                data.join_date = formatDateTime(data.join_date);
+                                data.join_date = formatDate(data.join_date);
                             });
-                            // console.log(randomUsersArray.length)
+
                             res.render('home', {
                                 data: randomUsersArray,
                                 isSearchResults: false
@@ -330,7 +316,7 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                     db.getMessagesByRecipient(internalId)
                         .then( (receivedMessages) => {
                             receivedMessages.forEach((message, index) => {
-                                // message.date_time = message.date_time.toString();
+
                                 message.date_time = formatDateTime(message.date_time);
                             });
 
@@ -364,12 +350,9 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
         .catch(console.error);
 
 });
-app.post('/messages', (req, res) => {
-    res.render('messages')
-});
 
 app.get('/messages/new', ensureAuthenticated, (req, res) => {
-    // res.render('messages-new')
+
     const userData = req.session.passport.user;
     const github_id = userData.id;
 
@@ -400,12 +383,11 @@ app.get('/messages/new', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/messages/new', (req, res) => {
+    
     const postedObject = req.body;
-    // console.log(postedObject);
     const recipients = postedObject.recipients;
     const message = postedObject.message;
     const author_id = Number(postedObject.user_id);
-    // console.log(author_id);
     let recipientIds = [];
 
     // make sure recipients and message have both been entered before attempting to send
@@ -420,7 +402,7 @@ app.post('/messages/new', (req, res) => {
                 userIds.forEach((item) => {
                     recipientIds.push(item.user_id);
                 });
-                // console.log(recipientIds);
+
                 db.sendMessage(author_id, recipientIds, message)
                     .then((sentSuccessfully) => {
                         if (sentSuccessfully) {
@@ -454,16 +436,16 @@ app.get('/profile', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/profile', (req, res) => {
-    // console.log(req.body);
+
     let newBody = generateConvertedObject(req.body);
-    // console.log(newBody);
     let userSession = req.session.passport.user;
     let editUserPromise = db.editUser(newBody.name, newBody.employer, newBody.city, newBody.state, newBody.zip, newBody.tabs_preference, newBody.same_line_curlies_preference, newBody.single_quotes_preference, newBody.bio, userSession.id)
     let editLanguagesPromise = db.editUserLanguages(newBody.user_id, newBody.languages);
     let editEditorsPromise = db.editUserEditors(newBody.user_id, newBody.editors);
+
     Promise.all([editUserPromise, editLanguagesPromise, editEditorsPromise])
         .then((data) => {
-                // console.log()
+                
                 res.redirect('/profile');
             })
             .catch(console.log);
@@ -483,11 +465,8 @@ app.listen(port, () => {
 
 
 function isProfile(session, dbUser){
-    // console.log(session.id)
-    // console.log(dbUser.github_id)
-    // console.log(dbUser)
+
     if (Number(session.id) === Number(dbUser.github_id)) {
-        // console.log('they are the same')
         return true
     } else {
         return null;
@@ -519,11 +498,9 @@ function formatDate(dateTime) {
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
-    // console.log('LINE 171!!!!!!!!!!!!!')
-    // console.log(dbUser);
+
     dbUser.forEach(function(data){
-        // console.log(session.id);
-        // console.log(data.github_id);
+
         if (Number(session.id) !== Number(data.github_id)) {
             fixedArr.push(data);
         }
@@ -571,9 +548,7 @@ function displayProfile(data, req, res) {
         let editors = db.getUserEditors(data.user_id);
         Promise.all([curlyPrefs, quotesPrefs, tabsPrefs, languages, editors])
             .then(moreData => {
-                // console.log(data);
-                // console.log(moreData[0]);
-                // console.log(moreData[4]);
+
                 let userStateArray = [];
                 stateArray.forEach(state => {
                     let stateEntry = {}
@@ -590,9 +565,7 @@ function displayProfile(data, req, res) {
                     }
                     userStateArray.push(stateEntry);
                 });
-                // console.log('logging tabsprefs');
-                // console.log(moreData[2]);
-                // console.log(data);
+
                 res.render('profile', {
                     data: data,
                     state: userStateArray,
