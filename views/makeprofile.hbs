@@ -1,3 +1,4 @@
+<div class="block">
 <form method="POST" action="/newprofile">
 
     <img src="{{gitHubAv}}" alt="GitHub Avatar" class="github-avatar">
@@ -10,7 +11,7 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <input type="text" name="name" value="{{name}}"></label>
+                    <input class="input" type="text" name="name" value="{{name}}"></label>
                 </div>
             </div>
         </div>
@@ -50,7 +51,7 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    &nbsp;<input type="text" name="employer" placeholder="Enter Company Name">
+                    <input class="input" type="text" name="employer" placeholder="Enter Company Name"></label>
                 </div>
             </div>
         </div>
@@ -64,28 +65,27 @@
         <div class="field-body">
             <div class="field">
                 <div class="control">
-                    <input type="text" name="city" value="{{city}}" placeholder="Enter City">
+                    <input class="input is-expanded" type="text" name="city" value="{{city}}" placeholder="Enter City"></label>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <div>   
-                        <select name="state">
-                            {{#each state}}
-                            <option value="{{name}}">
-                                {{name}}
-                            </option>
-                            {{/each}}
-                            {{!-- <option value=>AL</option> --}}
-                            {{!-- <option value="AK">AK</option> --}}
-                            {{!-- <option value="AS">AS</option> --}}
-                        </select>
+                    <div class="select">
+                        <div>   
+                            <select name="state">
+                                {{#each state}}
+                                <option value="{{name}}">
+                                    {{name}}
+                                </option>
+                                {{/each}}
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <input type="number" name="zip_code" value="zip" placeholder="Enter Zip Code"></label>
+                    <input class="input" type="number" name="zip_code" value="zip" placeholder="Enter Zip Code"></label>
                 </div>
             </div>
         </div>
@@ -198,6 +198,7 @@
 
 <input type="submit">
 </form>
+</div>
 
 {{!-- <div class="block">
     <form action="/profile" method="POST">
