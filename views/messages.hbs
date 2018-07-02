@@ -1,36 +1,70 @@
-<h1><strong>Messages</strong></h1>
-
-<a href="/messages/new">Send New Message</a>
-
-<div class="buttons">
-    <label>Inbox</label><input type="radio" name="box-type" value="inbox" data-box-button checked>
-    <label>Outbox</label><input type="radio" name="box-type" value="outbox" data-box-button>
+<div class="block">
+    <button class="button is-primary" data-box-button>Inbox</button>
+    <button class="button is-primary is-outlined" data-box-button>Outbox</button>
+    <div class="is-pulled-right">
+        <a href="/messages/new" class="button is-info">New Message</a>
+    </div>
 </div>
 
-{{!-- <div class="is-hidden" data-display> --}}
-<div data-display class="is-hidden">
-    <div>Outbox</div>
+{{!-- Outbox --}}
+<div class="block is-hidden" data-display>
+    <table class="table is-striped is-fullwidth">
+        <thead>
+            <tr>
+                <th>
+                    Message
+                </th>
+                <th class="has-text-right">
+                    Date/Time Sent
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each messages.sent}}
+                <tr>
+                    <td>
+                        {{this.message_text}}
+                    </td>
+                    <td class="has-text-right has-text-weight-light">
+                        <div>{{this.date}}<br>{{this.time}}</div>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
 
-    {{#each messages.sent}}
-        <div>
-            @ {{this.date_time}}, {{this.sender_alias}} said
-        </div>
-        <div>
-            {{this.message_text}}
-        </div>
-    {{/each}}
+    </table>
 </div>
 
-<div data-display>
-    <div>Inbox</div>
-    {{#each messages.received}}
-        <div>
-            @ {{this.date_time}}, {{this.sender_alias}} said
-        </div>
-        <div>
-            {{this.message_text}}
-        </div>
-    {{/each}}
+{{!-- Inbox --}}
+<div class="block" data-display>
+    <table class="table is-striped is-fullwidth">
+        <thead>
+            <tr>
+                <th>
+                    Message
+                </th>
+                <th class="has-text-right">
+                    Received / From
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each messages.received}}
+                <tr>
+                    <td>
+                        <div>
+                            {{this.message_text}}
+                        </div>
+                    </td>
+                    <td class="has-text-right has-text-weight-light">
+                        <div>{{this.date}}<br>{{this.time}}</div>
+                        <div>{{this.sender_alias}}</div>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+
+    </table>
 </div>
 
 <script src="/js/messages.js"></script>

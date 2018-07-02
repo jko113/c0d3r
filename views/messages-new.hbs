@@ -1,25 +1,44 @@
-{{!-- <h1><strong>This is the logged in new messages page.</strong></h1>--}}
+<div class="block">
+    &nbsp;
+    {{#if this.justSentMessage}}
+        <span class="has-text-success">Message Sent Successfully!</span>
+    {{/if}}
 
-<a href="/messages">Back to Messages</a>
+    {{#if this.messageFailed}}
+        <span class="has-text-warning">Message Failed To Send..</span>
+    {{/if}}
+
+    <div class="is-pulled-right">
+        <a href="/messages" class="button is-info">Back to Messages</a>
+    </div>
+</div>
 
 <form method="POST" action="/messages/new">
-    <label for="">Recipients:</label>
-    <div>(Use recipients' github_ids. For multiple recipients, separate ids with a comma and space, such as 'user1, user2, user3'.)</div>
-    <input type="text" name="recipients">
-    <br>
-    <label for="">Message:</label><br><textarea rows="2" cols="25" placeholder="This is the default text" name="message"></textarea><br>
-    <input type="submit">
-    <input type="reset">
     <input type="hidden" name="user_id" value={{this.user_id}}>
-    {{!-- <br><div>{{this</div> --}}
+
+    <div class="block">
+
+        <div class="field">
+            <label class="label">Recipients</label>
+            <div class="control">
+                <input class="input" type="text" name="recipients" placeholder="GitHub Alias">
+                <p class="help">Use recipients' GitHub alias. For multiple recipients, separate aliases with a comma and space, such as <span class="is-italic">user1, user2, user3</span>.</p>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Message</label>
+            <div class="control">
+                <textarea class="textarea" rows="5" placeholder="Enter a message" name="message"></textarea>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <input class="button is-primary" type="submit">
+                <input class="button is-primary" type="reset">
+            </div>
+        </div>
+    </div>
+
 </form> 
-
-{{#if this.justSentMessage}}
-<h1>Message Sent Successfully!</h1>
-{{/if}}
-
-{{#if this.messageFailed}}
-<h1>Message Failed To Send..</h1>
-{{/if}}
-
-{{!-- <h1>user_id: {{this.user_id</h1> --}}

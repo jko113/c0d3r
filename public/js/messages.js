@@ -1,24 +1,32 @@
 function toggleHidden(dataLabel) {
-    let elements = document.querySelectorAll(dataLabel);
-    elements.forEach(function(element) {
-      element.classList.toggle('is-hidden');
-    });
-  }
+  let elements = document.querySelectorAll(dataLabel);
+  elements.forEach(function(element) {
+    element.classList.toggle('is-hidden');
+  });
+}
 
-  function addBoxTypeListener() {
-      let buttons = document.querySelectorAll('[data-box-button]');
-      if (buttons) {
-          buttons.forEach(function (button) {
-            button.addEventListener('click', function (event) {
-                //event.preventDefault();
-                toggleHidden('[data-display]');
-            });
+function toggleInverted(dataLabel) {
+  let elements = document.querySelectorAll(dataLabel);
+  elements.forEach(function(element) {
+    element.classList.toggle('is-outlined');
+  });
+}
+
+function addButtonListener() {
+    let buttons = document.querySelectorAll('[data-box-button]');
+    if (buttons) {
+        buttons.forEach(function (button) {
+          button.addEventListener('click', function (event) {
+              //event.preventDefault();
+              toggleHidden('[data-display]');
+              toggleInverted('[data-box-button]');
           });
-      }
-  }
-  
-  function main() {
-    addBoxTypeListener();
-  }
-  
-  main();
+        });
+    }
+}
+
+function main() {
+  addButtonListener();
+}
+
+main();
