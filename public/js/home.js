@@ -23,6 +23,10 @@ function addLoadToggle(){
 function hideAllCards(){
     let profileCards = document.body.querySelectorAll('.profile-container');
     let cardsArr = Array.from(profileCards);
+    if(cardsArr.length < 5 || !cardsArr){
+        let load = document.body.querySelector('.load');
+        load.classList.add('hide');
+    }
     let cutCardsArr = cardsArr.slice(5, cardsArr.length);
     //console.log(cutCardsArr);
     for (i=0; i<cutCardsArr.length; i++){
