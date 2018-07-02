@@ -155,20 +155,44 @@ app.get('/search', (req, res) => {
 
     const userData = req.session.passport.user;
     const github_id = userData.id;
+    console.log(userData);
 
     // check if user exists in database
     db.checkUserExistence(github_id)
         .then((data) => {
-
             if (data && data.length) {
 
                 const isRegistered = data[0].user_exists;
     
                 // render new messages page if user exists
                 if (isRegistered) {
-                    const internalId = data[0].user_id;
-                    res.render('search', {
-                        user_id: internalId
+                let languages = db.getLanguages();
+                let editors = db.getEditors();
+                let curlies = db.getCurlyPrefs();
+                let quotes = db.getQuotePrefs();
+                let tabsPre = db.getTabsPrefs();
+                let userStateArray = [];
+                stateArray.forEach(state => {
+                    let stateEntry = {}
+                        stateEntry = {
+                            name: state
+                        };
+                    userStateArray.push(stateEntry);
+                });
+                Promise.all([languages, editors, curlies, quotes, tabsPre])
+                    .then((moreData) => {
+                        console.log(moreData);    
+                        const internalId = data[0].user_id;
+                        res.render('search', {
+                            user_id: internalId,
+                            tabsPrefs: moreData[4],
+                            curlyPrefs: moreData[2],
+                            quotesPrefs: moreData[3],
+                            state: userStateArray,
+                            languages: moreData[0],
+                            editors: moreData[1]
+
+                        })
                     })
 
                 // otherwise, redirect to root
@@ -183,6 +207,7 @@ app.get('/search', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
+    console.log(req.body);
     // TODO Check if this contains post results, if so, display 'clear filter'
     // button that redirects to home page
     req.queryObject = generateConvertedObject(req.body);

@@ -99,13 +99,25 @@
           <div class="column">
             <div class="block">
               <label class="label">Preferred languages</label>
-              <input type="checkbox" name="languages_1">&nbsp;Java<br>
-              <input type="checkbox" name="languages_2">&nbsp;JavaScript
+              {{#each languages}}
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" name="{{name}}">
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
             </div>
             <div class="block">
               <label class="label">Preferred text editor</label>
-              <input type="checkbox" name="editors_1">&nbsp;VS Code<br>
-              <input type="checkbox" name="editors_2">&nbsp;Atom
+              {{#each editors}}
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" name="editor_{{editor_id}}">
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
             </div>
             <div class="block">
               {{!-- <label class="label">City</label> --}}
@@ -116,9 +128,11 @@
               <div class="select">
                 <select name="state">
                   <option>State</option>
-                  <option value="AL">AL</option>
-                  <option value="AK">AK</option>
-                  <option value="AS">AS</option>
+                  {{#each state}}
+                  <option value="{{name}}">
+                      {{name}}
+                  </option>
+                  {{/each}}
                 </select>
               </div>
             </div>
