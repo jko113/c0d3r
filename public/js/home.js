@@ -2,7 +2,7 @@
 
 
 function addLoadToggle(){
-    let load = document.body.querySelector('.sidebutton');
+    let load = document.body.querySelector('.load');
     if(load){
         let hiddenCards = document.querySelectorAll('.hide');
         let hiddenArr = Array.from(hiddenCards);
