@@ -431,6 +431,7 @@ app.post('/messages/new', (req, res) => {
 app.get('/profile', ensureAuthenticated, (req, res) => {
     db.getUserByGithubId(req.session.passport.user.id)
         .then(data => {
+            data.memberSince = formatDateTime(data.join_date);
             displayProfile(data, req, res)
         })
         .catch(console.log);
@@ -452,7 +453,7 @@ app.post('/profile', (req, res) => {
             .catch(console.log);
 });
 
-app.get('/profile/:user_id', (req, res) => {
+app.get('/profile/:user_id', ensureAuthenticated, (req, res) => {
     db.getUserByUserId(req.params.user_id)
         .then(data => {
             displayProfile(data, req, res)
@@ -478,10 +479,14 @@ function isProfile(session, dbUser){
 };
 
 function formatDateTime(dateTime) {
-    let stringDate = dateTime.toString();
-    let idx = stringDate.indexOf('GMT');
-    let formattedDate = stringDate.slice(0, idx - 1);
-    return formattedDate;
+    // let stringDate = dateTime.toString();
+    // let idx = stringDate.indexOf('GMT');
+    // let formattedDate = stringDate.slice(0, idx - 1);
+    // return formattedDate;
+    let dateObject = new Date(dateTime);
+    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let dateString = dateObject.toLocaleDateString('en-US', options);
+    return dateString;
 }
 
 function arrayIsProfile(session, dbUser){
