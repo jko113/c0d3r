@@ -105,11 +105,13 @@
     </div>
 
     {{/each}}
+    {{#unless isSearchResults}}
     <div class="app-profile-footer">
         <form action="/home" method="post">
         <input class="app-button-2" type="submit" class="add-profiles" value="More Users">
         </form>
     </div>
+    {{/unless}}
 </div>
 
 {{!-- <script src="/js/home.js"></script> --}}
