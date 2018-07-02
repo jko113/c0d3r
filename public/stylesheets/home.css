@@ -34,23 +34,29 @@
     padding-bottom: 20px;
 }
 .sidebutton{
-    height: auto;    
+    height: auto;
+    width: auto;  
     position: fixed;
     z-index: 1;
     bottom: 5%;
-    right: 15%;
+    right: 5%;
     overflow-x: hidden;
     text-align: center;
-    display: inline;
 }
 .inline{
     color: #fffcf8;
     background-color: #dea1ad;
-    align-items: center;
+    align-items: left;
+    text-align: left;
     justify-content: center;
     border: none;
     padding: 10px 20px;
-    display: inline;
+    display: block;
+    width: 30%;
+    margin-bottom: 5%;
+}
+.load{
+
 }
 
 
