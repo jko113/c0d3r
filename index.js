@@ -1,3 +1,5 @@
+
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -229,7 +231,9 @@ app.get('/home', (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
-                            // console.log(randomUsersArray)
+                            randomUsersArray.forEach(function(data){
+                                data.join_date = formatDateTime(data.join_date);
+                            });
                             res.render('home', {
                                 data: randomUsersArray,
                                 isSearchResults: false
@@ -264,6 +268,9 @@ app.post('/home', (req, res) => {
                 
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
+                            randomUsersArray.forEach(function(data){
+                                data.join_date = formatDateTime(data.join_date);
+                            });
                             console.log(randomUsersArray.length)
                             res.render('home', {
                                 data: randomUsersArray,
