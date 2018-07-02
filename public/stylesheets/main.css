@@ -96,3 +96,12 @@ html, body {
 .app-header-item:hover {
     color: #cad7f2;
 }
+
+/* .is-primary {
+    color: #fffcf8 !important;
+    background-color: #dea1ad !important;
+} */
+
+.app-wrapper {
+    margin: 20px;
+}
