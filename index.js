@@ -199,7 +199,7 @@ app.post('/search', (req, res) => {
     if(req.body.alias) {
         db.getUsersByAlias(req.body.alias)
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 renderResults(data);
             })
             .catch(console.error);
@@ -293,7 +293,7 @@ app.post('/home', (req, res) => {
                             randomUsersArray.forEach(function(data){
                                 data.join_date = formatDateTime(data.join_date);
                             });
-                            console.log(randomUsersArray.length)
+                            // console.log(randomUsersArray.length)
                             res.render('home', {
                                 data: randomUsersArray,
                                 isSearchResults: false

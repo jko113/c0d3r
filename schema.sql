@@ -17,7 +17,7 @@ CREATE TABLE users (
     user_id serial primary key,
     alias varchar(30) NOT NULL,
     github_id integer NOT NULL,
-    github_avatar_url varchar(100) NOT NULL,
+    github_avatar_url varchar(200) NOT NULL,
     name varchar(50),
     github_url varchar(100) NOT NULL,
     employer varchar(30),
