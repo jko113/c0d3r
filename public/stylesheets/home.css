@@ -1,9 +1,19 @@
 .app-profile-header {
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
-    padding-top: 20px;
+    /* padding-top: 20px; */
     font-family: 'Raleway', sans-serif;
+}
+
+.app-clear-again-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px 0 20px;
+    font-size: 12px !important;
 }
 
 .profile-container {

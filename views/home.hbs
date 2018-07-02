@@ -3,9 +3,11 @@
 <div class="app-background">
     <div class="app-profile-header">
         {{#if isSearchResults}}
-            <a href="/home">Clear Search Results</a><br>
-            &nbsp;<a href="/search">Search Again</a><br>
-            &nbsp;<div>Search Results</div>
+            <div class="app-clear-again-container">
+                <a href="/home">Clear Search Results</a>
+                <a href="/search">Search Again</a>
+            </div>
+            <div>Search Results</div>
         {{else}}
             <div>Highlighted Users</div>
         {{/if}}
