@@ -14,8 +14,13 @@
   </form>
   <hr>
   <form action="/search" method="POST">
+
       <div class="notification is-5">
         <div class="field is-horizontal">
+          <div class="block">
+            <input type="submit" value="Search" class="button is-primary">
+            <input type="reset" value="Reset" class="button is-primary">
+          </div>
           <div class="field-label">
               <label class="label">Filter profiles by</label>
           </div>
@@ -37,32 +42,77 @@
           </div>
         </div>
     </div>
-    <div class="field">
+
       <div class="columns">
           <div class="column">
 
-            <div class="field is-horizontal">
-              <div class="field-label">
-                  <label class="label">Tabs or Spaces?</label>
+            <div class="block">
+              <label class="label">Location</label>
+              <input class="input" type="text" name="city" placeholder="City..." data-display></label>
+              <div class="select" data-display>
+                <select name="state">
+                    <option>State</option>
+                    {{#each state}}
+                    <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                </select>
               </div>
-              <div class="field-body">
-                  <div class="field">
-                      {{#each tabsPrefs}}
-                          <div class="control" data-display>
-                              <label class="checkbox">
-                                  <input type="checkbox" name="tabs_preference" value="{{preference_id}}">
-                                  {{description}}
-                              </label>
-                          </div>
-                      {{/each}}
-                  </div>
+              <input class="input" type="text" name="zip" placeholder="Zip..." data-display></label>
+            </div>
+
+            <div class="block">
+              <label class="label">Preferred languages</label>
+              <div class="field">
+                {{#each language}}
+                    <div class="control" data-display>
+                        <label class="checkbox">
+                            <input type="checkbox" name="languages_{{lang_id}}">
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
               </div>
             </div>
 
-            <div class="field is-horizontal">
-              <div class="field-label">
-                  <label class="label">Brackets: same line or next?</label>
+            <div class="block">
+              <label class="label">Preferred text editor</label>
+              <div class="field">
+                {{#each editor}}
+                    <div class="control" data-display>
+                        <label class="checkbox">
+                            <input type="checkbox" name="editors_{{editor_id}}">
+                            {{name}}
+                        </label>
+                    </div>
+                {{/each}}
               </div>
+            </div>
+
+          </div>
+
+          <div class="column">
+
+            <div class="block">
+              <label class="label">Employer</label>
+              <input type="search" class="input" name="employer" placeholder="Employer...">
+            </div>
+          
+            <div class="block">
+                <label class="label">Tabs or Spaces?</label>
+                <div class="field">
+                    {{#each tabsPrefs}}
+                        <div class="control" data-display>
+                            <label class="checkbox">
+                                <input type="checkbox" name="tabs_preference" value="{{preference_id}}">
+                                {{description}}
+                            </label>
+                        </div>
+                    {{/each}}
+                </div>
+              </div>
+
+            <div class="block">
+              <label class="label">Brackets: same line or next?</label>
               <div class="field-body">
                   <div class="field">
                       {{#each curlyPrefs}}
@@ -76,11 +126,9 @@
                   </div>
               </div>
             </div>
-          
-            <div class="field is-horizontal">
-              <div class="field-label">
-                  <label class="label">Quotes: single or double?</label>
-              </div>
+
+            <div class="block">
+              <label class="label">Quotes: single or double?</label>
               <div class="field-body">
                   <div class="field">
                       {{#each quotesPrefs}}
@@ -93,63 +141,10 @@
                       {{/each}}
                   </div>
               </div>
-          </div>
+            </div>
 
           </div>
-          <div class="column">
-            <div class="block">
-              <label class="label">Preferred languages</label>
-              {{#each languages}}
-                    <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" name="{{name}}">
-                            {{name}}
-                        </label>
-                    </div>
-                {{/each}}
-            </div>
-            <div class="block">
-              <label class="label">Preferred text editor</label>
-              {{#each editors}}
-                    <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" name="editor_{{editor_id}}">
-                            {{name}}
-                        </label>
-                    </div>
-                {{/each}}
-            </div>
-            <div class="block">
-              {{!-- <label class="label">City</label> --}}
-              <input type="text" class="input" name="city" placeholder="City...">
-            </div>
-            <div class="block">
-              {{!-- <label class="label">State</label> --}}
-              <div class="select">
-                <select name="state">
-                  <option>State</option>
-                  {{#each state}}
-                  <option value="{{name}}">
-                      {{name}}
-                  </option>
-                  {{/each}}
-                </select>
-              </div>
-            </div>
-            <div class="block">
-              {{!-- <label class="label">Zip</label> --}}
-              <input type="text" class="input" name="zip" placeholder="Zip...">
-            </div>
-            <div class="block">
-              {{!-- <label class="label">Employer</label> --}}
-              <input type="search" class="input" name="employer" placeholder="Employer...">
-            </div>
-          </div>
         </div>
-      <div class="block">
-        <input type="submit" value="Search" class="button is-primary">
-        <input type="reset" value="Reset" class="button is-primary">
-      </div>
-    </div>
+
   </form>
 </div>
