@@ -5,18 +5,17 @@ function addLoadToggle(){
     let load = document.body.querySelectorAll('.add-profiles');
     if(load){
         load.addEventListener('click', function(event) {
-            // console.log('button licked');
+            // console.log('button clicked');
             var xhttp;
             xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = () => {
 
             }
-            })
         });
     } else {
-        //console.log('no button selected')
-    };
-};
+        console.log('no button selected')
+    }
+}
 
 
 function get(url) {
