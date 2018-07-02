@@ -484,7 +484,8 @@ function formatDateTime(dateTime) {
     // let formattedDate = stringDate.slice(0, idx - 1);
     // return formattedDate;
     let dateObject = new Date(dateTime);
-    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let options = { year: 'numeric', month: 'long', day: 'numeric' };
     let dateString = dateObject.toLocaleDateString('en-US', options);
     return dateString;
 }
