@@ -317,7 +317,9 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                         .then( (receivedMessages) => {
                             receivedMessages.forEach((message, index) => {
 
-                                message.date_time = formatDateTime(message.date_time);
+                                // message.date_time = formatDateTime(message.date_time);
+                                message.date = formatDate(message.date_time);
+                                message.time = formatTime(message.date_time);
                             });
 
                             db.getMessagesBySender(internalId)
@@ -325,12 +327,15 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                                 .then(sentMessages => {
 
                                     sentMessages.forEach((message, index) => {
-                                        message.date_time = message.date_time.toString();
+                                        // message.date_time = formatDateTime(message.date_time);
+                                        message.date = formatDate(message.date_time);
+                                        message.time = formatTime(message.date_time);
+
                                     });
                                     let messageObject = {};
                                     messageObject.sent = sentMessages;
                                     messageObject.received = receivedMessages;
-
+                                    console.log(messageObject);
                                     res.render('messages', {
                                         messages: messageObject
                                     });
@@ -479,6 +484,14 @@ function formatDateTime(dateTime) {
     let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
     let dateString = dateObject.toLocaleDateString('en-US', options);
     return dateString;
+}
+
+function formatTime(dateTime) {
+    let dateObject = new Date(dateTime);
+    let tOptions = { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+    let timeString = dateObject.toLocaleTimeString('en-US', tOptions);
+
+    return timeString;
 }
 
 function formatDate(dateTime) {
