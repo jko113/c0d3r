@@ -103,7 +103,7 @@
                     {{#each tabsPrefs}}
                         <div class="control" data-display>
                             <label class="checkbox">
-                                <input type="checkbox" name="tabs_preference" value="{{preference_id}}">
+                                <input type="checkbox" name="tabs_preference_{{preference_id}}">
                                 {{description}}
                             </label>
                         </div>
@@ -118,7 +118,7 @@
                       {{#each curlyPrefs}}
                           <div class="control" data-display>
                               <label class="checkbox">
-                                  <input type="checkbox" name="same_line_curlies_preference" value="{{preference_id}}">
+                                  <input type="checkbox" name="same_line_curlies_preference_{{preference_id}}">
                                   {{description}}
                               </label>
                           </div>
@@ -134,7 +134,7 @@
                       {{#each quotesPrefs}}
                           <div class="control" data-display>
                               <label class="checkbox">
-                                  <input type="checkbox" name="single_quotes_preference" value="{{preference_id}}">
+                                  <input type="checkbox" name="single_quotes_preference_{{preference_id}}">
                                   {{description}}
                               </label>
                           </div>
