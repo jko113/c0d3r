@@ -5,299 +5,306 @@
 
     <input type="hidden" name="user_id" value="{{data.user_id}}">
 
-    <div class="is-hidden" data-display>
-        <div class="container is-hidden-tablet has-text-centered">
+    <div class="app-margin app-flex-start">
+    <div class="app-profile-left app-margin-right">
+        <div class="is-hidden" data-display>
+            <div class="container is-hidden-tablet has-text-centered">
+                <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar">
+            </div>
+            <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar is-hidden-mobile">
+        </div>
+        <div data-display>
             <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar">
         </div>
-        <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar is-pulled-right is-hidden-mobile">
-    </div>
-    <div data-display>
-        <img src="{{data.github_avatar_url}}" alt="GitHub Avatar" class="github-avatar is-pulled-right">
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Name</label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Name</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <div data-display>{{data.name}}</div>
+                        <input class="input is-hidden" type="text" name="name" value="{{data.name}}" placeholder="Display name..." data-display></label>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <div data-display>{{data.name}}</div>
-                    <input class="input is-hidden" type="text" name="name" value="{{data.name}}" placeholder="Display name..." data-display></label>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Bio</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <div data-display>{{data.bio}}</div>
+                        <textarea class="textarea is-hidden" placeholder="Bio..." name="bio" data-display>{{data.bio}}</textarea>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Employer</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <div data-display>{{data.employer}}</div>
-                    <input class="input is-hidden" type="text" name="employer" value="{{data.employer}}" placeholder="Employer..." data-display></label>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="app-profile-right">
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Location</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    {{#if data.state}}
-                        <div data-display>{{data.city}}, {{data.state}} {{data.zip}}</div>
-                    {{else}}
-                        <div data-display>{{data.city}} {{data.state}} {{data.zip}}</div>
-                    {{/if}}
-                    <input class="input is-hidden is-expanded" type="text" name="city" value="{{data.city}}" placeholder="City..." data-display></label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Employer</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <div data-display>{{data.employer}}</div>
+                        <input class="input is-hidden" type="text" name="employer" value="{{data.employer}}" placeholder="Employer..." data-display></label>
+                    </div>
                 </div>
             </div>
-            <div class="field">
-                <div class="control">
-                    <div class="select is-hidden" data-display>
-                        <select name="state">
-                            <option>State</option>
-                            {{#each state}}
-                            <option value="{{name}}"
-                            {{#if userPref}}
-                            selected
-                            {{/if}}
-                            >{{name}}</option>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Location</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        {{#if data.state}}
+                            <div data-display>{{data.city}}, {{data.state}} {{data.zip}}</div>
+                        {{else}}
+                            <div data-display>{{data.city}} {{data.state}} {{data.zip}}</div>
+                        {{/if}}
+                        <input class="input is-hidden is-expanded" type="text" name="city" value="{{data.city}}" placeholder="City..." data-display></label>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <div class="select is-hidden" data-display>
+                            <select name="state">
+                                <option>State</option>
+                                {{#each state}}
+                                <option value="{{name}}"
+                                {{#if userPref}}
+                                selected
+                                {{/if}}
+                                >{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-hidden" type="text" name="zip" value="{{data.zip}}" placeholder="Zip..." data-display></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">GitHub Alias</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <div>{{data.alias}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">GitHub URL</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <a href="{{data.github_url}}">{{data.github_url}}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Tabs or Spaces?</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    {{#each tabsPrefs}}
+                        <div class="control is-hidden" data-display>
+                            <label class="radio">
+                                <input type="radio" name="tabs_preference" value="{{preference_id}}"
+                                {{#if userpref}}
+                                checked
+                                {{/if}}
+                                >
+                                {{description}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <div class="control" data-display>
+                        <ul>
+                            {{#each tabsPrefs}}
+                                {{#if userpref}}
+                                    <li>{{description}}</li>
+                                {{/if}}
                             {{/each}}
-                        </select>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input is-hidden" type="text" name="zip" value="{{data.zip}}" placeholder="Zip..." data-display></label>
-                </div>
-            </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Bio</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <div data-display>{{data.bio}}</div>
-                    <textarea class="textarea is-hidden" placeholder="Bio..." name="bio" data-display>{{data.bio}}</textarea>
-                </div>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Brackets: same line or next?</label>
             </div>
-        </div>
-    </div>
-
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">GitHub Alias</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <div>{{data.alias}}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">GitHub URL</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <a href="{{data.github_url}}">{{data.github_url}}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Tabs or Spaces?</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                {{#each tabsPrefs}}
-                    <div class="control is-hidden" data-display>
-                        <label class="radio">
-                            <input type="radio" name="tabs_preference" value="{{preference_id}}"
-                            {{#if userpref}}
-                            checked
-                            {{/if}}
-                            >
-                            {{description}}
-                        </label>
+            <div class="field-body">
+                <div class="field">
+                    {{#each curlyPrefs}}
+                        <div class="control is-hidden" data-display>
+                            <label class="radio">
+                                <input type="radio" name="same_line_curlies_preference" value="{{preference_id}}"
+                                {{#if userpref}}
+                                checked
+                                {{/if}}
+                                >
+                                {{description}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <div class="control" data-display>
+                        <ul>
+                            {{#each curlyPrefs}}
+                                {{#if userpref}}
+                                    <li>{{description}}</li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
                     </div>
-                {{/each}}
-                <div class="control" data-display>
-                    <ul>
-                        {{#each tabsPrefs}}
-                            {{#if userpref}}
-                                <li>{{description}}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Brackets: same line or next?</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                {{#each curlyPrefs}}
-                    <div class="control is-hidden" data-display>
-                        <label class="radio">
-                            <input type="radio" name="same_line_curlies_preference" value="{{preference_id}}"
-                            {{#if userpref}}
-                            checked
-                            {{/if}}
-                            >
-                            {{description}}
-                        </label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Quotes: single or double?</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    {{#each quotesPrefs}}
+                        <div class="control is-hidden" data-display>
+                            <label class="radio">
+                                <input type="radio" name="single_quotes_preference" value="{{preference_id}}"
+                                {{#if userpref}}
+                                checked
+                                {{/if}}
+                                >
+                                {{description}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <div class="control" data-display>
+                        <ul>
+                            {{#each quotesPrefs}}
+                                {{#if userpref}}
+                                    <li>{{description}}</li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
                     </div>
-                {{/each}}
-                <div class="control" data-display>
-                    <ul>
-                        {{#each curlyPrefs}}
-                            {{#if userpref}}
-                                <li>{{description}}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Quotes: single or double?</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                {{#each quotesPrefs}}
-                    <div class="control is-hidden" data-display>
-                        <label class="radio">
-                            <input type="radio" name="single_quotes_preference" value="{{preference_id}}"
-                            {{#if userpref}}
-                            checked
-                            {{/if}}
-                            >
-                            {{description}}
-                        </label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Preferred languages</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    {{#each language}}
+                        <div class="control is-hidden" data-display>
+                            <label class="checkbox">
+                                <input type="checkbox" name="languages_{{lang_id}}"
+                                {{#if userpref}}
+                                checked
+                                {{/if}}
+                                >
+                                {{name}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <div class="control" data-display>
+                        <ul>
+                            {{#each language}}
+                                {{#if userpref}}
+                                    <li>{{name}}</li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
                     </div>
-                {{/each}}
-                <div class="control" data-display>
-                    <ul>
-                        {{#each quotesPrefs}}
-                            {{#if userpref}}
-                                <li>{{description}}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Preferred languages</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                {{#each language}}
-                    <div class="control is-hidden" data-display>
-                        <label class="checkbox">
-                            <input type="checkbox" name="languages_{{lang_id}}"
-                            {{#if userpref}}
-                            checked
-                            {{/if}}
-                            >
-                            {{name}}
-                        </label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Preferred text editors</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    {{#each editor}}
+                        <div class="control is-hidden" data-display>
+                            <label class="checkbox">
+                                <input type="checkbox" name="editors_{{editor_id}}"
+                                {{#if userpref}}
+                                checked
+                                {{/if}}
+                                >
+                                {{name}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <div class="control" data-display>
+                        <ul>
+                            {{#each editor}}
+                                {{#if userpref}}
+                                    <li>{{name}}</li>
+                                {{/if}}
+                            {{/each}}
+                        </ul>
                     </div>
-                {{/each}}
-                <div class="control" data-display>
-                    <ul>
-                        {{#each language}}
-                            {{#if userpref}}
-                                <li>{{name}}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Preferred text editor</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                {{#each editor}}
-                    <div class="control is-hidden" data-display>
-                        <label class="checkbox">
-                            <input type="checkbox" name="editors_{{editor_id}}"
-                            {{#if userpref}}
-                            checked
-                            {{/if}}
-                            >
-                            {{name}}
-                        </label>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label">Member since</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <div>{{data.memberSince}}</div>
                     </div>
-                {{/each}}
-                <div class="control" data-display>
-                    <ul>
-                        {{#each editor}}
-                            {{#if userpref}}
-                                <li>{{name}}</li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="field is-horizontal">
-        <div class="field-label">
-            <label class="label">Member since</label>
-        </div>
-        <div class="field-body">
-            <div class="field">
-                <div class="control">
-                    <div>{{data.memberSince}}</div>
-                </div>
-            </div>
-        </div>
-    </div>
         {{#if isProfile}}
             <div class="field">
-                <div class="control">
-                    <input type="button" value="Edit Profile" class="button is-primary" data-edit-button>
-                    <input type="submit" value="Save Profile" class="button is-primary is-hidden" data-save-button>
-                    <input type="button" value="Cancel" class="button is-primary is-hidden" data-cancel-button>
+                <div class="control app-flex-start">
+                    <input type="button" value="Edit Profile" class="app-button-2" data-edit-button>
+                    <input type="submit" value="Save Profile" class="app-button-2 is-hidden" data-save-button>
+                    <input type="button" value="Cancel" class="app-button-3 app-margin-left is-hidden" data-cancel-button>
                 </div>
             </div>
         {{/if}}
+        </div>
+    </div>
     </form>
 </div>
 <script src="/js/profile.js"></script>

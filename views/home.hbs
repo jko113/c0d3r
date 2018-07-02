@@ -3,13 +3,13 @@
 <div class="app-background">
     <div class="app-profile-header">
         {{#if isSearchResults}}
-            <div class="app-clear-again-container">
-                <a href="/home">Clear Search Results</a>
-                <a href="/search">Search Again</a>
+            <div class="app-flex-center app-margin-bottom">
+                <a href="/search"><button class="app-button-2">Search</button></a>
+                <a href="/home"><button class="app-button-3 app-margin-left">Clear</button></a>
             </div>
             <div>Search Results</div>
         {{else}}
-            <div>Highlighted Users</div>
+            <div><i class="fas fa-heart app-margin-right-small app-pink"></i>Highlighted Users</div>
         {{/if}}
     </div>
     {{#if isSearchResults}}
@@ -113,7 +113,7 @@
                 </div>
                 <a href="/profile/{{user_id}}">
                     <button class="app-button">
-                        See more
+                        More
                     </button>
                 </a>
         </div>
@@ -127,13 +127,15 @@
         </form>
     </div>
     {{/unless}}
+
+    {{#if isSearchResults}}
+    <div class="sidebutton">
+            <button type="button" class="button load inline"><i class="fas fa-sync"></i></button>
+            <a href="#"><button type="button" value="Top" class="button inline"><i class="fas fa-angle-up"></i></button></a>
+    </div>
+    {{/if}}
 </div>
 
-{{#if isSearchResults}}
-<div class="sidebutton">
-        <button type="button" class="button load inline"><i class="fas fa-sync"></i></button>
-        <a href="#"><button type="button" value="Top" class="button inline"><i class="fas fa-angle-up"></i></button></a>
-</div>
-{{/if}}
+
 
 <script src="/js/home.js"></script> 
