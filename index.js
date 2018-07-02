@@ -254,7 +254,7 @@ app.get('/home', ensureAuthenticated, (req, res) => {
                     db.getRandomUsers(internalId, 5)
                         .then((randomUsersArray) => {
                             randomUsersArray.forEach(function(data){
-                                data.join_date = formatDateTime(data.join_date);
+                                data.join_date = formatDate(data.join_date);
                             });
                             res.render('home', {
                                 data: randomUsersArray,
@@ -292,7 +292,7 @@ app.post('/home', (req, res) => {
                         .then((randomUsersArray) => {
 
                             randomUsersArray.forEach(function(data){
-                                data.join_date = formatDateTime(data.join_date);
+                                data.join_date = formatDate(data.join_date);
                             });
                             // console.log(randomUsersArray.length)
                             res.render('home', {
