@@ -150,8 +150,7 @@ app.post('/newprofile', (req, res) => {
             .catch(console.log)
     })
 
-app.get('/search', (req, res) => {
-    // res.render('search')
+app.get('/search', ensureAuthenticated, (req, res) => {
 
     const userData = req.session.passport.user;
     const github_id = userData.id;
@@ -159,17 +158,31 @@ app.get('/search', (req, res) => {
     // check if user exists in database
     db.checkUserExistence(github_id)
         .then((data) => {
-
             if (data && data.length) {
-
                 const isRegistered = data[0].user_exists;
-    
-                // render new messages page if user exists
+                // render search page if user exists
                 if (isRegistered) {
                     const internalId = data[0].user_id;
-                    res.render('search', {
-                        user_id: internalId
-                    })
+                    // Search route code here
+                    let tabPrefsPromise = db.getTabsPrefsList();
+                    let quotesPrefsPromise = db.getQuotesPrefsList();
+                    let curlyPrefsPromise = db.getCurlyPrefsList();
+                    let languagePrefsPromise = db.getLanguages();
+                    let editorPrefsPromise = db.getEditors();
+                    Promise.all([curlyPrefsPromise, quotesPrefsPromise, tabPrefsPromise, languagePrefsPromise, editorPrefsPromise])
+                        .then(moreData => {
+                            console.log(moreData[2]);
+                            res.render('search', {
+                                user_id: internalId,
+                                state: stateArray,
+                                curlyPrefs: moreData[0],
+                                quotesPrefs: moreData[1],
+                                tabsPrefs: moreData[2],
+                                language: moreData[3],
+                                editor: moreData[4]
+                            });
+                        })
+                        .catch(console.error);
 
                 // otherwise, redirect to root
                 } else {
@@ -183,12 +196,8 @@ app.get('/search', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-    // TODO Check if this contains post results, if so, display 'clear filter'
-    // button that redirects to home page
     req.queryObject = generateConvertedObject(req.body);
     // console.log(req.queryObject);
-    // TODO Handle case where user doesn't choose anything to filter on
-    // if(req.queryObject.length = 0)
     if(req.body.searchType == 'and') {
         db.andSearch(req.queryObject)
             .then((data) => {
@@ -206,15 +215,12 @@ app.post('/search', (req, res) => {
                     data: data,
                     isSearchResults: true
                 });
-            });
+            })
+            .catch(console.error);
     }
-
-    
-    
 });
 
-
-app.get('/home', (req, res) => {
+app.get('/home', ensureAuthenticated, (req, res) => {
     const userData = req.session.passport.user;
     const github_id = userData.id;
 
@@ -425,6 +431,7 @@ app.post('/messages/new', (req, res) => {
 app.get('/profile', ensureAuthenticated, (req, res) => {
     db.getUserByGithubId(req.session.passport.user.id)
         .then(data => {
+            data.memberSince = formatDate(data.join_date);
             displayProfile(data, req, res)
         })
         .catch(console.log);
@@ -446,7 +453,7 @@ app.post('/profile', (req, res) => {
             .catch(console.log);
 });
 
-app.get('/profile/:user_id', (req, res) => {
+app.get('/profile/:user_id', ensureAuthenticated, (req, res) => {
     db.getUserByUserId(req.params.user_id)
         .then(data => {
             displayProfile(data, req, res)
@@ -472,11 +479,27 @@ function isProfile(session, dbUser){
 };
 
 function formatDateTime(dateTime) {
-    let stringDate = dateTime.toString();
-    let idx = stringDate.indexOf('GMT');
-    let formattedDate = stringDate.slice(0, idx - 1);
-    return formattedDate;
+    let dateObject = new Date(dateTime);
+    // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+    let dateString = dateObject.toLocaleDateString('en-US', options);
+    return dateString;
 }
+
+function formatDate(dateTime) {
+    let dateObject = new Date(dateTime);
+    // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let options = { year: 'numeric', month: 'long', day: 'numeric' };
+    let dateString = dateObject.toLocaleDateString('en-US', options);
+    return dateString;
+}
+
+// function formatDateTime(dateTime) {
+    // let stringDate = dateTime.toString();
+    // let idx = stringDate.indexOf('GMT');
+    // let formattedDate = stringDate.slice(0, idx - 1);
+    // return formattedDate;
+// }
 
 function arrayIsProfile(session, dbUser){
     var fixedArr = [];
