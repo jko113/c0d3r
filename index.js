@@ -325,7 +325,7 @@ app.get('/messages', ensureAuthenticated, (req, res) => {
                                 .then(sentMessages => {
 
                                     sentMessages.forEach((message, index) => {
-                                        message.date_time = message.date_time.toString();
+                                        message.date_time = formatDateTime(message.date_time);
                                     });
                                     let messageObject = {};
                                     messageObject.sent = sentMessages;

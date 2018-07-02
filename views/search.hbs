@@ -1,150 +1,161 @@
-<div class="block">
-  <form action="/search" method="POST">
-  <div class="field has-addons">
-    <div class="control">
-      <input type="text" name="alias" placeholder="Search for user..." class="input">
+<div class="block app-margin-left app-margin-right app-margin-bottom">
+    <div class="app-profile-header">
+        Search by GitHub Alias
     </div>
-    <div class="control">
-      <input type="submit" value="Search" class="button is-primary">
-    </div>
-    <div class="control">
-      <input type="reset" value="Reset" class="button is-primary">
-    </div>
-  </div>
-  </form>
-  <hr>
-  <form action="/search" method="POST">
-
-      <div class="notification is-5">
-        <div class="field is-horizontal">
-          <div class="block">
-            <input type="submit" value="Search" class="button is-primary">
-            <input type="reset" value="Reset" class="button is-primary">
-          </div>
-          <div class="field-label">
-              <label class="label">Filter profiles by</label>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                  <label class="radio">
-                      <input type="radio" name="searchType" value="and" checked>
-                      All of these selections
-                  </label>
-              </div>
-              <div class="control">
-                  <label class="radio">
-                      <input type="radio" name="searchType" value="or">
-                      Any of these selections
-                  </label>
-              </div>
+    <form action="/search" method="POST">
+    <div class="field app-search-github">
+        <div class="control">
+        <input type="text" name="alias" placeholder="Search for user..." class="input">
+        </div>
+        <div class="app-flex-center">
+            <div class="control app-margin-left">
+            <input type="submit" value="Search" class="app-button-2">
             </div>
-          </div>
+            <div class="control app-margin-left">
+            <input type="reset" value="Reset" class="app-button-3">
+            </div>
         </div>
     </div>
+    </form>
 
-      <div class="columns">
-          <div class="column">
+    <div class="app-profile-header">
+        Search by Profile Criteria
+    </div>
 
-            <div class="block">
-              <label class="label">Location</label>
-              <input class="input" type="text" name="city" placeholder="City..." data-display></label>
-              <div class="select" data-display>
-                <select name="state">
-                    <option>State</option>
-                    {{#each state}}
-                    <option value="{{this}}">{{this}}</option>
-                    {{/each}}
-                </select>
-              </div>
-              <input class="input" type="text" name="zip" placeholder="Zip..." data-display></label>
-            </div>
+    <form action="/search" method="POST">
 
-            <div class="block">
-              <label class="label">Preferred languages</label>
-              <div class="field">
-                {{#each language}}
-                    <div class="control" data-display>
-                        <label class="checkbox">
-                            <input type="checkbox" name="languages_{{lang_id}}">
-                            {{name}}
-                        </label>
+        <div class="columns app-margin-top">
+            <div class="column">
+
+                <div class="block">
+                    <label class="label">Location</label>
+                    <div class="app-flex-center">
+                        <input class="input" type="text" name="city" placeholder="City..." data-display></label>
+                        <div class="select app-margin-left" data-display>
+                            <select name="state">
+                                <option>State</option>
+                                {{#each state}}
+                                <option value="{{this}}">{{this}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <input class="input app-margin-left" type="text" name="zip" placeholder="Zip..." data-display></label>
                     </div>
-                {{/each}}
-              </div>
-            </div>
+                </div>
 
-            <div class="block">
-              <label class="label">Preferred text editor</label>
-              <div class="field">
-                {{#each editor}}
-                    <div class="control" data-display>
-                        <label class="checkbox">
-                            <input type="checkbox" name="editors_{{editor_id}}">
-                            {{name}}
-                        </label>
-                    </div>
-                {{/each}}
-              </div>
-            </div>
-
-          </div>
-
-          <div class="column">
-
-            <div class="block">
-              <label class="label">Employer</label>
-              <input type="search" class="input" name="employer" placeholder="Employer...">
-            </div>
-          
-            <div class="block">
-                <label class="label">Tabs or Spaces?</label>
-                <div class="field">
-                    {{#each tabsPrefs}}
-                        <div class="control" data-display>
+                <div class="block">
+                <label class="label">Preferred languages</label>
+                <div class="field app-flex-start app-flex-wrap">
+                    {{#each language}}
+                        <div class="control app-margin-right" data-display>
                             <label class="checkbox">
-                                <input type="checkbox" name="tabs_preference_{{preference_id}}">
-                                {{description}}
+                                <input type="checkbox" name="languages_{{lang_id}}">
+                                {{name}}
                             </label>
                         </div>
                     {{/each}}
                 </div>
-              </div>
+                </div>
 
-            <div class="block">
-              <label class="label">Brackets: same line or next?</label>
-              <div class="field-body">
-                  <div class="field">
-                      {{#each curlyPrefs}}
-                          <div class="control" data-display>
-                              <label class="checkbox">
-                                  <input type="checkbox" name="same_line_curlies_preference_{{preference_id}}">
-                                  {{description}}
-                              </label>
-                          </div>
-                      {{/each}}
-                  </div>
-              </div>
+                <div class="block">
+                <label class="label">Preferred text editors</label>
+                <div class="field app-flex-start app-flex-wrap">
+                    {{#each editor}}
+                        <div class="control app-margin-right" data-display>
+                            <label class="checkbox">
+                                <input type="checkbox" name="editors_{{editor_id}}">
+                                {{name}}
+                            </label>
+                        </div>
+                    {{/each}}
+                </div>
+                </div>
+
             </div>
 
-            <div class="block">
-              <label class="label">Quotes: single or double?</label>
-              <div class="field-body">
-                  <div class="field">
-                      {{#each quotesPrefs}}
-                          <div class="control" data-display>
-                              <label class="checkbox">
-                                  <input type="checkbox" name="single_quotes_preference_{{preference_id}}">
-                                  {{description}}
-                              </label>
-                          </div>
-                      {{/each}}
-                  </div>
-              </div>
+            <div class="column">
+
+                <div class="block">
+                <label class="label">Employer</label>
+                <input type="search" class="input" name="employer" placeholder="Employer...">
+                </div>
+            
+                <div class="block">
+                    <label class="label">Tabs or Spaces?</label>
+                    <div class="field app-flex-start app-flex-wrap">
+                        {{#each tabsPrefs}}
+                            <div class="control app-margin-right" data-display>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="tabs_preference_{{preference_id}}">
+                                    {{description}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                <div class="block">
+                <label class="label">Brackets: same line or next?</label>
+                <div class="field-body">
+                    <div class="field app-flex-start app-flex-wrap">
+                        {{#each curlyPrefs}}
+                            <div class="control app-margin-right" data-display>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="same_line_curlies_preference_{{preference_id}}">
+                                    {{description}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+                </div>
+
+                <div class="block">
+                <label class="label">Quotes: single or double?</label>
+                <div class="field-body">
+                    <div class="field app-flex-start app-flex-wrap">
+                        {{#each quotesPrefs}}
+                            <div class="control app-margin-right" data-display>
+                                <label class="checkbox">
+                                    <input type="checkbox" name="single_quotes_preference_{{preference_id}}">
+                                    {{description}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+                </div>
+
+            </div>
             </div>
 
-          </div>
-        </div>
+            <div class="notification is-5 app-flex-center app-flex-column">
+                <div class="app-flex-center app-flex-column">
+                    <div class="field-label">
+                        <label class="label">Filter profiles by</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="searchType" value="and" checked>
+                                All of these selections
+                            </label>
+                        </div>
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="searchType" value="or">
+                                Any of these selections
+                            </label>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block app-flex-center app-margin-top">
+                    <input type="submit" value="Search" class="app-button-2 app-margin-right">
+                    <input type="reset" value="Reset" class="app-button-3">
+                </div>
+            </div>
 
-  </form>
+    </form>
 </div>
