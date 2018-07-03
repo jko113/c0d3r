@@ -128,3 +128,5 @@ function scrollPage(){
     });
 };
 ~~~
+
+#### Mobile horizontal swiping on the home page
