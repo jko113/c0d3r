@@ -1,35 +1,44 @@
-<h1><strong>Messages</strong></h1>
+<div class="app-profile-header">Messages</div>
 
-<a href="/messages/new">Send New Message</a>
 
-<div class="buttons">
-    <label>Inbox</label><input type="radio" name="box-type" value="inbox" data-box-button checked>
-    <label>Outbox</label><input type="radio" name="box-type" value="outbox" data-box-button>
+
+<div class="app-flex-center app-margin-top">
+    <a href="/messages/new"><button class="app-button-2 app-margin-right" >New</button></a>
+    <input class="app-button-3 app-margin-right" type="button" name="box-type" value="inbox" data-box-button>
+    <input class="app-button-3" type="button" name="box-type" value="outbox" data-box-button>
 </div>
 
-{{!-- <div class="is-hidden" data-display> --}}
-<div data-display class="is-hidden">
-    <div>Outbox</div>
-
+<div data-display>
+    <div class="app-profile-header">Inbox</div>
     {{#each messages.sent}}
-        <div>
-            @ {{this.date_time}}, {{this.sender_alias}} said
-        </div>
-        <div>
-            {{this.message_text}}
+        <div class="app-message-container">
+            <i class="app-message-icon far fa-envelope-open"></i>
+            <div class="app-message app-flex-column">
+                <div class="app-message-info">
+                    @ {{this.date_time}}, {{this.sender_alias}} said
+                </div>
+                <div>
+                    {{this.message_text}}
+                </div>
+            </div>
         </div>
     {{/each}}
 </div>
 
-<div data-display>
-    <div>Inbox</div>
+<div data-display class="is-hidden">
+    <div class="app-profile-header">Outbox</div>
     {{#each messages.received}}
-        <div>
-            @ {{this.date_time}}, {{this.sender_alias}} said
-        </div>
-        <div>
-            {{this.message_text}}
-        </div>
+        <div class="app-message-container">
+            <i class="app-message-icon far fa-envelope"></i>
+            <div class="app-message app-flex-column">
+                <div class="app-message-info">
+                    @ {{this.date_time}}, {{this.sender_alias}} said
+                </div>
+                <div>
+                    {{this.message_text}}
+                </div>
+            </div>
+        </div> 
     {{/each}}
 </div>
 

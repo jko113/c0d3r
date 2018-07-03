@@ -1,12 +1,14 @@
 <link rel="stylesheet" href="/stylesheets/makeprofile.css">
 
 
-<div class="block">
+
 <form method="POST" action="/newprofile">
+    <div class="app-margin app-flex-start">
+    <div class="app-profile-left app-margin-right">
+        <img src="{{gitHubAv}}" alt="GitHub Avatar" class="github-avatar">
+    </div>
 
-    <img src="{{gitHubAv}}" alt="GitHub Avatar" class="github-avatar is-pulled-right">
-
-
+    <div class="app-profile-right">
     <div class="field is-horizontal">
         <div class="field-label">
             <label class="label">Name</label>
@@ -175,7 +177,7 @@
 
     <div class="field is-horizontal">
         <div class="field-label">
-            <label class="label">Preferred text editor</label>
+            <label class="label">Preferred text editors</label>
         </div>
         <div class="field-body">
             <div class="field">
@@ -189,9 +191,11 @@
                 {{/each}}
             </div>
         </div>
-<input type="submit" value="Make New Profile" class="button is-primary">
+        <input type="submit" value="Submit" class="app-button-2 app-margin-top">
+    </div>
+    </div>
 </form>
-</div>
+
 
 {{!-- <div class="block">
     <form action="/profile" method="POST">
