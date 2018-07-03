@@ -1,6 +1,6 @@
-# C0d3R 
+# C0D3R 
 
-C0d3R is a resource to help facilitate coders finding other coders. Whether it is for finding people for meetups, dating, or looking for partners to collaberate on projects C0d3R is a tool be help developers find each other.
+C0D3R is a resource to help facilitate coders finding other coders. Whether it is for finding people for meetups, dating, or looking for partners to collaberate on projects C0D3R is a tool to help developers find each other.
 
 ## Team Members
 
@@ -28,6 +28,8 @@ Our git repository is at https://github.com/jko113/c0d3r to take a look at the c
 
 
 ## Walkthrough
+
+[![Demo Video](readmeimg/youtubeimg.png)](http://www.youtube.com/watch?v=xxSGhGFpLyM "C0D3R ")
 
 ### Login Page
 
@@ -59,25 +61,14 @@ edit the information on their profile or delete their account from the site alto
 
 ### Messages
 
-* This page acts as an in app mailbox. A user can get display their message or compose a new message to another user by their GitHub alias.
+* Acts as an in app mailbox. A user can get display their message or compose a new message to another user by their GitHub alias.
 
 <img src="readmeimg/messagespage.png">
 
 ### Logout
 
-* This will end the users current session in the app and return to the login page.
+* Ends the users current session in the app and return to the login page.
 
-
-## Challenges
-#### Joshua
-
-#### Lisa
-
-#### Josh
-
-* Keeping track of our templates became more involved because at one point each of our .hbs files included at least one CSS reference and JS scripts. In the final product our CSS was consolidated into one file which made for an easier reference. 
-
-## Lessons Learned
 
 ## Future Additions
 
