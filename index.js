@@ -586,3 +586,15 @@ function displayProfile(data, req, res) {
         res.redirect('/login');
     }
 }
+app.post('/delete', (req, res) => {
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then((data) => {
+            db.deleteUser(data.user_id)
+                .then((deleteData) => {
+                    req.session.destroy();
+                    res.redirect('/');
+                })
+                .catch(console.log)
+        })
+        .catch(console.log)
+});
