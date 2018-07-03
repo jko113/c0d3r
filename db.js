@@ -152,9 +152,10 @@ function getMessagesBySender (author_id) {
 }
 
 function getMessagesByRecipient (recipient_id) {
-    return db.any('SELECT m.*, u.alias AS sender_alias FROM message_recipients mr \
+    return db.any('SELECT m.*, u2.alias AS sender_alias FROM message_recipients mr \
     JOIN messages m ON mr.message_id = m.message_id \
     JOIN users AS u ON mr.recipient_id = u.user_id \
+    JOIN users AS u2 ON m.author_id = u2.user_id \
     WHERE mr.recipient_id = $1 ORDER BY m.date_time DESC;', [recipient_id]);
 }
 
