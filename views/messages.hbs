@@ -10,7 +10,7 @@
 
 <div data-display>
     <div class="app-profile-header">Inbox</div>
-    {{#each messages.sent}}
+    {{#each messages.received}}
         <div class="app-message-container">
             <i class="app-message-icon far fa-envelope-open"></i>
             <div class="app-message app-flex-column">
@@ -27,7 +27,7 @@
 
 <div data-display class="is-hidden">
     <div class="app-profile-header">Outbox</div>
-    {{#each messages.received}}
+    {{#each messages.sent}}
         <div class="app-message-container">
             <i class="app-message-icon far fa-envelope"></i>
             <div class="app-message app-flex-column">
