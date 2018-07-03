@@ -148,14 +148,14 @@ function getUsersByEmployer(employer) {
 function getMessagesBySender (author_id) {
     return db.any('SELECT mess.*, users.alias AS sender_alias FROM messages AS mess \
     JOIN users ON users.user_id = mess.author_id \
-    WHERE author_id = $1 ORDER BY date_time DESC;', [author_id]);
+    WHERE author_id = $1 ORDER BY mess.date_time DESC;', [author_id]);
 }
 
 function getMessagesByRecipient (recipient_id) {
-    return db.any('SELECT mess.*, users.alias AS sender_alias FROM messages AS mess JOIN \
-    message_recipients AS ma ON mess.message_id = ma.message_id \
-    JOIN users ON mess.author_id = users.user_id \
-    WHERE ma.recipient_id = $1 ORDER BY date_time DESC;', [recipient_id]);
+    return db.any('SELECT m.*, u.alias AS sender_alias FROM message_recipients mr \
+    JOIN messages m ON mr.message_id = m.message_id \
+    JOIN users AS u ON mr.recipient_id = u.user_id \
+    WHERE mr.recipient_id = $1 ORDER BY m.date_time DESC;', [recipient_id]);
 }
 
 function createMessage(author_id, now, message_text) {
@@ -175,7 +175,10 @@ function sendMessage(author_id, recipient_id_array, message_text) {
             });
             return true;
         })
-        .catch(console.error);
+        .catch((error) => {
+            console.log('logging error');
+            console.error(error);
+        });
 }
 
 function getTabsPrefsList(){
