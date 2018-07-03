@@ -156,6 +156,9 @@ function scrollTimeout() {
             if (hiddenArr[0]){
                 hiddenArr[0].classList.remove('hide');
                 hiddenArr = hiddenArr.slice(1, hiddenArr.length);
+            } else {
+                let refreshButton = document.querySelector('.refresh');
+                refreshButton.classList.remove('hide');
             };
         };
     };
