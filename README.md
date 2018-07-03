@@ -115,7 +115,7 @@ function deleteUser(id) {
 function scrollPage(){
     let hiddenCards = document.querySelectorAll('.hide');
     let hiddenArr = Array.from(hiddenCards);
-    $(window).scroll(function() {
+    $(window).scroll(setTimeout(function() {
         if($(window).scrollTop() + $(window).height() == $(document).height()) {
             for (i=0; i<5; i++){
                 if (hiddenArr[0]){
@@ -124,8 +124,9 @@ function scrollPage(){
                 }
             }
         }
-    });
-};
+    }, 400));
+}
+
 ~~~
 
 #### Mobile horizontal swiping on the home page
