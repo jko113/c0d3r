@@ -61,6 +61,8 @@ edit the information on their profile or delete their account from the site alto
 
 * This page acts as an in app mailbox. A user can get display their message or compose a new message to another user by their GitHub alias.
 
+<img src="readmeimg/messagespage.png">
+
 ### Logout
 
 * This will end the users current session in the app and return to the login page.
