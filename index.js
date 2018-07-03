@@ -179,7 +179,10 @@ app.get('/search', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-    if(req.body.alias) {
+    if(Object.keys(req.body).length = 1 && req.body.alias == '') {
+        let data = {};
+        renderResults(data);
+    } else if(req.body.alias) {
         db.getUsersByAlias(req.body.alias)
             .then(data => {
 
@@ -203,7 +206,7 @@ app.post('/search', (req, res) => {
         }
     }
     function renderResults(data) {
-        if(data) {
+        if(data && data.length > 0) {
 
             data.forEach((user) => {
                 user.join_date = formatDate(user.join_date);
@@ -459,19 +462,6 @@ app.get('/profile/:user_id', ensureAuthenticated, (req, res) => {
         .catch(console.log)
 });
 
-app.post('/delete', (req, res) => {
-    db.getUserByGithubId(req.session.passport.user.id)
-        .then((data) => {
-            db.deleteUser(data.user_id)
-                .then((deleteData) => {
-                    req.session.destroy();
-                    res.redirect('/');
-                })
-                .catch(console.log)
-        })
-        .catch(console.log)
-});
-
 app.listen(port, () => {
     console.log(`Application running at http://localhost:${port}`);
 });
@@ -596,3 +586,15 @@ function displayProfile(data, req, res) {
         res.redirect('/login');
     }
 }
+app.post('/delete', (req, res) => {
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then((data) => {
+            db.deleteUser(data.user_id)
+                .then((deleteData) => {
+                    req.session.destroy();
+                    res.redirect('/');
+                })
+                .catch(console.log)
+        })
+        .catch(console.log)
+});
