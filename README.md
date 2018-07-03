@@ -71,6 +71,14 @@ edit the information on their profile or delete their account from the site alto
 * Ends the users current session in the app and return to the login page.
 
 
+## Things we're proud of
+
+#### SQL generation for AND/OR searches and dummy data 
+* Search implemented by passing in a JSON object from the search form which triggers dynamic SQL generation based on a dictionary of possible statement permutations. Dummy data insert statement generated via JS program that randomly generates most fields in the users table, including date-time values
+#### Get random users feature
+* Ensures the current user is not included in the result set. Draws from the JS Math library’s random() function. Keeps track of users being displayed to prevent duplicates
+
+
 ## Future Additions
 
 #### New button to delete profile
@@ -140,3 +148,7 @@ function scrollTimeout() {
 #### Utilize SASS features on Bulma
 
 * The styling library we used enables you to use SASS functionality which we didnt take advantage of in this project, but would like to revisit in future iterations.
+
+#### Streamline/strengthen/secure search feature
+
+#### Introduce message threading
