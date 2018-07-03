@@ -176,3 +176,5 @@ function scrollTimeout() {
 #### Streamline/strengthen/secure search feature
 
 #### Introduce message threading
+
+#### Block user
