@@ -138,7 +138,7 @@ function deleteUser(id) {
 ~~~
 
 
-#### Infinite ccrolling on home page
+#### Infinite scrolling on home page
 
 ##### This is the only snippet of our app that utilizes jQuery and rather than linking the library we opted to use a button for pagination until this snippet could be rewritten in vanilla JS
 ~~~
