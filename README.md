@@ -76,15 +76,6 @@ edit the information on their profile or delete their account from the site alto
 #### SQL generation for AND/OR searches and dummy data 
 * Search implemented by passing in a JSON object from the search form which triggers dynamic SQL generation based on a dictionary of possible statement permutations. Dummy data insert statement generated via JS program that randomly generates most fields in the users table, including date-time values
 
-~~~
-let chunks = {
-editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
-tabs_preference: 'JOIN tabs_preferences tp ON tp.preference_id = users.tabs_preference ',
-editorsWhere: 'editors.editor_id IN ',
-tabs_preferenceWhere: 'tp.preference_id IN ',
-employerWhere: 'users.employer ILIKE'
-}
-~~~
 
 #### Get random users feature
 * Ensures the current user is not included in the result set. Draws from the JS Math library’s random() function. Keeps track of users being displayed to prevent duplicates
