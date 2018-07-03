@@ -203,7 +203,7 @@ app.post('/search', (req, res) => {
         }
     }
     function renderResults(data) {
-        if(data) {
+        if(data && data.length > 0) {
 
             data.forEach((user) => {
                 user.join_date = formatDate(user.join_date);
