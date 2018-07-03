@@ -1,6 +1,7 @@
 # C0D3R 
 
-C0D3R is a resource to help facilitate coders finding other coders. Whether it is for finding people for meetups, dating, or looking for partners to collaberate on projects C0D3R is a tool to help developers find each other.
+C0D3R is a web application that facilitates genuine and meaningful interactions between programmers in search of a like-minded partner.
+
 
 ## Team Members
 
