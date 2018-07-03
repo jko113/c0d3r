@@ -70,17 +70,6 @@ edit the information on their profile or delete their account from the site alto
 * This will end the users current session in the app and return to the login page.
 
 
-## Challenges
-#### Joshua
-
-#### Lisa
-
-#### Josh
-
-* Keeping track of our templates became more involved because at one point each of our .hbs files included at least one CSS reference and JS scripts. In the final product our CSS was consolidated into one file which made for an easier reference. 
-
-## Lessons Learned
-
 ## Future Additions
 
 #### New button to delete profile
