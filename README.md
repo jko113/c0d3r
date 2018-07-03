@@ -75,9 +75,39 @@ edit the information on their profile or delete their account from the site alto
 
 #### SQL generation for AND/OR searches and dummy data 
 * Search implemented by passing in a JSON object from the search form which triggers dynamic SQL generation based on a dictionary of possible statement permutations. Dummy data insert statement generated via JS program that randomly generates most fields in the users table, including date-time values
+
+~~~
+let chunks = {
+editors: 'JOIN user_editors ue ON ue.user_id = users.user_id JOIN editors ON editors.editor_id = ue.editor_id ',
+tabs_preference: 'JOIN tabs_preferences tp ON tp.preference_id = users.tabs_preference ',
+editorsWhere: 'editors.editor_id IN ',
+tabs_preferenceWhere: 'tp.preference_id IN ',
+employerWhere: 'users.employer ILIKE'
+}
+~~~
+
 #### Get random users feature
 * Ensures the current user is not included in the result set. Draws from the JS Math library’s random() function. Keeps track of users being displayed to prevent duplicates
 
+~~~
+function getRandomUsers(current_user_id, num_users) {   return getAllUserIds()
+    .then((arrayOfAllUserIds) => {       if (num_users > arrayOfAllUserIds.length) {
+        throw new Error('number of users specified must be <= the dataset’);
+      }       let randomIds = [];
+      for (let i = 0; i < num_users; i++) {
+        let randomIndex = Math.floor(Math.random() * intIds.length);
+        let randomValue = intIds[randomIndex];
+        randomIds.push(randomValue);
+        intIds.splice(randomIndex, 1);
+      }
+    let initial = 'SELECT * FROM users WHERE user_id != $1 AND user_id IN (‘; let userIds = ’’; let final = ');’;
+     randomIds.forEach((item, index) => {
+      index === randomIds.length - 1 ? userIds += item: userIds += item + ', ‘; 
+    });
+     results = initial + userIds + final;
+    return db.any(results, [current_user_id]);
+  })
+~~~
 
 ## Future Additions
 
