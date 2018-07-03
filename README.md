@@ -113,20 +113,23 @@ function deleteUser(id) {
 ##### This is the only snippet of our app that utilizes jQuery and rather than linking the library we opted to use a button for pagination until this snippet could be rewritten in vanilla JS
 ~~~
 function scrollPage(){
+    $(window).scroll(function() {
+        setTimeout(scrollTimeout, 800);
+    });
+};
+
+function scrollTimeout() {
     let hiddenCards = document.querySelectorAll('.hide');
     let hiddenArr = Array.from(hiddenCards);
-    $(window).scroll(setTimeout(function() {
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
-            for (i=0; i<5; i++){
-                if (hiddenArr[0]){
-                    hiddenArr[0].classList.remove('hide');
-                    hiddenArr = hiddenArr.slice(1, hiddenArr.length)
-                }
-            }
-        }
-    }, 400));
-}
-
+    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        for (i=0; i<5; i++){
+            if (hiddenArr[0]){
+                hiddenArr[0].classList.remove('hide');
+                hiddenArr = hiddenArr.slice(1, hiddenArr.length);
+            };
+        };
+    };
+};
 ~~~
 
 #### Mobile horizontal swiping on the home page
