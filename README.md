@@ -33,7 +33,7 @@ Our git repository is at https://github.com/jko113/c0d3r to take a look at the c
 
 * The first page the user sees when they visit our site
 
-<img src="">
+<img src="readmeimg/loginpage.png">
 
 
 ### Home Page
@@ -41,16 +41,21 @@ Our git repository is at https://github.com/jko113/c0d3r to take a look at the c
 * After logging in the user will be taken to the home page. Here you are shown a handful of profile cards and
 can navigate to other sections of the site from the header at the top of the page.
 
+<img src="readmeimg/homepage.png">
+
 ### Profile
 
 * Here the user can view a detailed profile page. If the user is the owner of the page they will be given the option to 
 edit the information on their profile or delete their account from the site altogether
+
+<img src="readmeimg/profilepage.png">
 
 
 ### Search
 
 * Here the user can choose from a variety of fields to narrow down the profiles their shown. The search works by or/and.  
 
+<img src="readmeimg/searchpage.png">
 
 ### Messages
 
