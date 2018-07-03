@@ -320,6 +320,7 @@ html, body {
   @media screen and (min-width: 760px) {
     .github-avatar {
       height: 200px;
+      width: 200px;
     }
   }
 
