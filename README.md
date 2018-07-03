@@ -18,7 +18,7 @@ C0d3R is a resource to help facilitate coders finding other coders. Whether it i
 * Express-handlebars
 * PostgreSQL
 * Bulma
-* OAuth
+* OAuth (GitHub)
 
 ## Where to find it
 
