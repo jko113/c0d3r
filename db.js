@@ -207,6 +207,9 @@ function hasUnreadMessages(user_id) {
     WHERE ma.is_read = false AND ma.recipient_id = $1;', [user_id]);
 }
 
+function deleteUser(id) {
+    return db.result('DELETE from users WHERE user_id = $1', [id]);
+}
 // let parameters = {
 //     editors: [1,2],
 //     languages: [3,4],
@@ -488,7 +491,8 @@ module.exports = {
     getUserIdsByGitHubAliasArray: getUserIdsByGitHubAliasArray,
     getCurlyPrefs: getCurlyPrefs,
     getQuotePrefs: getQuotePrefs,
-    getTabsPrefs: getTabsPrefs
+    getTabsPrefs: getTabsPrefs,
+    deleteUser: deleteUser
 };
 
 // TESTS

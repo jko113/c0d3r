@@ -296,10 +296,11 @@
         </div>
         {{#if isProfile}}
             <div class="field">
-                <div class="control app-flex-start">
-                    <input type="button" value="Edit Profile" class="app-button-2" data-edit-button>
-                    <input type="submit" value="Save Profile" class="app-button-2 is-hidden" data-save-button>
-                    <input type="button" value="Cancel" class="app-button-3 app-margin-left is-hidden" data-cancel-button>
+                <div class="control">
+                    <input type="button" value="Edit Profile" class="button is-primary" data-edit-button>
+                    <input type="submit" value="Save Profile" class="button is-primary is-hidden" data-save-button>
+                    <input type="button" value="Cancel" class="button is-primary is-hidden" data-cancel-button>
+                    <button type="submit" formaction="/delete" formmethod="POST" class="button is-danger is-hidden is-pulled-right" data-delete-button>Delete Account</button>
                 </div>
             </div>
         {{/if}}
