@@ -179,7 +179,10 @@ app.get('/search', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-    if(req.body.alias) {
+    if(Object.keys(req.body).length = 1 && req.body.alias == '') {
+        let data = {};
+        renderResults(data);
+    } else if(req.body.alias) {
         db.getUsersByAlias(req.body.alias)
             .then(data => {
 
