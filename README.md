@@ -33,6 +33,8 @@ Our git repository is at https://github.com/jko113/c0d3r to take a look at the c
 
 * The first page the user sees when they visit our site
 
+<img src="">
+
 
 ### Home Page
 
