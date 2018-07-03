@@ -131,3 +131,5 @@ function scrollPage(){
 ~~~
 
 #### Mobile horizontal swiping on the home page
+
+* A similar feature to vertical pagination we woulld like to implement a horizontal swipe feature on the home page in future iterations.
