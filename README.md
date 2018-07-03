@@ -29,7 +29,7 @@ Our git repository is at https://github.com/jko113/c0d3r to take a look at the c
 
 ## Walkthrough
 
-[![Demo Video](http://img.youtube.com/vi/xxSGhGFpLyM/0.jpg)](http://www.youtube.com/watch?v=xxSGhGFpLyM "C0D3R ")
+[![Demo Video](readmeimg/youtubeimg.png)](http://www.youtube.com/watch?v=xxSGhGFpLyM "C0D3R ")
 
 ### Login Page
 
