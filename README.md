@@ -69,6 +69,13 @@ edit the information on their profile or delete their account from the site alto
 
 
 ## Challenges
+#### Joshua
+
+#### Lisa
+
+#### Josh
+
+* Keeping track of our templates became more involved because at one point each of our .hbs files included at least one CSS reference and JS scripts. In the final product our CSS was consolidated into one file which made for an easier reference. 
 
 ## Lessons Learned
 
@@ -101,7 +108,7 @@ CREATE TABLE message_recipients (
 );
 ~~~
 
-##### By adjusting this function to removed references from other tables we could implement it without making changes to the schema
+##### By adjusting this function to remove references from other tables we could implement it without making changes to the schema
 
 ~~~
 function deleteUser(id) {
@@ -133,3 +140,7 @@ function scrollPage(){
 #### Mobile horizontal swiping on the home page
 
 * A similar feature to vertical pagination we woulld like to implement a horizontal swipe feature on the home page in future iterations.
+
+#### Utilize SASS features on Bulma
+
+* The styling library we used enables you to use SASS functionality which we didnt take advantage of in this project, but would like to revisit in future iterations.
