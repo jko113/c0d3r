@@ -233,7 +233,8 @@ function andSearch(searchObject) {
         single_quotes_preferenceWhere: 'sq.preference_id IN ',
         cityWhere: 'users.city ILIKE ',
         stateWhere: 'users.state ILIKE ',
-        zipWhere: 'users.zip = '
+        zipWhere: 'users.zip = ',
+        employerWhere: 'users.employer ILIKE'
     }
 
     let result = '';
@@ -310,7 +311,8 @@ function orSearch(searchObject) {
         single_quotes_preferenceWhere: 'sq.preference_id IN ',
         cityWhere: 'users.city ILIKE ',
         stateWhere: 'users.state ILIKE ',
-        zipWhere: 'users.zip = '
+        zipWhere: 'users.zip = ',
+        employerWhere: 'users.employer ILIKE'
     }
 
     let result = '';
