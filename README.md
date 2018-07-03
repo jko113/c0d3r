@@ -73,3 +73,60 @@ edit the information on their profile or delete their account from the site alto
 ## Lessons Learned
 
 ## Future Additions
+
+#### New button to delete profile
+~~~
+app.post('/delete', (req, res) => {
+    db.getUserByGithubId(req.session.passport.user.id)
+        .then((data) => {
+            db.deleteUser(data.user_id)
+                .then((deleteData) => {
+                    req.session.destroy();
+                    res.redirect('/');
+                })
+                .catch(console.log)
+        })
+        .catch(console.log)
+});
+~~~
+##### Current implementation requires that we make changes to the schema and at the point at which we looked at deletion we were 
+##### hesitant to make those changes.
+
+~~~
+CREATE TABLE message_recipients (
+    message_id integer REFERENCES messages (message_id) ON DELETE CASCADE,
+    recipient_id integer REFERENCES users (user_id) ON DELETE CASCADE,
+    is_read boolean,
+    PRIMARY KEY (message_id, recipient_id)
+);
+~~~
+
+##### By adjusting this function to removed references from other tables we could implement it without making changes to the schema
+
+~~~
+function deleteUser(id) {
+    return db.result('DELETE from users WHERE user_id = $1', [id]);
+}
+~~~
+
+
+#### Scrolling pagination on home page
+
+~~~
+function scrollPage(){
+    let hiddenCards = document.querySelectorAll('.hide');
+    let hiddenArr = Array.from(hiddenCards);
+    $(window).scroll(function() {
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            for (i=0; i<5; i++){
+                if (hiddenArr[0]){
+                    hiddenArr[0].classList.remove('hide');
+                    hiddenArr = hiddenArr.slice(1, hiddenArr.length)
+                }
+            }
+        }
+    });
+};
+~~~
+
+#### Mobile horizontal swiping on the home page
