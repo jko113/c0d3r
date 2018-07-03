@@ -24,7 +24,7 @@ C0d3R is a resource to help facilitate coders finding other coders. Whether it i
 
 Our project in it's entirety is hosted at http://www.trashpandapals.com to login and check it out.
 
-Otherwise our git repository is at https://github.com/jko113/c0d3r to take a look at the code. 
+Our git repository is at https://github.com/jko113/c0d3r to take a look at the code. 
 
 
 ## Walkthrough
