@@ -22,7 +22,7 @@ C0d3R is a resource to help facilitate coders finding other coders. Whether it i
 
 ## Where to find it
 
-Our project in it's entirety is hosted at trashpandapals.com if you'd like to login and check it out.
+Our project in it's entirety is hosted at http://www.trashpandapals.com if you'd like to login and check it out.
 
 Otherwise our git repository is at https://github.com/jko113/c0d3r if you'd like to take a look at the code. 
 
