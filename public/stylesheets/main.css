@@ -188,7 +188,7 @@ html, body {
     align-items: center;
     justify-content: center;
     border: none;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     cursor: pointer;
 }
 
