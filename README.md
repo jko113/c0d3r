@@ -34,41 +34,41 @@ The git repository is located [here](https://github.com/jko113/c0d3r/).
 
 ### Home Page
 
-* After logging in via GitHub authentication and creating a profile, the user is directed to the home page. Here a handful of random users' profile cards appear on screen. It is possible to navigate to other areas of the site using links in the header.
+After logging in via GitHub authentication and creating a profile, the user is directed to the home page. Here a handful of random users' profile cards appear on screen. It is possible to navigate to other areas of the site using links in the header.
 
 <img src="readmeimg/homepage.png">
 
 ### Profile
 
-* Users can view their own or other users' full profile. When viewing one's own profile, the option to "Edit Profile" appears.
+Users can view their own or other users' full profile. When viewing one's own profile, the option to "Edit Profile" appears.
 
 <img src="readmeimg/profilepage.png">
 
 ### Search
 
-* The search feature empowers users to find other members based on their profile criteria. The versatile search can be realized with the AND keyword (a strict search) or the OR keyword (a loose search). There is also a direct search for a user by GitHub alias.
+The search feature empowers users to find other members based on their profile criteria. The versatile search can be realized with the AND keyword (a strict search) or the OR keyword (a loose search). There is also a direct search for a user by GitHub alias.
 
 <img src="readmeimg/searchpage.png">
 
 ### Messages
 
-* The messages feature acts as an in-app mailbox. The user can display both sent and received messages, which are complete with timestamp and sender information. She can also compose new messages to other users by their GitHub alias.
+The messages feature acts as an in-app mailbox. The user can display both sent and received messages, which are complete with timestamp and sender information. She can also compose new messages to other users by their GitHub alias.
 
 <img src="readmeimg/messagespage.png">
 
 ### Logout
 
-* Ends the users current session and redirects to the login page.
+Ends the users current session and redirects to the login page.
 
 ## Things we're proud of
 
 #### SQL generation for AND/OR searches and dummy data 
 
-* Search implemented by passing in a JSON object from the search form which triggers dynamic SQL generation based on a dictionary of possible statement permutations. Dummy data insert statement generated via JS program that randomly generates most fields in the users table, including date-time values.
+Search implemented by passing in a JSON object from the search form which triggers dynamic SQL generation based on a dictionary of possible statement permutations. Dummy data insert statement generated via JS program that randomly generates most fields in the users table, including date-time values.
 
 #### Get random users feature
 
-* This method ensures the current user is not included in the result set. To obtain users randomly, it draws from the JS Math library’s random() function. It dynamically keeps track of users being displayed in order to prevent duplicates.
+This method ensures the current user is not included in the result set. To obtain users randomly, it draws from the JS Math library’s random() function. It dynamically keeps track of users being displayed in order to prevent duplicates.
 
 ```javascript
 function getRandomUsers(current_user_id, num_users) {
@@ -128,6 +128,7 @@ app.post('/delete', (req, res) => {
 ```
 
 #### Another possible feature is deletion of user accounts and messages:
+
 ```SQL
 CREATE TABLE message_recipients (
     message_id integer REFERENCES messages (message_id) ON DELETE CASCADE,
@@ -173,20 +174,20 @@ function scrollTimeout() {
 
 #### Mobile horizontal swiping on the home page
 
-* For increased usability on mobile devices, it would be helpful to incorporate a horizontal swiping feature.
+For increased usability on mobile devices, it would be helpful to incorporate a horizontal swiping feature.
 
 #### Utilize SASS features on Bulma
 
-* The styling library we used is compatible with SASS. This would be a powerful tool to utilize in future iterations.
+The styling library we used is compatible with SASS. This would be a powerful tool to utilize in future iterations.
 
 #### Streamline/strengthen/secure search feature
 
-* Streamlining the search feature amounts to simplifying the search experience, particularly where the UI is concerned. To the degree that strengthening the search wouldn't make it more complicated, this refers to adding more control to the user over how the search is performed. Securing the search relates to preventing database attacks.
+Streamlining the search feature amounts to simplifying the search experience, particularly where the UI is concerned. To the degree that strengthening the search wouldn't make it more complicated, this refers to adding more control to the user over how the search is performed. Securing the search relates to preventing database attacks.
 
 #### Introduce message threading
 
-* Enhance message functionality by allowing users to respond directly to a message, creating a thread (or conversation).
+Enhance message functionality by allowing users to respond directly to a message, creating a thread (or conversation).
 
 #### Block user/Report abuse
 
-* To ensure a pleasant experience for all users of this dating app, it's important to be able to block pesky users and report abusive behavior.
+To ensure a pleasant experience for all users of this dating app, it's important to be able to block pesky users and report abusive behavior.
