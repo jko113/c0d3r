@@ -70,7 +70,7 @@ The git repository is located [here](https://github.com/jko113/c0d3r/).
 
 * This method ensures the current user is not included in the result set. To obtain users randomly, it draws from the JS Math library’s random() function. It dynamically keeps track of users being displayed in order to prevent duplicates.
 
-```(javascript)
+```javascript
 function getRandomUsers(current_user_id, num_users) {
 
     return getAllUserIds()
@@ -112,7 +112,7 @@ function getRandomUsers(current_user_id, num_users) {
 
 #### New button to delete profile
 
-```(javascript)
+```javascript
 app.post('/delete', (req, res) => {
   db.getUserByGithubId(req.session.passport.user.id)
     .then((data) => {
@@ -128,7 +128,7 @@ app.post('/delete', (req, res) => {
 ```
 
 #### Another possible feature is deletion of user accounts and messages:
-```(SQL)
+```SQL
 CREATE TABLE message_recipients (
     message_id integer REFERENCES messages (message_id) ON DELETE CASCADE,
     recipient_id integer REFERENCES users (user_id) ON DELETE CASCADE,
@@ -139,7 +139,7 @@ CREATE TABLE message_recipients (
 
 ##### By adjusting this function to remove references from other tables we could implement it without making changes to the schema
 
-```(javascript)
+```javascript
 function deleteUser(id) {
     return db.result('DELETE from users WHERE user_id = $1', [id]);
 }
@@ -147,7 +147,7 @@ function deleteUser(id) {
 
 #### Infinite scrolling on home page
 
-```(javascript)
+```javascript
 function scrollPage(){
     $(window).scroll(function() {
         setTimeout(scrollTimeout, 800);
