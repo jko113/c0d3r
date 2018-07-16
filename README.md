@@ -138,7 +138,7 @@ CREATE TABLE message_recipients (
 );
 ```
 
-##### By adjusting this function to remove references from other tables we could implement it without making changes to the schema
+##### This would be the associated deleteUser() function in the database API:
 
 ```javascript
 function deleteUser(id) {
