@@ -6,7 +6,7 @@ function addLoadToggle(){
     if(load){
         let hiddenCards = document.querySelectorAll('.hide');
         let hiddenArr = Array.from(hiddenCards);
-        console.log(hiddenArr);
+        //console.log(hiddenArr);
         load.addEventListener('click', function(event) {
             let count = 0;
             for (i=0; i<5; i++){
@@ -25,7 +25,9 @@ function hideAllCards(){
     let cardsArr = Array.from(profileCards);
     if(cardsArr.length < 5 || !cardsArr){
         let load = document.body.querySelector('.load');
-        load.classList.add('hide');
+        if (load) {
+            load.classList.add('hide');
+        }
     }
     let cutCardsArr = cardsArr.slice(5, cardsArr.length);
     //console.log(cutCardsArr);
